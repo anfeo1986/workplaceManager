@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: feoktistov
@@ -8,10 +9,36 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <title>Title</title>
 </head>
 <body>
-    ${film}
-    <h2><a href="/edit">edit page asd</a></h2>
+    <h2>Films</h2>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>Название</th>
+            <th>Год</th>
+            <th>Жанр</th>
+            <th>Просмотрено</th>
+            <th>action</th>
+        </tr>
+        <c:forEach var="film" items="${filmsList}">
+            <tr>
+                <td>${film.id}</td>
+                <td>${film.title}</td>
+                <td>${film.year}</td>
+                <td>${film.genre}</td>
+                <td>${film.watched}</td>
+                <td>
+                    <a href="/edit/${film.id}">edit</a>
+                    <a href="/delete/${film.id}">delete</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+    <h2>Add</h2>
+    <c:url value="/add" var ="add"/>
+    <a href="${add}">Add new film</a>
 </body>
 </html>
