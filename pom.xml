@@ -17,6 +17,12 @@
         <spring.version>5.3.22</spring.version>
 
         <hibernate.version>5.4.6.Final</hibernate.version>
+
+       <!-- <flyway.user>postgres</flyway.user>
+        <flyway.password>.;ysqehfk</flyway.password>
+        <flyway.schemas>test</flyway.schemas>
+        <flyway.url>jdbc:postgresql://localhost:5432/test</flyway.url>-->
+
     </properties>
 
     <dependencies>
@@ -99,10 +105,28 @@
             <version>3.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>9.2.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>4.0.3</version>
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://localhost:5432/test</url>
+                    <user>postgres</user>
+                    <password>.;ysqehfk</password>
+                    <schemas>public</schemas>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
