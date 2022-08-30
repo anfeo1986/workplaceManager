@@ -28,7 +28,7 @@ public class HibernateConfig {
         this.environment = environment;
     }
 
-    /*@Bean
+    @Bean
     public ClassicConfiguration flywayConfig() {
         ClassicConfiguration configuration = new ClassicConfiguration();
         configuration.setDataSource(dataSource());
@@ -38,7 +38,7 @@ public class HibernateConfig {
     @Bean(initMethod = "migrate")
     public Flyway flyway() {
         return new Flyway(flywayConfig());
-    }*/
+    }
 
     @Bean
     public DataSource dataSource() {

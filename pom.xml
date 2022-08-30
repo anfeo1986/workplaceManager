@@ -18,10 +18,14 @@
 
         <hibernate.version>5.4.6.Final</hibernate.version>
 
-       <!-- <flyway.user>postgres</flyway.user>
-        <flyway.password>.;ysqehfk</flyway.password>
-        <flyway.schemas>test</flyway.schemas>
-        <flyway.url>jdbc:postgresql://localhost:5432/test</flyway.url>-->
+        <flyway.user>admin</flyway.user>
+        <flyway.password>hk7g8k</flyway.password>
+        <flyway.schemas>public</flyway.schemas>
+        <flyway.catalog>workplaceManager</flyway.catalog>
+        <flyway.server>localhost</flyway.server>
+        <flyway.port>5433</flyway.port>
+        <flyway.driver>org.postgresql.Driver</flyway.driver>
+        <flyway.url>jdbc:postgresql://${flyway.server}:${flyway.port}/${flyway.catalog}</flyway.url>
 
     </properties>
 
@@ -111,6 +115,14 @@
             <version>9.2.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -120,11 +132,11 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>4.0.3</version>
                 <configuration>
-                    <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5432/test</url>
-                    <user>postgres</user>
-                    <password>.;ysqehfk</password>
-                    <schemas>public</schemas>
+                    <driver>${flyway.driver}</driver>
+                    <url>${flyway.url}</url>
+                    <user>${flyway.user}</user>
+                    <password>${flyway.password}</password>
+                    <schemas>${flyway.schemas}</schemas>
                 </configuration>
             </plugin>
             <plugin>

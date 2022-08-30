@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.db.domain.Film;
-import workplaceManager.db.service.FilmService;
+import workplaceManager.db.service.FilmServiceImpl;
 
 import java.util.List;
 
-@Controller
+//@Controller
 public class FilmController {
 
-    private FilmService filmService;
+    /*private FilmServiceImpl filmService;
     @Autowired
-    public void setFilmService(FilmService filmService) {
+    public void setFilmService(FilmServiceImpl filmService) {
         this.filmService = filmService;
     }
 
@@ -43,7 +43,7 @@ public class FilmController {
     public ModelAndView editFilm(@ModelAttribute("film") Film film) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/");
-        filmService.edit(film);
+        filmService.update(film);
         return modelAndView;
     }
 
@@ -69,5 +69,5 @@ public class FilmController {
         Film film = filmService.getById(id);
         filmService.delete(film);
         return modelAndView;
-    }
+    }*/
 }

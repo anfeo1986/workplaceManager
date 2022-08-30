@@ -9,49 +9,42 @@ import workplaceManager.db.domain.Film;
 
 import java.util.List;
 
-@Repository
-public class FilmServiceImpl implements FilmService {
-    /*private FilmDAO filmDAO;
-
-    @Autowired
-    public void setFilmDAO(FilmDAO filmDAO) {
-        this.filmDAO = filmDAO;
-    }*/
-
-    private SessionFactory sessionFactory;
+//@Repository
+//public class FilmServiceImpl implements FilmService {
+public class FilmServiceImpl extends EntityManager<Film> {
+    /*private SessionFactory sessionFactory;
     @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-    }
+    }*/
 
-
-    @Transactional
+    /*@Transactional
     public List<Film> allFilms() {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("from Film").list();
     }
 
-    @Transactional
+    /*@Transactional
     public void add(Film film) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(film);
-    }
+    }*/
 
-    @Transactional
+    /*@Transactional
     public void delete(Film film) {
         Session session = sessionFactory.getCurrentSession();
         session.delete(film);
-    }
+    }*/
 
-    @Transactional
+    /*@Transactional
     public void edit(Film film) {
         Session session = sessionFactory.getCurrentSession();
         session.update(film);
-    }
+    }*/
 
-    @Transactional
+    /*@Transactional
     public Film getById(int id) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Film.class, id);
-    }
+    }*/
 }

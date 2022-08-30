@@ -2,12 +2,12 @@ package workplaceManager.db.domain;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "films")
+//@Entity
+//@Table(name = "films")
 public class Film {
-    @Id
+    /*@Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "title")
@@ -57,5 +57,5 @@ public class Film {
 
     public void setWatched(boolean watched) {
         this.watched = watched;
-    }
+    }*/
 }
