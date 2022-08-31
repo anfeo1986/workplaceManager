@@ -3,6 +3,7 @@ package workplaceManager.db.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,4 +15,7 @@ public class Workplace {
 
     @Column
     private String title;
+
+    @OneToOne(optional = false, mappedBy = "workplace")
+    private Employee employee;
 }

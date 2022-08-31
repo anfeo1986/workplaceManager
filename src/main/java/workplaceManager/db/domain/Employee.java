@@ -19,4 +19,8 @@ public class Employee {
     @Column
     private String post;
 
+    @OneToOne(optional = true,cascade = CascadeType.ALL)
+    @JoinColumn(name = "workplace_id")
+    private Workplace workplace;
+
 }

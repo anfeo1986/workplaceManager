@@ -19,6 +19,12 @@
             <form action="/add_employee" method="post">
                 <label for="name">ФИО</label>
                 <input type="text" name="name" id="name">
+                <select name="workplace">
+                    <option disabled>Выберите рабочее место</option>
+                    <c:forEach var="workplace" items="${workplaceList}">
+                        <option value="${workplace}">${workplace.title}</option>
+                    </c:forEach>
+                </select>
                 <input type="submit" value="добавить сотрудника">
             </form>
         </td>
