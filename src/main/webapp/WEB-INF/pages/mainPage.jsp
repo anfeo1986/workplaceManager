@@ -19,10 +19,10 @@
             <form action="/add_employee" method="post">
                 <label for="name">ФИО</label>
                 <input type="text" name="name" id="name">
-                <select name="workplace">
+                <select name="workplace_id">
                     <option disabled>Выберите рабочее место</option>
                     <c:forEach var="workplace" items="${workplaceList}">
-                        <option value="${workplace}">${workplace.title}</option>
+                        <option value="${workplace.id}">${workplace.title}</option>
                     </c:forEach>
                 </select>
                 <input type="submit" value="добавить сотрудника">
@@ -42,11 +42,18 @@
                 <tr>
                     <th>id</th>
                     <th>ФИО</th>
+                    <th>Раб. место</th>
                 </tr>
                 <c:forEach var="employee" items="${employeeList}">
                     <tr>
                         <td>${employee.id}</td>
                         <td>${employee.name}</td>
+                        <c:if test="${!empty employee.workplace}">
+                            <td>${employee.workplace.title}</td>
+                        </c:if>
+                        <c:if test="${empty employee.workplace}">
+                            <td/>
+                        </c:if>
                         <td><a href="/delete_employee/?id=${employee.id}">Удалить</a> </td>
                     </tr>
                 </c:forEach>

@@ -2,10 +2,7 @@ package workplaceManager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.db.domain.Employee;
 import workplaceManager.db.domain.Workplace;
@@ -42,10 +39,15 @@ public class MainController {
     }
 
     @PostMapping("/add_employee")
-    public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee) {
+    public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee,
+                                    @ModelAttribute("workplace_id") Long id) {
+        Workplace workplace = workplaceManager.getWorkplaceById(id);
+        workplace.setEmployee(employee);
+        employee.setWorkplace(workplace);
+        employeeManager.add(employee);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/");
-        employeeManager.add(employee);
         return modelAndView;
     }
 
