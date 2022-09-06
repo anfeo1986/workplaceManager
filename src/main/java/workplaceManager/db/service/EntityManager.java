@@ -16,7 +16,14 @@ public abstract class EntityManager<T> {
     @Transactional
     public void add(T entity) {
         Session session = sessionFactory.getCurrentSession();
-        session.persist(entity);
+        //session.persist(entity);
+        session.saveOrUpdate(entity);
+    }
+
+    @Transactional
+    public void save(T entity) {
+        Session session = sessionFactory.getCurrentSession();
+        session.saveOrUpdate(entity);
     }
 
     @Transactional

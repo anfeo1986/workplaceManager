@@ -4,10 +4,11 @@ import lombok.Data;
 import workplaceManager.db.service.EntityManager;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
-public class Employee {
+public class Employee implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,8 +20,8 @@ public class Employee {
     @Column
     private String post;
 
-    @OneToOne(optional = true,cascade = CascadeType.ALL)
-    @JoinColumn(name = "workplace_id")
+    @ManyToOne(optional = true,cascade = CascadeType.ALL)
+    @JoinColumn(name = "workplace")
     private Workplace workplace;
 
 }
