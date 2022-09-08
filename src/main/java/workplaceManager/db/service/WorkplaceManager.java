@@ -21,8 +21,15 @@ public class WorkplaceManager extends EntityManager<Workplace> {
     @Transactional
     public Workplace getWorkplaceById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        //return session.get(Workplace.class, id);
         Query query = session.createQuery("from Workplace as workplace where workplace.id=" + id);
+        Workplace workplace = (Workplace) query.uniqueResult();
+        return workplace;
+    }
+
+    @Transactional
+    public Workplace getWorkplaceByTitle(String title) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from Workplace as workplace where workplace.title='" + title + "'");
         Workplace workplace = (Workplace) query.uniqueResult();
         return workplace;
     }

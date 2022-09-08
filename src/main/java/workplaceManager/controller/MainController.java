@@ -98,20 +98,5 @@ public class MainController {
         return modelAndView;
     }
 
-    @GetMapping("/delete_workplace")
-    public ModelAndView deleteWorkplace(@RequestParam(name = "id") Long id) {
-        Workplace workplace = workplaceManager.getWorkplaceById(id);
-        workplaceManager.delete(workplace);
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
-        return modelAndView;
-    }
-
-    @GetMapping("/mainPage")
-    public ModelAndView test() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("content2");
-        return modelAndView;
-    }
 }

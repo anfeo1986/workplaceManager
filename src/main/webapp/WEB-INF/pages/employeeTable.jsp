@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <table>
+    <tr><a href="/config/employee/addUpdateEmployee">Добавить сотрудника</a> </tr>
     <tr>
         <th>id</th>
         <th>ФИО</th>
@@ -17,7 +18,7 @@
             <c:if test="${empty employee.workplace}">
                 <td/>
             </c:if>
-            <td><a href="/delete_employee/?id=${employee.id}">Удалить</a> </td>
+            <td><a href="/config/employee/deleteEmployee?id=${employee.id}">Удалить</a> </td>
         </tr>
     </c:forEach>
 </table>
