@@ -15,7 +15,7 @@ public class EmployeeManager extends EntityManager<Employee> {
     @Transactional
     public List<Employee> getEmployeeList() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Employee").list();
+        return session.createQuery("from Employee as employee order by employee.name asc").list();
     }
 
     @Transactional

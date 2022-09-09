@@ -26,7 +26,8 @@ public class ConfigWorkplaceController {
     }
 
     @GetMapping("/addUpdateWorkplace")
-    public ModelAndView addWorkplace(@RequestParam(name = "id", required = false) Long workplaceId) {
+    public ModelAndView addWorkplace(@RequestParam(name = "id", required = false) Long workplaceId,
+                                     @RequestParam(name = "redirect", required = false) String redirect) {
         ModelAndView modelAndView = new ModelAndView("/config/addUpdateWorkplace");
 
         Workplace workplace = new Workplace();
@@ -34,6 +35,11 @@ public class ConfigWorkplaceController {
             workplace = workplaceManager.getWorkplaceById(workplaceId);
         }
         modelAndView.addObject("workplace", workplace);
+
+        if (redirect == null) {
+            redirect = "";
+        }
+        modelAndView.addObject("redirect", "/" + redirect);
 
         return modelAndView;
     }
@@ -57,7 +63,8 @@ public class ConfigWorkplaceController {
     }
 
     @PostMapping("/updateWorkplacePost")
-    public ModelAndView updateWorkplace(@ModelAttribute("workplace") Workplace workplace) {
+    public ModelAndView updateWorkplace(@ModelAttribute("workplace") Workplace workplace,
+                                        @ModelAttribute("redirect") String redirect) {
         ModelAndView modelAndView = new ModelAndView();
 
         Workplace workplaceFromDb = workplaceManager.getWorkplaceByTitle(workplace.getTitle());
@@ -69,6 +76,11 @@ public class ConfigWorkplaceController {
             workplaceManager.save(workplace);
             modelAndView.setViewName("redirect:/");
         }
+
+        if (redirect == null) {
+            redirect = "";
+        }
+        modelAndView.addObject("redirect", "/" + redirect);
 
         return modelAndView;
     }

@@ -43,7 +43,8 @@
 
     <p>
         <input type="submit" value="${buttonTitle}">
-        <a href="/workplace" class="button">Назад</a>
+        <input type="hidden" name="redirect" value="${redirect}">
+        <a href="${redirect}" class="button">Назад</a>
     </p>
 </form>
 

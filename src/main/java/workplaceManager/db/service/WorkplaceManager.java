@@ -15,7 +15,7 @@ public class WorkplaceManager extends EntityManager<Workplace> {
     @Transactional
     public List<Workplace> getWorkplaceList() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Workplace").list();
+        return session.createQuery("from Workplace as workplace order by workplace.title asc ").list();
     }
 
     @Transactional

@@ -28,7 +28,7 @@
         <c:set var="employeePost" value=""/>
     </c:if>
     <c:if test="${!empty employee.post}">
-        <c:set var="employeePost" value="${employee.name}"/>
+        <c:set var="employeePost" value="${employee.post}"/>
     </c:if>
 
     <c:if test="${empty employee.workplace}">
@@ -61,11 +61,11 @@
 
     <label>Рабочее место</label>
     <select name="workplace_id">
-        <option/>
+        <option value="-1"/>
         <%--<option disabled>Выберите рабочее место</option>--%>
         <c:forEach var="workplace" items="${workplaceList}">
             <c:if test="${employeeWorkplaceId == workplace.id}">
-                <option value="${workplace.id}" selected>${workplace.title}</option>
+                <option selected value="${workplace.id}" >${workplace.title}</option>
             </c:if>
             <c:if test="${employeeWorkplaceId != workplace.id}">
                 <option value="${workplace.id}">${workplace.title}</option>
@@ -75,7 +75,8 @@
 
     <p>
         <input type="submit" value="${buttonTitle}">
-        <a href="/employee" class="button">Назад</a>
+        <input type="hidden" name="redirect" value="${redirect}">
+        <a href="${redirect}" class="button">Назад</a>
     </p>
 </form>
 
