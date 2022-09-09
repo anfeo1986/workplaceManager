@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h1>Сотрудники</h1>
-<a href="/config/employee/addUpdateEmployee">Добавить сотрудника</a>
+<a href="/config/employee/addUpdateEmployee?redirect=employee">Добавить сотрудника</a>
 
 <table>
     <tr>
@@ -15,7 +15,7 @@
         <tr>
             <td>${employee.id}</td>
 
-            <td><a href="/config/employee/addUpdateEmployee?id=${employee.id}&redirect=employee">${employee.name}</a></td>
+            <td><a href="/config/employee/addUpdateEmployee?id=${employee.id}">${employee.name}</a></td>
 
             <td>${employee.post}</td>
 

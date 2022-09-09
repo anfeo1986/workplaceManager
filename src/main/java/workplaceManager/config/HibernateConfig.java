@@ -31,6 +31,7 @@ public class HibernateConfig {
     @Bean
     public ClassicConfiguration flywayConfig() {
         ClassicConfiguration configuration = new ClassicConfiguration();
+        configuration.setBaselineOnMigrate(true);
         configuration.setDataSource(dataSource());
         return configuration;
     }

@@ -39,13 +39,14 @@ public class ConfigWorkplaceController {
         if (redirect == null) {
             redirect = "";
         }
-        modelAndView.addObject("redirect", "/" + redirect);
+        modelAndView.addObject("redirect", redirect);
 
         return modelAndView;
     }
 
     @PostMapping("/addWorkplacePost")
-    public ModelAndView addWorkplace(@ModelAttribute("workplace") Workplace workplace) {
+    public ModelAndView addWorkplace(@ModelAttribute("workplace") Workplace workplace,
+                                     @ModelAttribute("redirect") String redirect) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/config/addUpdateWorkplace");
 
@@ -58,6 +59,12 @@ public class ConfigWorkplaceController {
             modelAndView.addObject("message", String.format("%s успешно добавлен", workplace.getTitle()));
             modelAndView.addObject("workplace", new Workplace());
         }
+
+        if (redirect == null) {
+            redirect = "";
+        }
+        modelAndView.addObject("redirect", redirect);
+
 
         return modelAndView;
     }
@@ -74,13 +81,13 @@ public class ConfigWorkplaceController {
             modelAndView.addObject("workplace", workplace);
         } else {
             workplaceManager.save(workplace);
-            modelAndView.setViewName("redirect:/");
+            modelAndView.setViewName("redirect:/"+redirect);
         }
 
         if (redirect == null) {
             redirect = "";
         }
-        modelAndView.addObject("redirect", "/" + redirect);
+        modelAndView.addObject("redirect", redirect);
 
         return modelAndView;
     }

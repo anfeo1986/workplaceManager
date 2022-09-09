@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,9 @@ public class Workplace implements Serializable {
     @Column
     private String title;
 
-    @OneToMany(mappedBy = "workplace", fetch=FetchType.EAGER)
-    private List<Employee> employeeList;
+    @OneToMany(mappedBy = "workplace", fetch = FetchType.LAZY)
+    private List<Employee> employeeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "workplace", fetch = FetchType.LAZY)
+    private List<Equipment> equipmentList = new ArrayList<>();
 }

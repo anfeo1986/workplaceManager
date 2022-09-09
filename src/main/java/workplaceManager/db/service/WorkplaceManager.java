@@ -1,8 +1,10 @@
 package workplaceManager.db.service;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import workplaceManager.db.domain.Employee;
 import workplaceManager.db.domain.Workplace;
@@ -10,12 +12,18 @@ import workplaceManager.db.domain.Workplace;
 import java.util.List;
 
 @Repository
+@Service
 public class WorkplaceManager extends EntityManager<Workplace> {
 
     @Transactional
     public List<Workplace> getWorkplaceList() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Workplace as workplace order by workplace.title asc ").list();
+
+        List<Workplace> workplaceList = session.createQuery("from Workplace as workplace order by workplace.title asc ").list();
+        workplaceList.stream().forEach(workplace -> initializeWorkplace(workplace));
+
+        //return session.createQuery("from Workplace as workplace order by workplace.title asc ").list();
+        return workplaceList;
     }
 
     @Transactional
@@ -23,6 +31,7 @@ public class WorkplaceManager extends EntityManager<Workplace> {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Workplace as workplace where workplace.id=" + id);
         Workplace workplace = (Workplace) query.uniqueResult();
+        initializeWorkplace(workplace);
         return workplace;
     }
 
@@ -31,6 +40,14 @@ public class WorkplaceManager extends EntityManager<Workplace> {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Workplace as workplace where workplace.title='" + title + "'");
         Workplace workplace = (Workplace) query.uniqueResult();
+        initializeWorkplace(workplace);
         return workplace;
+    }
+
+    protected void initializeWorkplace(Workplace workplace) {
+        if(workplace != null) {
+            Hibernate.initialize(workplace.getEmployeeList());
+            Hibernate.initialize(workplace.getEquipmentList());
+        }
     }
 }

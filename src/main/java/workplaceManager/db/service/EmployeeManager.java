@@ -1,5 +1,6 @@
 package workplaceManager.db.service;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,10 @@ public class EmployeeManager extends EntityManager<Employee> {
     @Transactional
     public List<Employee> getEmployeeList() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Employee as employee order by employee.name asc").list();
+        List<Employee> employeeList = session.createQuery("from Employee as employee order by employee.name asc").list();
+        employeeList.stream().forEach(employee -> initializeEmployee(employee));
+
+        return employeeList;
     }
 
     @Transactional
@@ -23,6 +27,7 @@ public class EmployeeManager extends EntityManager<Employee> {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Employee as employee where employee.id=" + id);
         Employee employee = (Employee) query.uniqueResult();
+        initializeEmployee(employee);
         return employee;
     }
 
@@ -31,6 +36,13 @@ public class EmployeeManager extends EntityManager<Employee> {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Employee as employee where employee.name='" + name + "'");
         Employee employee = (Employee) query.uniqueResult();
+        initializeEmployee(employee);
         return employee;
+    }
+
+    protected void initializeEmployee(Employee employee) {
+        if(employee != null) {
+            Hibernate.initialize(employee.getAccounting1СList());
+        }
     }
 }

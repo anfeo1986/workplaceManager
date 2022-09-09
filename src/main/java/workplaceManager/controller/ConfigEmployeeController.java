@@ -45,14 +45,15 @@ public class ConfigEmployeeController {
         if (redirect == null) {
             redirect = "";
         }
-        modelAndView.addObject("redirect", "/" + redirect);
+        modelAndView.addObject("redirect", redirect);
 
         return modelAndView;
     }
 
     @PostMapping("/addEmployeePost")
     public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee,
-                                    @ModelAttribute("workplace_id") Long workplaceId) {
+                                    @ModelAttribute("workplace_id") Long workplaceId,
+                                    @RequestParam(name = "redirect", required = false) String redirect) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/config/addUpdateEmployee");
 
@@ -75,6 +76,12 @@ public class ConfigEmployeeController {
         List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
         modelAndView.addObject("workplaceList", workplaceList);
 
+        if (redirect == null) {
+            redirect = "";
+        }
+        modelAndView.addObject("redirect", redirect);
+
+
         return modelAndView;
     }
 
@@ -95,7 +102,7 @@ public class ConfigEmployeeController {
         } else {
             employee.setWorkplace(workplace);
             employeeManager.save(employee);
-            modelAndView.setViewName("redirect:" + redirect);
+            modelAndView.setViewName("redirect:/" + redirect);
         }
 
         List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
@@ -104,7 +111,8 @@ public class ConfigEmployeeController {
         if (redirect == null) {
             redirect = "";
         }
-        modelAndView.addObject("redirect", "/" + redirect);
+        modelAndView.addObject("redirect", redirect);
+
 
         return modelAndView;
     }

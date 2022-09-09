@@ -2,11 +2,9 @@ package workplaceManager.db.domain;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Entity
 @Data
-public class Monitor extends Equipment {
-
-
+public class Printer extends Equipment {
 }

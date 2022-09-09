@@ -3,17 +3,16 @@ package workplaceManager.db.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
-//@Entity
+@Entity
 @Data
-public class Accounting1С {
-   /* @Id
+public class Accounting1C implements Serializable {
+    @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column
-    private String uid;
 
     @Column
     private String inventoryNumber;
@@ -21,7 +20,7 @@ public class Accounting1С {
     @Column
     private String title;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Monitor entity;*/
-
+    @ManyToOne(optional = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee")
+    private Employee employee;
 }
