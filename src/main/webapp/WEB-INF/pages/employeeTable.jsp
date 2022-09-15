@@ -15,7 +15,7 @@
         <tr>
             <td>${employee.id}</td>
 
-            <td><a href="/config/employee/addUpdateEmployee?id=${employee.id}">${employee.name}</a></td>
+            <td><a href="/config/employee/addUpdateEmployee?id=${employee.id}&redirect=employee">${employee.name}</a></td>
 
             <td>${employee.post}</td>
 

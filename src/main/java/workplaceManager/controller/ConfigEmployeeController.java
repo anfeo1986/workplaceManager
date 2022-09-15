@@ -31,7 +31,7 @@ public class ConfigEmployeeController {
     @GetMapping("/addUpdateEmployee")
     public ModelAndView addUpdateEmployee(@RequestParam(name = "id", required = false) Long employeeId,
                                           @RequestParam(name = "redirect", required = false) String redirect) {
-        ModelAndView modelAndView = new ModelAndView("/config/addUpdateEmployee");
+        ModelAndView modelAndView = new ModelAndView("/config/employee");
 
         Employee employee = new Employee();
         if (employeeId != null && employeeId > 0) {
@@ -55,7 +55,7 @@ public class ConfigEmployeeController {
                                     @ModelAttribute("workplace_id") Long workplaceId,
                                     @RequestParam(name = "redirect", required = false) String redirect) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/config/addUpdateEmployee");
+        modelAndView.setViewName("/config/employee");
 
         Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
 
@@ -81,7 +81,6 @@ public class ConfigEmployeeController {
         }
         modelAndView.addObject("redirect", redirect);
 
-
         return modelAndView;
     }
 
@@ -96,7 +95,7 @@ public class ConfigEmployeeController {
         Employee employeeFromDB = employeeManager.getEmployeeByName(employee.getName());
         if (employeeFromDB != null && employeeFromDB.getId() != employee.getId()) {
             employee.setWorkplace(workplace);
-            modelAndView.setViewName("/config/addUpdateEmployee");
+            modelAndView.setViewName("/config/employee");
             modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
             modelAndView.addObject("employee", employee);
         } else {

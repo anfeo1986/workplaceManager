@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 
 @Entity
 @Data
-@DiscriminatorValue(TypeEquipment.PRINTER)
-public class Printer extends Equipment<Printer> {
+@DiscriminatorValue(TypeEquipment.SCANNER)
+public class Scanner extends Equipment<Scanner>{
+
 }

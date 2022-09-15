@@ -4,7 +4,9 @@
 <html>
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
+
     <title>JSP Templates</title>
+
 </head>
 <!--<body background='graphics/background.jpg'>-->
 <body>
@@ -17,12 +19,47 @@
 
     <tr valign='top' align='center'>
         <c:if test="${page == 'employee'}">
-            <td><%@include file='employeeTable.jsp' %></td>
+            <td>
+                <%@include file='employeeTable.jsp' %>
+            </td>
         </c:if>
         <c:if test="${page == 'workplace'}">
-            <td><%@include file='workplaceTable.jsp' %></td>
+            <td>
+                <%@include file='workplaceTable.jsp' %>
+            </td>
+        </c:if>
+        <c:if test="${page == 'accounting1c'}">
+            <td>
+                <%@include file="accounting1cTable.jsp"%>
+            </td>
+        </c:if>
+        <c:if test="${page == 'monitor'}">
+            <td>
+                <%@include file="equipmentTable.jsp"%>
+            </td>
+        </c:if>
+        <c:if test="${page == 'printer'}">
+            <td>
+                <%@include file="equipmentTable.jsp"%>
+            </td>
+        </c:if>
+        <c:if test="${page == 'scanner'}">
+            <td>
+                <%@include file="equipmentTable.jsp"%>
+            </td>
+        </c:if>
+        <c:if test="${page == 'mfd'}">
+            <td>
+                <%@include file="equipmentTable.jsp"%>
+            </td>
+        </c:if>
+        <c:if test="${page == 'ups'}">
+            <td>
+                <%@include file="equipmentTable.jsp"%>
+            </td>
         </c:if>
     </tr>
 </table>
+
 </body>
 </html>

@@ -10,8 +10,8 @@ with (
     );
 
 create table Equipment (
-    typeEquipment varchar(100) not null,
     id bigint,
+    typeEquipment varchar(100) not null,
     manufacturer varchar(255),
     model varchar(255),
     uid varchar(255),

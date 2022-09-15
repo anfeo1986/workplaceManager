@@ -8,9 +8,9 @@
         <td><a href="/monitor" class="button">Мониторы</a></td>
         <td><a href="/mfd" class="button">МФУ</a> </td>
         <td><a href="/printer" class="button">Принтеры</a></td>
-        <td><a href="/scaner" class="button">Сканеры</a> </td>
+        <td><a href="/scanner" class="button">Сканеры</a> </td>
         <td><a href="/ups" class="button">ИБП</a> </td>
-        <td><a href="/net" class="button">Сетевое оборудование</a> </td>
         <td><a href="/employee" class="button">Сотрудники</a></td>
+        <td><a href="/accounting1c" class="button">Бухгалтерия</a> </td>
     </tr>
 </table>

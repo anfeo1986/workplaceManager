@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class Monitor extends Equipment {
-
-
+@DiscriminatorValue(TypeEquipment.MONITOR)
+public class Monitor extends Equipment<Monitor> {
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,4 +24,7 @@ public class Accounting1C implements Serializable {
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "employee")
     private Employee employee;
+
+    @OneToMany(mappedBy = "accounting1С", fetch = FetchType.LAZY)
+    private List<Equipment> equipmentList = new ArrayList<>();
 }

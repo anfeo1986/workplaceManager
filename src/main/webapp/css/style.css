@@ -36,3 +36,15 @@ a.button:active {
     background: rgb(33,147,90);
     box-shadow: 0 3px rgb(33,147,90) inset;
 }
+
+#form[data-state="seamen"] .hide-if-seamen {
+    display: none;
+}
+
+#form[data-state="crewing"] .hide-if-crewing {
+    display: none;
+}
+
+#form[data-state="shipowner"] .hide-if-shipowner {
+    display: none;
+}

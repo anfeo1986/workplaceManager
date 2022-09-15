@@ -28,7 +28,7 @@ public class ConfigWorkplaceController {
     @GetMapping("/addUpdateWorkplace")
     public ModelAndView addWorkplace(@RequestParam(name = "id", required = false) Long workplaceId,
                                      @RequestParam(name = "redirect", required = false) String redirect) {
-        ModelAndView modelAndView = new ModelAndView("/config/addUpdateWorkplace");
+        ModelAndView modelAndView = new ModelAndView("/config/workplace");
 
         Workplace workplace = new Workplace();
         if(workplaceId != null && workplaceId > 0) {
@@ -48,7 +48,7 @@ public class ConfigWorkplaceController {
     public ModelAndView addWorkplace(@ModelAttribute("workplace") Workplace workplace,
                                      @ModelAttribute("redirect") String redirect) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/config/addUpdateWorkplace");
+        modelAndView.setViewName("/config/workplace");
 
         Workplace workplaceFromDb = workplaceManager.getWorkplaceByTitle(workplace.getTitle());
         if(workplaceFromDb != null) {
@@ -76,7 +76,7 @@ public class ConfigWorkplaceController {
 
         Workplace workplaceFromDb = workplaceManager.getWorkplaceByTitle(workplace.getTitle());
         if(workplaceFromDb != null && workplaceFromDb.getId() != workplace.getId()) {
-            modelAndView.setViewName("/config/addUpdateWorkplace");
+            modelAndView.setViewName("/config/workplace");
             modelAndView.addObject("error", String.format("%s уже существует", workplace.getTitle()));
             modelAndView.addObject("workplace", workplace);
         } else {

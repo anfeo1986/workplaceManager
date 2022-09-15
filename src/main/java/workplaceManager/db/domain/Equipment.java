@@ -13,22 +13,22 @@ import java.io.Serializable;
         name = "typeEquipment",
         discriminatorType = DiscriminatorType.STRING
 )
-@DiscriminatorValue(value = "equipment")
+@DiscriminatorValue(value = TypeEquipment.EQUIPMENT)
 @Data
-public class Equipment implements Serializable {
+public class Equipment<T> implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "uid")
-    public String uid = "";
+    private String uid = "";
 
     @Column(name = "manufacturer")
-    public String manufacturer = "";
+    private String manufacturer = "";
 
     @Column(name = "model")
-    public String model = "";
+    private String model = "";
 
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "accounting1С")
@@ -37,4 +37,33 @@ public class Equipment implements Serializable {
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "workplace")
     private Workplace workplace;
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s %s)", uid, manufacturer, model);
+    }
+
+    public T getChildFromEquipment(String typeEquipment) {
+        Equipment equipment = new Equipment();
+
+        if(TypeEquipment.MONITOR.equals(typeEquipment)) {
+            equipment = new Monitor();
+        } else if(TypeEquipment.PRINTER.equals(typeEquipment)) {
+            equipment = new Printer();
+        } else if(TypeEquipment.SCANNER.equals(typeEquipment)) {
+            equipment = new Scanner();
+        } else if(TypeEquipment.MFD.equals(typeEquipment)) {
+            equipment = new Mfd();
+        } else if(TypeEquipment.UPS.equals(typeEquipment)) {
+            equipment = new Ups();
+        }
+
+        equipment.setUid(this.getUid());
+        equipment.setManufacturer(this.getManufacturer());
+        equipment.setModel(this.getModel());
+        equipment.setWorkplace(this.getWorkplace());
+        equipment.setAccounting1С(this.getAccounting1С());
+
+        return (T) equipment;
+    }
 }
