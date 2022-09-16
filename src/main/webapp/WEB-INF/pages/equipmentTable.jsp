@@ -8,17 +8,24 @@
 <table>
     <tr>
         <th>id</th>
-        <th>UID</th>
-        <th>Модель</th>
+        <th>${title}</th>
         <th>Рабочее место</th>
         <th>Бухгалтерия</th>
     </tr>
+    <c:set var="count" value="0"/>
     <c:forEach var="equipment" items="${equipmentList}">
         <tr>
-            <td>${equipment.id}</td>
-            <td><a href="/config/equipment/addUpdateEquipment?id=${equipment.id}&redirect=${page}&typeEquipment=${typeEquipment}">${equipment.uid}</a></td>
-            <td><a href="/config/equipment/addUpdateEquipment?id=${equipment.id}&redirect=${page}&typeEquipment=${typeEquipment}">${equipment.manufacturer} ${equipment.model}</a></td>
-            <td/>
+            <td>${count}</td>
+
+
+            <td><a href="/config/equipment/addUpdateEquipment?id=${equipment.id}&redirect=${page}&typeEquipment=${typeEquipment}">${equipment}</a></td>
+            <c:if test="${!empty equipment.workplace}">
+                <td>
+                    <a href="/config/workplace/addUpdateWorkplace?id=${equipment.workplace.id}&redirect=${page}&typeEquipment=${typeEquipment}">
+                        ${equipment.workplace.title}
+                    </a>
+                </td>
+            </c:if>
             <td/>
             <td><a href="/config/equipment/deleteEquipment?id=${equipment.id}&redirect=${page}&typeEquipment=${typeEquipment}">Удалить</a> </td>
         </tr>

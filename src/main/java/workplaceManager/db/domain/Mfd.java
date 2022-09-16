@@ -10,4 +10,8 @@ import javax.persistence.Entity;
 @Data
 @DiscriminatorValue(TypeEquipment.MFD)
 public class Mfd extends Equipment<Mfd>{
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

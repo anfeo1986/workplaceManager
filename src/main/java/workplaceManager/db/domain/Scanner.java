@@ -9,5 +9,8 @@ import javax.persistence.Entity;
 @Data
 @DiscriminatorValue(TypeEquipment.SCANNER)
 public class Scanner extends Equipment<Scanner>{
-
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

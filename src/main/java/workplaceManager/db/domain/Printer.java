@@ -9,4 +9,8 @@ import javax.persistence.Entity;
 @Data
 @DiscriminatorValue(TypeEquipment.PRINTER)
 public class Printer extends Equipment<Printer> {
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

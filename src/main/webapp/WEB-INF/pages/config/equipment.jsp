@@ -38,6 +38,13 @@
     <c:if test="${!empty equipment.model}">
         <c:set var="model" value="${equipment.model}"/>
     </c:if>
+
+    <c:if test="${empty equipment.workplace}">
+        <c:set var="workplaceId" value=""/>
+    </c:if>
+    <c:if test="${!empty equipment.workplace}">
+        <c:set var="workplaceId" value="${equipment.workplace.id}"/>
+    </c:if>
 </head>
 <body>
 <c:if test="${!empty error}">
@@ -52,14 +59,35 @@
         <input type="hidden" name="id" value="${equipmentId}">
     </c:if>
 
-    <label for="uid">UID</label>
-    <input type="text" name="uid" id="uid" value="${uid}">
+    <p>
+        <label for="uid">UID</label>
+        <input type="text" name="uid" id="uid" value="${uid}">
+    </p>
 
-    <label for="manufacturer">Производитель</label>
-    <input type="text" name="manufacturer" id="manufacturer" value="${manufacturer}">
+    <p>
+        <label for="manufacturer">Производитель</label>
+        <input type="text" name="manufacturer" id="manufacturer" value="${manufacturer}">
+    </p>
 
-    <label for="model">Модель</label>
-    <input type="text" name="model" id="model" value="${model}">
+    <p>
+        <label for="model">Модель</label>
+        <input type="text" name="model" id="model" value="${model}">
+    </p>
+
+    <p>
+        <label>Рабочее место</label>
+        <select name="workplace_id">
+            <option value="null"/>
+            <c:forEach var="workplace" items="${workplaceList}">
+                <c:if test="${workplaceId == workplace.id}">
+                    <option selected value="${workplace.id}">${workplace.title}</option>
+                </c:if>
+                <c:if test="${workplaceId != workplace.id}">
+                    <option value="${workplace.id}">${workplace.title}</option>
+                </c:if>
+            </c:forEach>
+        </select>
+    </p>
 
     <p>
         <input type="submit" value="${buttonTitle}">

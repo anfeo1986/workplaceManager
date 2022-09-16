@@ -9,4 +9,8 @@ import javax.persistence.Entity;
 @Data
 @DiscriminatorValue(TypeEquipment.UPS)
 public class Ups extends Equipment<Ups>{
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

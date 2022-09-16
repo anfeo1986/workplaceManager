@@ -3,6 +3,14 @@
 
 <html>
 <head>
+    <script type="text/javascript">
+        function changeFunc() {
+            var selectBox = document.getElementById("selectBox");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            alert(selectedValue);
+        }
+    </script>
+
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
 
     <title>JSP Templates</title>
@@ -10,6 +18,12 @@
 </head>
 <!--<body background='graphics/background.jpg'>-->
 <body>
+
+<select id="selectBox" onchange="changeFunc();">
+    <option value="1">Option #1</option>
+    <option value="2">Option #2</option>
+</select>
+
 <table>
     <tr valign='top' align='center'>
         <td>

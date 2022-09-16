@@ -8,4 +8,9 @@ import javax.persistence.*;
 @Data
 @DiscriminatorValue(TypeEquipment.MONITOR)
 public class Monitor extends Equipment<Monitor> {
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

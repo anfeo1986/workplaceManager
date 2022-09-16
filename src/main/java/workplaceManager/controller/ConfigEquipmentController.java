@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.EquipmentManager;
+import workplaceManager.db.service.WorkplaceManager;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/config/equipment")
@@ -18,8 +21,15 @@ public class ConfigEquipmentController {
         this.equipmentManager = equipmentManager;
     }
 
+    WorkplaceManager workplaceManager;
+
+    @Autowired
+    public void setWorkplaceManager(WorkplaceManager workplaceManager) {
+        this.workplaceManager = workplaceManager;
+    }
+
     @GetMapping("/addUpdateEquipment")
-    public ModelAndView getFromAddUpdateEquipment(@RequestParam(name = "id", required = false) Long id,
+    public ModelAndView getFormAddUpdateEquipment(@RequestParam(name = "id", required = false) Long id,
                                                   @RequestParam(name = "typeEquipment") String typeEquipment,
                                                   @RequestParam(name = "redirect", required = false) String redirect) {
         ModelAndView modelAndView = new ModelAndView("/config/equipment");
@@ -30,6 +40,9 @@ public class ConfigEquipmentController {
         }
         modelAndView.addObject("equipment", equipment);
         modelAndView.addObject("typeEquipment", typeEquipment);
+
+        List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
+        modelAndView.addObject("workplaceList", workplaceList);
 
         if (redirect == null) {
             redirect = "";
@@ -42,8 +55,14 @@ public class ConfigEquipmentController {
     @PostMapping("/addEquipmentPost")
     public ModelAndView addEquipment(@ModelAttribute("equipment") Equipment equipment,
                                      @RequestParam(value = "typeEquipment") String typeEquipment,
-                                     @RequestParam(name = "redirect", required = false) String redirect) {
+                                     @RequestParam(name = "redirect", required = false) String redirect,
+                                     @RequestParam(name = "workplace_id", required = false) Long workplaceId) {
         ModelAndView modelAndView = new ModelAndView("/config/equipment");
+
+        if(equipment != null && workplaceId > 0) {
+            Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
+            equipment.setWorkplace(workplace);
+        }
 
         Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid());
 
@@ -83,6 +102,7 @@ public class ConfigEquipmentController {
 
     @PostMapping("/updateEquipmentPost")
     public ModelAndView updateEquipment(@ModelAttribute("equipment") Equipment equipment,
+                                        @RequestParam(value = "workplace_id", required = false) Long workplaceId,
                                         @RequestParam(value = "typeEquipment") String typeEquipment,
                                         @RequestParam(name = "redirect", required = false) String redirect) {
         ModelAndView modelAndView = new ModelAndView();
@@ -94,6 +114,10 @@ public class ConfigEquipmentController {
             modelAndView.addObject("equipment", equipment);
             modelAndView.addObject("typeEquipment", typeEquipment);
         } else {
+            if(equipment != null && workplaceId > 0) {
+                Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
+                equipment.setWorkplace(workplace);
+            }
             equipmentManager.save(equipment);
             modelAndView.setViewName("redirect:/" + redirect);
         }
