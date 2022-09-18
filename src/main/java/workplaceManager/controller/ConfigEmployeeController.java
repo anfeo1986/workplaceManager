@@ -119,12 +119,12 @@ public class ConfigEmployeeController {
     @GetMapping("/deleteEmployee")
     public ModelAndView deleteEmployee(@RequestParam(name = "id") Long id) {
         Employee employee = employeeManager.getEmployeeById(id);
-        employee.setWorkplace(null);
-        employeeManager.save(employee);
         employeeManager.delete(employee);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/employee");
         return modelAndView;
     }
+
+
 }

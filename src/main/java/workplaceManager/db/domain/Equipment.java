@@ -32,7 +32,7 @@ public class Equipment<T> implements Serializable {
 
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "accounting1С")
-    private Accounting1C accounting1С;
+    private Accounting1C accounting1C;
 
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "workplace")
@@ -62,7 +62,7 @@ public class Equipment<T> implements Serializable {
         equipment.setManufacturer(this.getManufacturer());
         equipment.setModel(this.getModel());
         equipment.setWorkplace(this.getWorkplace());
-        equipment.setAccounting1С(this.getAccounting1С());
+        equipment.setAccounting1C(this.getAccounting1C());
 
         return (T) equipment;
     }

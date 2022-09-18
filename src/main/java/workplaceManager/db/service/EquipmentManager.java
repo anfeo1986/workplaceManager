@@ -107,4 +107,12 @@ public class EquipmentManager extends EntityManager<Equipment> {
 
         return equipment;
     }
+
+    @Override
+    public void delete(Equipment equipment) {
+        equipment.setWorkplace(null);
+        equipment.setAccounting1C(null);
+        super.save(equipment);
+        super.delete(equipment);
+    }
 }

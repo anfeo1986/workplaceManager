@@ -7,13 +7,13 @@
     <c:if test="${employee.id > 0}">
         <title>Редактирование сотрудника</title>
         <c:url value="/config/employee/updateEmployeePost" var="url"/>
-        <c:set var="employeeId" value="${employee.id}"/>
+        <c:set var="employee_id" value="${employee.id}"/>
         <c:set var="buttonTitle" value="Редактировать"/>
     </c:if>
     <c:if test="${employee.id <= 0}">
         <title>Добавление сотрудника</title>
         <c:url value="/config/employee/addEmployeePost" var="url"/>
-        <c:set var="employeeId" value="0"/>
+        <c:set var="employee_id" value="0"/>
         <c:set var="buttonTitle" value="Добавить"/>
     </c:if>
 
@@ -49,8 +49,8 @@
 </c:if>
 
 <form action="${url}" method="post">
-    <c:if test="${employeeId > 0}">
-        <input type="hidden" name="id" value="${employeeId}">
+    <c:if test="${employee_id > 0}">
+        <input type="hidden" name="id" value="${employee_id}">
     </c:if>
 
     <label for="name">ФИО</label>

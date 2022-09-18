@@ -3,6 +3,27 @@
 
 <html>
 <head>
+    <script type="text/javascript">
+
+        function changeFunc() {
+            if(document.getElementById("noRecord").checked) {
+                document.getElementById("selectAccounting1CId").disabled=true;
+                document.getElementById("accounting1CInventoryNumber").disabled=true;
+                document.getElementById("accounting1CTitle").disabled=true;
+                document.getElementById("selectEmployeeId").disabled=true;
+            } else if(document.getElementById("useRecord").checked) {
+                document.getElementById("selectAccounting1CId").disabled=false;
+                document.getElementById("accounting1CInventoryNumber").disabled=true;
+                document.getElementById("accounting1CTitle").disabled=true;
+                document.getElementById("selectEmployeeId").disabled=true;
+            } else if(document.getElementById("addNewRecord").checked) {
+                document.getElementById("selectAccounting1CId").disabled=true;
+                document.getElementById("accounting1CInventoryNumber").disabled=false;
+                document.getElementById("accounting1CTitle").disabled=false;
+                document.getElementById("selectEmployeeId").disabled=false;
+            }
+        }
+    </script>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
 
     <c:if test="${equipment.id > 0}">
@@ -45,6 +66,13 @@
     <c:if test="${!empty equipment.workplace}">
         <c:set var="workplaceId" value="${equipment.workplace.id}"/>
     </c:if>
+
+    <c:if test="${empty equipment.accounting1C}">
+        <c:set var="accounting1СId" value=""/>
+    </c:if>
+    <c:if test="${!empty equipment.accounting1C}">
+        <c:set var="accounting1СId" value="${equipment.accounting1C.id}"/>
+    </c:if>
 </head>
 <body>
 <c:if test="${!empty error}">
@@ -77,7 +105,7 @@
     <p>
         <label>Рабочее место</label>
         <select name="workplace_id">
-            <option value="null"/>
+            <option value="-1"/>
             <c:forEach var="workplace" items="${workplaceList}">
                 <c:if test="${workplaceId == workplace.id}">
                     <option selected value="${workplace.id}">${workplace.title}</option>
@@ -86,6 +114,41 @@
                     <option value="${workplace.id}">${workplace.title}</option>
                 </c:if>
             </c:forEach>
+        </select>
+    </p>
+
+    <p>
+        <input type="radio" name="accounting1CRadio" id="noRecord" value="noRecord" onchange="changeFunc()"> Не привязывать к бухгалтерии
+    </p>
+
+    <p>
+        <input type="radio" name="accounting1CRadio" id="useRecord" value="useRecord" checked onchange="changeFunc()"> Использовать существующую запись
+        <select name="selectAccounting1CId" id="selectAccounting1CId" onchange="changeFunc();">
+            <option value="-1"/>
+            <c:forEach var="accounting1C" items="${accounting1CList}">
+                <c:if test="${accounting1СId == accounting1C.id}">
+                    <option selected value="${accounting1C.id}">${accounting1C}</option>
+                </c:if>
+                <c:if test="${accounting1СId != accounting1C.id}">
+                    <option value="${accounting1C.id}">${accounting1C}</option>
+                </c:if>
+            </c:forEach>
+        </select>
+    </p>
+    <p><input type="radio" name="accounting1CRadio" id="addNewRecord" value="addNewRecord" onchange="changeFunc()"> Добавить новую запись</p>
+    <p>
+        <label for="accounting1CInventoryNumber">Инвентарный номер</label>
+        <input type="text" name="accounting1CInventoryNumber" id="accounting1CInventoryNumber" disabled>
+
+        <label for="accounting1CTitle">Название</label>
+        <textarea name="accounting1CTitle" id="accounting1CTitle" disabled></textarea>
+
+        <label for="selectEmployeeId">Материально-ответственное лицо</label>
+        <select name="employeeId" id="selectEmployeeId" disabled>
+            <option value="-1"/>
+            <c:forEach var="employee" items="${employeeList}">
+                <option value="${employee.id}">${employee.name}</option>
+            </c:forEach>"
         </select>
     </p>
 

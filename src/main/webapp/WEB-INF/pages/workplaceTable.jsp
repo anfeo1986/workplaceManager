@@ -11,19 +11,34 @@
 <table>
     <tr>
         <th/>
-        <th>Название</th>
-        <th><a href="/employee">Сотрудники</a></th>
-        <th>Компьютеры</th>
-        <th>Мониторы</th>
-        <th>МФУ</th>
-        <th>Принтеры</th>
-        <th>Сканеры</th>
-        <th>ИБП</th>
+        <th><h1>Название</h1></th>
+        <th><h1><a href="/employee">Сотрудники</a></h1></th>
+        <th><h1>Компьютеры</h1></th>
+        <th>
+            <p><h1>Мониторы</h1></p>
+            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=monitor">Добавить монитор</a></p>
+        </th>
+        <th>
+            <p><h1>МФУ</h1></p>
+            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=mfd">Добавить МФУ</a></p>
+        </th>
+        <th>
+            <p><h1>Принтеры</h1></p>
+            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=printer">Добавить принтер</a></p>
+        </th>
+        <th>
+            <p><h1>Сканеры</h1></p>
+            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=scanner">Добавить сканер</a></p>
+        </th>
+        <th>
+            <p><h1>ИБП</h1></p>
+            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=ups">Добавить ИБП</a></p>
+        </th>
     </tr>
 
     <%
         List<Workplace> workplaceList = (List<Workplace>) request.getAttribute("workplaceList");
-        int i = 0;
+        int count = 1;
         for (Workplace workplace : workplaceList) {
             List<Monitor> monitorList = new ArrayList<>();
             List<Printer> printerList = new ArrayList<>();
@@ -53,8 +68,8 @@
 
             out.println("<tr>");
 
-            out.println("<td>" + i + "</td>");
-            i++;
+            out.println("<td>" + count + "</td>");
+            count++;
 
             out.println("<td><a href=\"/config/workplace/addUpdateWorkplace?id=" + workplace.getId() + "\">" + workplace.getTitle() + "</a></td>");
 

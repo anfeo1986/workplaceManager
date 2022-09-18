@@ -45,4 +45,11 @@ public class EmployeeManager extends EntityManager<Employee> {
             Hibernate.initialize(employee.getAccounting1СList());
         }
     }
+
+    @Override
+    public void delete(Employee employee) {
+        employee.setWorkplace(null);
+        super.save(employee);
+        super.delete(employee);
+    }
 }

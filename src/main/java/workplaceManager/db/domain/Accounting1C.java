@@ -12,7 +12,7 @@ import java.util.List;
 public class Accounting1C implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column
@@ -25,6 +25,21 @@ public class Accounting1C implements Serializable {
     @JoinColumn(name = "employee")
     private Employee employee;
 
-    @OneToMany(mappedBy = "accounting1С", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "accounting1C", fetch = FetchType.LAZY)
     private List<Equipment> equipmentList = new ArrayList<>();
+
+    public Accounting1C() {
+
+    }
+
+    public Accounting1C(String inventoryNumber, String title, Employee employee) {
+        this.inventoryNumber = inventoryNumber;
+        this.title = title;
+        this.employee = employee;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s, %s)", title, employee == null ? "" : employee.getName(), inventoryNumber);
+    }
 }

@@ -3,14 +3,6 @@
 
 <html>
 <head>
-    <script type="text/javascript">
-        function changeFunc() {
-            var selectBox = document.getElementById("selectBox");
-            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-            alert(selectedValue);
-        }
-    </script>
-
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
 
     <title>JSP Templates</title>
@@ -18,62 +10,64 @@
 </head>
 <!--<body background='graphics/background.jpg'>-->
 <body>
+<header>
+    <div align="center">
+        <%@include file='header.jsp' %>
+    </div>
+</header>
 
-<select id="selectBox" onchange="changeFunc();">
-    <option value="1">Option #1</option>
-    <option value="2">Option #2</option>
-</select>
-
-<table>
-    <tr valign='top' align='center'>
-        <td>
-            <%@include file='header.jsp' %>
-        </td>
-    </tr>
-
-    <tr valign='top' align='center'>
-        <c:if test="${page == 'employee'}">
-            <td>
-                <%@include file='employeeTable.jsp' %>
-            </td>
-        </c:if>
-        <c:if test="${page == 'workplace'}">
-            <td>
-                <%@include file='workplaceTable.jsp' %>
-            </td>
-        </c:if>
-        <c:if test="${page == 'accounting1c'}">
-            <td>
-                <%@include file="accounting1cTable.jsp"%>
-            </td>
-        </c:if>
-        <c:if test="${page == 'monitor'}">
-            <td>
-                <%@include file="equipmentTable.jsp"%>
-            </td>
-        </c:if>
-        <c:if test="${page == 'printer'}">
-            <td>
-                <%@include file="equipmentTable.jsp"%>
-            </td>
-        </c:if>
-        <c:if test="${page == 'scanner'}">
-            <td>
-                <%@include file="equipmentTable.jsp"%>
-            </td>
-        </c:if>
-        <c:if test="${page == 'mfd'}">
-            <td>
-                <%@include file="equipmentTable.jsp"%>
-            </td>
-        </c:if>
-        <c:if test="${page == 'ups'}">
-            <td>
-                <%@include file="equipmentTable.jsp"%>
-            </td>
-        </c:if>
-    </tr>
-</table>
+<div>
+    <table>
+        <%--  <tr valign='top' align='center'>
+              <td>
+                  <%@include file='header.jsp' %>
+              </td>
+          </tr>
+      --%>
+        <tr valign='top' align='center'>
+            <c:if test="${page == 'employee'}">
+                <td>
+                    <%@include file='employeeTable.jsp' %>
+                </td>
+            </c:if>
+            <c:if test="${page == 'workplace'}">
+                <td>
+                    <%@include file='workplaceTable.jsp' %>
+                </td>
+            </c:if>
+            <c:if test="${page == 'accounting1c'}">
+                <td>
+                    <%@include file="accounting1cTable.jsp" %>
+                </td>
+            </c:if>
+            <c:if test="${page == 'monitor'}">
+                <td>
+                    <%@include file="equipmentTable.jsp" %>
+                </td>
+            </c:if>
+            <c:if test="${page == 'printer'}">
+                <td>
+                    <%@include file="equipmentTable.jsp" %>
+                </td>
+            </c:if>
+            <c:if test="${page == 'scanner'}">
+                <td>
+                    <%@include file="equipmentTable.jsp" %>
+                </td>
+            </c:if>
+            <c:if test="${page == 'mfd'}">
+                <td>
+                    <%@include file="equipmentTable.jsp" %>
+                </td>
+            </c:if>
+            <c:if test="${page == 'ups'}">
+                <td>
+                    <%@include file="equipmentTable.jsp" %>
+                </td>
+            </c:if>
+        </tr>
+    </table>
+</div>
 
 </body>
 </html>
