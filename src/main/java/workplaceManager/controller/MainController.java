@@ -103,6 +103,20 @@ public class MainController {
         return modelAndView;
     }
 
+    @GetMapping("/computer")
+    public ModelAndView getComputerForm() {
+        ModelAndView modelAndView = new ModelAndView("mainPage");
+
+        List<Computer> equipmentList = equipmentManager.getComputerList();
+
+        modelAndView.addObject("equipmentList", equipmentList);
+        modelAndView.addObject("page", TypePage.computer.toString());
+        modelAndView.addObject("typeEquipment", TypeEquipment.COMPUTER);
+        modelAndView.addObject("title", "Компьютеры");
+
+        return modelAndView;
+    }
+
     @GetMapping("/monitor")
     public ModelAndView getMonitors() {
         ModelAndView modelAndView = new ModelAndView("mainPage");

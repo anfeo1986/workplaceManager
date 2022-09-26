@@ -25,6 +25,11 @@
           </tr>
       --%>
         <tr valign='top' align='center'>
+            <c:if test="${page == 'computer'}">
+                <td>
+                    <%@include file="computerTable.jsp" %>
+                </td>
+            </c:if>
             <c:if test="${page == 'employee'}">
                 <td>
                     <%@include file='employeeTable.jsp' %>

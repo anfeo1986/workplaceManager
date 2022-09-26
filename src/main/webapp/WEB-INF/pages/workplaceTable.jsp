@@ -40,6 +40,7 @@
         List<Workplace> workplaceList = (List<Workplace>) request.getAttribute("workplaceList");
         int count = 1;
         for (Workplace workplace : workplaceList) {
+            List<Computer> computerList1 = new ArrayList<>();
             List<Monitor> monitorList = new ArrayList<>();
             List<Printer> printerList = new ArrayList<>();
             List<Scanner> scannerList = new ArrayList<>();
@@ -48,6 +49,9 @@
 
             if (!workplace.getEquipmentList().isEmpty()) {
                 for (Equipment equipment : workplace.getEquipmentList()) {
+                    if(equipment instanceof Computer) {
+                        computerList1.add((Computer) equipment);
+                    }
                     if (equipment instanceof Monitor) {
                         monitorList.add((Monitor) equipment);
                     }
@@ -83,6 +87,10 @@
 
             //компьютеры
             out.println("<td>");
+            for (Computer computer : computerList1) {
+                out.println("<p><a href=\"/config/equipment/addUpdateEquipment?id=" + computer.getId() +
+                        "&redirect=workplace&typeEquipment=computer\">" + computer + "</a></p>");
+            }
             out.println("</td>");
 
             //мониторы

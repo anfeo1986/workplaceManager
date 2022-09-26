@@ -46,7 +46,9 @@ public class Equipment<T> implements Serializable {
     public T getChildFromEquipment(String typeEquipment) {
         Equipment equipment = new Equipment();
 
-        if(TypeEquipment.MONITOR.equals(typeEquipment)) {
+        if(TypeEquipment.COMPUTER.equals(typeEquipment)) {
+            equipment = new Computer();
+        } else if(TypeEquipment.MONITOR.equals(typeEquipment)) {
             equipment = new Monitor();
         } else if(TypeEquipment.PRINTER.equals(typeEquipment)) {
             equipment = new Printer();
@@ -58,6 +60,7 @@ public class Equipment<T> implements Serializable {
             equipment = new Ups();
         }
 
+        equipment.setId(this.getId());
         equipment.setUid(this.getUid());
         equipment.setManufacturer(this.getManufacturer());
         equipment.setModel(this.getModel());

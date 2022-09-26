@@ -1,5 +1,6 @@
 package workplaceManager.db.service;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,22 @@ public class EquipmentManager extends EntityManager<Equipment> {
                 "order by equipment.manufacturer, equipment.model ").list();
 
         return equipmentList;
+    }
+
+    @Transactional
+    public List<Computer> getComputerList() {
+        List<Equipment> equipmentAllList = getEquipmentList();
+
+        List<Computer> computerList = new ArrayList<>();
+        equipmentAllList.stream().forEach(equipment -> {
+            if(equipment instanceof Computer) {
+                computerList.add((Computer) equipment);
+            }
+        });
+
+        computerList.stream().forEach(computer -> initializeComputer(computer));
+
+        return computerList;
     }
 
     @Transactional
@@ -100,6 +117,16 @@ public class EquipmentManager extends EntityManager<Equipment> {
     }
 
     @Transactional
+    public Computer getComputerById(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from Equipment as equipment where equipment.id=" + id);
+        Computer computer = (Computer) query.uniqueResult();
+        initializeComputer(computer);
+
+        return computer;
+    }
+
+    @Transactional
     public Equipment getEquipmentByUid(String uid) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Equipment as equipment where equipment.uid='" + uid + "'");
@@ -114,5 +141,12 @@ public class EquipmentManager extends EntityManager<Equipment> {
         equipment.setAccounting1C(null);
         super.save(equipment);
         super.delete(equipment);
+    }
+
+    protected void initializeComputer(Computer computer) {
+        if(computer != null) {
+            Hibernate.initialize(computer.getHardDriveList());
+            Hibernate.initialize(computer.getRamList());
+        }
     }
 }

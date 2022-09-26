@@ -5,11 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.db.domain.*;
+import workplaceManager.db.domain.components.MotherBoard;
+import workplaceManager.db.domain.components.TypeRam;
 import workplaceManager.db.service.Accounting1CManager;
 import workplaceManager.db.service.EmployeeManager;
 import workplaceManager.db.service.EquipmentManager;
 import workplaceManager.db.service.WorkplaceManager;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -54,23 +57,29 @@ public class ConfigEquipmentController {
         if (id != null && id > 0) {
             equipment = equipmentManager.getEquipmentById(id);
         }
+
         modelAndView.addObject("equipment", equipment);
         modelAndView.addObject("typeEquipment", typeEquipment);
+        if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+            Computer computer = equipmentManager.getComputerById(id);
+            modelAndView.addObject("computer", computer == null ? new Computer() : computer);
+        }
 
         return getModelAndView(redirect, modelAndView);
     }
 
     @PostMapping("/addEquipmentPost")
     public ModelAndView addEquipment(@ModelAttribute("equipment") Equipment equipment,
-                                     @RequestParam(value = "typeEquipment") String typeEquipment,
-                                     @RequestParam(name = "redirect", required = false) String redirect,
-                                     @RequestParam(name = "workplace_id", required = false) Long workplaceId,
-                                     @RequestParam(name = "accounting1CRadio") String accounting1CRadio,
-                                     @RequestParam(name = "selectAccounting1CId", required = false) Long selectAccounting1CId,
-                                     @RequestParam(name = "accounting1CInventoryNumber", required = false) String accounting1CInventoryNumber,
-                                     @RequestParam(name = "accounting1CTitle", required = false) String accounting1CTitle,
-                                     @RequestParam(name = "employeeId", required = false) Long employeeId) {
+                                     HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/config/equipment");
+
+        Long workplaceId = request.getParameter("workplace_id") != null ? Long.parseLong(request.getParameter("workplace_id")) : -1;
+        String accounting1CRadio = request.getParameter("accounting1CRadio");
+        Long selectAccounting1CId = request.getParameter("selectAccounting1CId") != null ? Long.parseLong(request.getParameter("selectAccounting1CId")) : -1;
+        String accounting1CInventoryNumber = request.getParameter("accounting1CInventoryNumber");
+        String accounting1CTitle = request.getParameter("accounting1CTitle");
+        Long employeeId = request.getParameter("employeeId") != null ? Long.parseLong(request.getParameter("employeeId")) : -1;
+        String typeEquipment = request.getParameter("typeEquipment");
 
         if (equipment != null && workplaceId > 0) {
             Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
@@ -83,13 +92,18 @@ public class ConfigEquipmentController {
         Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid());
 
         if (equipmentFromDb != null || !"".equals(error)) {
-            if("".equals(error)) {
+            if ("".equals(error)) {
                 error = String.format("%s уже существует", equipment.getUid());
             }
             modelAndView.addObject("error", error);
             modelAndView.addObject("equipment", equipment);
             modelAndView.addObject("typeEquipment", typeEquipment);
         } else {
+            if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+                Computer computer = addMotherboardToComputerFromReque(request, (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER));
+                equipmentManager.save(computer);
+                modelAndView.addObject("computer", computer);
+            }
             if (TypeEquipment.MONITOR.equals(typeEquipment)) {
                 equipmentManager.save((Monitor) equipment.getChildFromEquipment(TypeEquipment.MONITOR));
             }
@@ -111,19 +125,34 @@ public class ConfigEquipmentController {
             modelAndView.addObject("typeEquipment", typeEquipment);
         }
 
-        return getModelAndView(redirect, modelAndView);
+        return getModelAndView(request.getParameter("redirect"), modelAndView);
+    }
+
+    private Computer addMotherboardToComputerFromReque(HttpServletRequest request, Computer computer) {
+        MotherBoard motherBoard = new MotherBoard();
+
+        motherBoard.setManufacturer(request.getParameter("motherboard_manufacturer"));
+        motherBoard.setModel(request.getParameter("motherboard_model"));
+        motherBoard.setSocket(request.getParameter("motherboard_socket"));
+        motherBoard.setTypeRam(TypeRam.valueOf(request.getParameter("selectTypeRam")));
+        motherBoard.setRamFrequency(request.getParameter("motherboard_ram_frequency"));
+        motherBoard.setRamMaxAmount(request.getParameter("motherboard_ram_max_amount"));
+
+        computer.setMotherBoard(motherBoard);
+
+        return computer;
     }
 
     private String setAccounting1CByEquipment(Equipment equipment, String accounting1CRadio, Long selectAccounting1CId,
-                                            String accounting1CInventoryNumber, String accounting1CTitle, Long employeeId) {
-        if("noRecord".equals(accounting1CRadio)) {
+                                              String accounting1CInventoryNumber, String accounting1CTitle, Long employeeId) {
+        if ("noRecord".equals(accounting1CRadio)) {
             equipment.setAccounting1C(null);
-        } else if("useRecord".equals(accounting1CRadio)) {
+        } else if ("useRecord".equals(accounting1CRadio)) {
             Accounting1C accounting1C = accounting1CManager.getAccounting1CById(selectAccounting1CId);
             equipment.setAccounting1C(accounting1C);
-        } else if("addNewRecord".equals(accounting1CRadio)) {
+        } else if ("addNewRecord".equals(accounting1CRadio)) {
             Accounting1C accounting1CFromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1CInventoryNumber);
-            if(accounting1CFromDB != null) {
+            if (accounting1CFromDB != null) {
                 return String.format("%s уже существует", accounting1CInventoryNumber);
             }
             Accounting1C accounting1C = new Accounting1C(accounting1CInventoryNumber, accounting1CTitle,
@@ -154,15 +183,17 @@ public class ConfigEquipmentController {
 
     @PostMapping("/updateEquipmentPost")
     public ModelAndView updateEquipment(@ModelAttribute("equipment") Equipment equipment,
-                                        @RequestParam(value = "workplace_id", required = false) Long workplaceId,
-                                        @RequestParam(value = "typeEquipment") String typeEquipment,
-                                        @RequestParam(name = "redirect", required = false) String redirect,
-                                        @RequestParam(name = "accounting1CRadio") String accounting1CRadio,
-                                        @RequestParam(name = "selectAccounting1CId", required = false) Long selectAccounting1CId,
-                                        @RequestParam(name = "accounting1CInventoryNumber", required = false) String accounting1CInventoryNumber,
-                                        @RequestParam(name = "accounting1CTitle", required = false) String accounting1CTitle,
-                                        @RequestParam(name = "employeeId", required = false) Long employeeId) {
+                                        HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
+
+        Long workplaceId = request.getParameter("workplace_id") != null ? Long.parseLong(request.getParameter("workplace_id")) : -1;
+        String accounting1CRadio = request.getParameter("accounting1CRadio");
+        Long selectAccounting1CId = request.getParameter("selectAccounting1CId") != null ? Long.parseLong(request.getParameter("selectAccounting1CId")) : -1;
+        String accounting1CInventoryNumber = request.getParameter("accounting1CInventoryNumber");
+        String accounting1CTitle = request.getParameter("accounting1CTitle");
+        Long employeeId = request.getParameter("employeeId") != null ? Long.parseLong(request.getParameter("employeeId")) : -1;
+        String typeEquipment = request.getParameter("typeEquipment");
+        String redirect = request.getParameter("redirect");
 
         Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid());
         if (equipmentFromDb != null && equipmentFromDb.getId() != equipment.getId()) {
@@ -180,13 +211,18 @@ public class ConfigEquipmentController {
 
             String error = setAccounting1CByEquipment(equipment, accounting1CRadio, selectAccounting1CId, accounting1CInventoryNumber,
                     accounting1CTitle, employeeId);
-            if(!"".equals(error)) {
+            if (!"".equals(error)) {
                 modelAndView.setViewName("/config/equipment");
                 modelAndView.addObject("error", error);
                 modelAndView.addObject("equipment", equipment);
                 modelAndView.addObject("typeEquipment", typeEquipment);
             } else {
-                equipmentManager.save(equipment);
+                if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+                    Computer computer = addMotherboardToComputerFromReque(request, (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER));
+                    equipmentManager.save(computer);
+                } else {
+                    equipmentManager.save(equipment);
+                }
                 modelAndView.setViewName("redirect:/" + redirect);
             }
         }

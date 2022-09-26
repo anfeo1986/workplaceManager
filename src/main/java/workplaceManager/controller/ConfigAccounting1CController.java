@@ -9,6 +9,7 @@ import workplaceManager.db.domain.Employee;
 import workplaceManager.db.service.Accounting1CManager;
 import workplaceManager.db.service.EmployeeManager;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -67,10 +68,21 @@ public class ConfigAccounting1CController {
     }
 
     @PostMapping("/updateAccounting1C")
-    public ModelAndView updateAccounting(@ModelAttribute("accounting1c") Accounting1C accounting1C,
+    public ModelAndView updateAccounting(//@ModelAttribute("accounting1c") Accounting1C accounting1C,
                                          @RequestParam(name = "redirect", required = false) String redirect,
-                                         @RequestParam(name = "employee_id", required = false) Long employeeId) {
+                                         @RequestParam(name = "employee_id", required = false) Long employeeId,
+                                         HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
+
+        Accounting1C accounting1C = null;
+        Long id = Long.parseLong(request.getParameter("id"));
+        if(id == null || id <= 0) {
+            accounting1C = new Accounting1C(request.getParameter("inventoryNumber"), request.getParameter("title"), null);
+        } else {
+            accounting1C = accounting1CManager.getAccounting1CById(id);
+            accounting1C.setInventoryNumber(request.getParameter("inventoryNumber"));
+            accounting1C.setTitle(request.getParameter("title"));
+        }
 
         Employee employee = employeeManager.getEmployeeById(employeeId);
         accounting1C.setEmployee(employee);

@@ -20,6 +20,7 @@
 
 
             <td><a href="/config/equipment/addUpdateEquipment?id=${equipment.id}&redirect=${page}&typeEquipment=${typeEquipment}">${equipment}</a></td>
+
             <c:if test="${!empty equipment.workplace}">
                 <td>
                     <a href="/config/workplace/addUpdateWorkplace?id=${equipment.workplace.id}&redirect=${page}&typeEquipment=${typeEquipment}">

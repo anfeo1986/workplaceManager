@@ -21,7 +21,7 @@ public class Accounting1C implements Serializable {
     @Column
     private String title;
 
-    @ManyToOne(optional = true, cascade = CascadeType.ALL)
+    @ManyToOne(optional = true, cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee")
     private Employee employee;
 

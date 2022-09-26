@@ -1,26 +1,28 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="workplaceManager.db.domain.*" %>
+<%@ page import="workplaceManager.db.domain.components.TypeRam" %>
 
 <html>
 <head>
     <script type="text/javascript">
 
         function changeFunc() {
-            if(document.getElementById("noRecord").checked) {
-                document.getElementById("selectAccounting1CId").disabled=true;
-                document.getElementById("accounting1CInventoryNumber").disabled=true;
-                document.getElementById("accounting1CTitle").disabled=true;
-                document.getElementById("selectEmployeeId").disabled=true;
-            } else if(document.getElementById("useRecord").checked) {
-                document.getElementById("selectAccounting1CId").disabled=false;
-                document.getElementById("accounting1CInventoryNumber").disabled=true;
-                document.getElementById("accounting1CTitle").disabled=true;
-                document.getElementById("selectEmployeeId").disabled=true;
-            } else if(document.getElementById("addNewRecord").checked) {
-                document.getElementById("selectAccounting1CId").disabled=true;
-                document.getElementById("accounting1CInventoryNumber").disabled=false;
-                document.getElementById("accounting1CTitle").disabled=false;
-                document.getElementById("selectEmployeeId").disabled=false;
+            if (document.getElementById("noRecord").checked) {
+                document.getElementById("selectAccounting1CId").disabled = true;
+                document.getElementById("accounting1CInventoryNumber").disabled = true;
+                document.getElementById("accounting1CTitle").disabled = true;
+                document.getElementById("selectEmployeeId").disabled = true;
+            } else if (document.getElementById("useRecord").checked) {
+                document.getElementById("selectAccounting1CId").disabled = false;
+                document.getElementById("accounting1CInventoryNumber").disabled = true;
+                document.getElementById("accounting1CTitle").disabled = true;
+                document.getElementById("selectEmployeeId").disabled = true;
+            } else if (document.getElementById("addNewRecord").checked) {
+                document.getElementById("selectAccounting1CId").disabled = true;
+                document.getElementById("accounting1CInventoryNumber").disabled = false;
+                document.getElementById("accounting1CTitle").disabled = false;
+                document.getElementById("selectEmployeeId").disabled = false;
             }
         }
     </script>
@@ -73,6 +75,7 @@
     <c:if test="${!empty equipment.accounting1C}">
         <c:set var="accounting1СId" value="${equipment.accounting1C.id}"/>
     </c:if>
+
 </head>
 <body>
 <c:if test="${!empty error}">
@@ -118,11 +121,13 @@
     </p>
 
     <p>
-        <input type="radio" name="accounting1CRadio" id="noRecord" value="noRecord" onchange="changeFunc()"> Не привязывать к бухгалтерии
+        <input type="radio" name="accounting1CRadio" id="noRecord" value="noRecord" onchange="changeFunc()"> Не
+        привязывать к бухгалтерии
     </p>
 
     <p>
-        <input type="radio" name="accounting1CRadio" id="useRecord" value="useRecord" checked onchange="changeFunc()"> Использовать существующую запись
+        <input type="radio" name="accounting1CRadio" id="useRecord" value="useRecord" checked onchange="changeFunc()">
+        Использовать существующую запись
         <select name="selectAccounting1CId" id="selectAccounting1CId" onchange="changeFunc();">
             <option value="-1"/>
             <c:forEach var="accounting1C" items="${accounting1CList}">
@@ -135,7 +140,8 @@
             </c:forEach>
         </select>
     </p>
-    <p><input type="radio" name="accounting1CRadio" id="addNewRecord" value="addNewRecord" onchange="changeFunc()"> Добавить новую запись</p>
+    <p><input type="radio" name="accounting1CRadio" id="addNewRecord" value="addNewRecord" onchange="changeFunc()">
+        Добавить новую запись</p>
     <p>
         <label for="accounting1CInventoryNumber">Инвентарный номер</label>
         <input type="text" name="accounting1CInventoryNumber" id="accounting1CInventoryNumber" disabled>
@@ -151,6 +157,48 @@
             </c:forEach>"
         </select>
     </p>
+
+    <c:if test="${typeEquipment == 'computer'}">
+
+        <div>
+            <p><label>Материнская плата</label></p>
+            <p>
+                <%
+                    Computer computer = (Computer) request.getAttribute("computer");
+                    out.println("<label for=\"motherboard_manufacturer\">Производитель</label>");
+                    out.println(String.format("<input type=\"text\" name=\"motherboard_manufacturer\" id=\"motherboard_manufacturer\" " + "value=\"%s\">",
+                            computer.getMotherBoard() != null ? computer.getMotherBoard().getManufacturer() : ""));
+
+                    out.println("<label for=\"motherboard_model\">Модель</label>");
+                    out.println(String.format("<input type=\"text\" name=\"motherboard_model\" id=\"motherboard_model\" value=\"%s\">",
+                            computer.getMotherBoard() != null ? computer.getMotherBoard().getModel() : ""));
+
+                    out.println("<label for=\"motherboard_socket\">Сокет</label>");
+                    out.println(String.format("<input type=\"text\" name=\"motherboard_socket\" id=\"motherboard_socket\" value=\"%s\">",
+                            computer.getMotherBoard() != null ? computer.getMotherBoard().getSocket() : ""));
+
+                    out.println("<label for=\"selectTypeRam\">Тип оперативной памяти</label>");
+                    out.println("<select name=\"selectTypeRam\" id=\"selectTypeRam\">");
+                    for (TypeRam typeRam : TypeRam.values()) {
+                        if (computer.getMotherBoard() != null && typeRam.equals(computer.getMotherBoard().getTypeRam())) {
+                            out.println("<option selected value=\"" + typeRam + "\">" + typeRam + "</option>");
+                        } else {
+                            out.println("<option value=\"" + typeRam + "\">" + typeRam + "</option>");
+                        }
+                    }
+                    out.println("</select>");
+
+                    out.println("<label for=\"motherboard_ram_frequency\">Частота оперативной памяти</label>");
+                    out.println(String.format("<input type=\"text\" name=\"motherboard_ram_frequency\" id=\"motherboard_ram_frequency\" value=\"%s\">",
+                            computer.getMotherBoard() != null ? computer.getMotherBoard().getRamFrequency() : ""));
+
+                    out.println("<label for=\"motherboard_ram_max_amount\">Максимальный объем оперативной памяти</label>");
+                    out.println(String.format("<input type=\"text\" name=\"motherboard_ram_max_amount\" id=\"motherboard_ram_max_amount\" value=\"%s\">",
+                            computer.getMotherBoard() != null ? computer.getMotherBoard().getRamMaxAmount() : ""));
+                %>
+            </p>
+        </div>
+    </c:if>
 
     <p>
         <input type="submit" value="${buttonTitle}">
