@@ -51,36 +51,40 @@
     <c:if test="${accounting1cId > 0}">
         <input type="hidden" name="id" value="${accounting1cId}">
     </c:if>
-    <p>
-        <label for="inventoryNumber">Инвентарный номер</label>
-        <input type="text" name="inventoryNumber" id="inventoryNumber" value="${inventoryNumber}">
-    </p>
+    <div class="wrapper_500">
+        <p>
+            <label for="inventoryNumber">Инвентарный номер</label>
+            <input type="text" name="inventoryNumber" id="inventoryNumber" value="${inventoryNumber}">
+        </p>
 
-    <p>
-        <label for="title">Название</label>
-        <input type="text" name="title" id="title" value="${title}">
-    </p>
+        <p>
+            <label for="title">Название</label>
+            <input type="text" name="title" id="title" value="${title}">
+        </p>
 
-    <p>
-        <label for="employee_id">Материально-ответственное лицо</label>
-        <select name="employee_id" id="employee_id">
-            <option value="-1"/>
-            <c:forEach var="employee" items="${employeeList}">
-                <c:if test="${employeeId == employee.id}">
-                    <option selected value="${employee.id}">${employee.name}</option>
-                </c:if>
-                <c:if test="${employeeId != employee.id}">
-                    <option value="${employee.id}">${employee.name}</option>
-                </c:if>
-            </c:forEach>
-        </select>
-    </p>
+        <p>
+            <label for="employee_id">Материально-ответственное лицо</label>
+            <select name="employee_id" id="employee_id">
+                <option value="-1"/>
+                <c:forEach var="employee" items="${employeeList}">
+                    <c:if test="${employeeId == employee.id}">
+                        <option selected value="${employee.id}">${employee.name}</option>
+                    </c:if>
+                    <c:if test="${employeeId != employee.id}">
+                        <option value="${employee.id}">${employee.name}</option>
+                    </c:if>
+                </c:forEach>
+            </select>
+        </p>
+    </div>
 
-    <p>
-        <input type="submit" value="${buttonTitle}">
-        <input type="hidden" name="redirect" value="${redirect}">
-        <a href="/${redirect}" class="button">Назад</a>
-    </p>
+    <div align="center">
+        <p>
+            <input type="submit" value="${buttonTitle}">
+            <input type="hidden" name="redirect" value="${redirect}">
+            <a href="/${redirect}" class="button">Назад</a>
+        </p>
+    </div>
 
 </form>
 

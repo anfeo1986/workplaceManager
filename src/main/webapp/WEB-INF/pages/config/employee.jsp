@@ -53,31 +53,41 @@
         <input type="hidden" name="id" value="${employee_id}">
     </c:if>
 
-    <label for="name">ФИО</label>
-    <input type="text" name="name" id="name" value="${employeeName}">
+    <div class="wrapper_500">
+        <p>
+            <label for="name">ФИО</label>
+            <input type="text" name="name" id="name" value="${employeeName}">
+        </p>
 
-    <label for="post">Должность</label>
-    <input type="text" name="post" id="post" value="${employeePost}">
+        <p>
+            <label for="post">Должность</label>
+            <input type="text" name="post" id="post" value="${employeePost}">
+        </p>
 
-    <label>Рабочее место</label>
-    <select name="workplace_id">
-        <option value="-1"/>
-        <%--<option disabled>Выберите рабочее место</option>--%>
-        <c:forEach var="workplace" items="${workplaceList}">
-            <c:if test="${employeeWorkplaceId == workplace.id}">
-                <option selected value="${workplace.id}" >${workplace.title}</option>
-            </c:if>
-            <c:if test="${employeeWorkplaceId != workplace.id}">
-                <option value="${workplace.id}">${workplace.title}</option>
-            </c:if>
-        </c:forEach>
-    </select>
+        <p>
+            <label>Рабочее место</label>
+            <select name="workplace_id">
+                <option value="-1"/>
+                <%--<option disabled>Выберите рабочее место</option>--%>
+                <c:forEach var="workplace" items="${workplaceList}">
+                    <c:if test="${employeeWorkplaceId == workplace.id}">
+                        <option selected value="${workplace.id}">${workplace.title}</option>
+                    </c:if>
+                    <c:if test="${employeeWorkplaceId != workplace.id}">
+                        <option value="${workplace.id}">${workplace.title}</option>
+                    </c:if>
+                </c:forEach>
+            </select>
+        </p>
+    </div>
 
-    <p>
-        <input type="submit" value="${buttonTitle}">
-        <input type="hidden" name="redirect" value="${redirect}">
-        <a href="/${redirect}" class="button">Назад</a>
-    </p>
+    <div align="center">
+        <p>
+            <input type="submit" value="${buttonTitle}">
+            <input type="hidden" name="redirect" value="${redirect}">
+            <a href="/${redirect}" class="button">Назад</a>
+        </p>
+    </div>
 </form>
 
 </body>
