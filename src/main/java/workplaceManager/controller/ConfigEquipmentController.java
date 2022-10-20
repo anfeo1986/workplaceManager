@@ -100,7 +100,9 @@ public class ConfigEquipmentController {
             modelAndView.addObject("typeEquipment", typeEquipment);
         } else {
             if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
-                Computer computer = addMotherboardToComputerFromReque(request, (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER));
+                Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                addMotherboardToComputer(request, computer);
+                addOperationSystemToComputer(request, computer);
                 equipmentManager.save(computer);
                 modelAndView.addObject("computer", computer);
             }
@@ -128,8 +130,11 @@ public class ConfigEquipmentController {
         return getModelAndView(request.getParameter("redirect"), modelAndView);
     }
 
-    private Computer addMotherboardToComputerFromReque(HttpServletRequest request, Computer computer) {
+    private void addMotherboardToComputer(HttpServletRequest request, Computer computer) {
         MotherBoard motherBoard = new MotherBoard();
+        if(computer != null && computer.getMotherBoard() != null) {
+            motherBoard = computer.getMotherBoard();
+        }
 
         motherBoard.setManufacturer(request.getParameter("motherboard_manufacturer"));
         motherBoard.setModel(request.getParameter("motherboard_model"));
@@ -139,8 +144,19 @@ public class ConfigEquipmentController {
         motherBoard.setRamMaxAmount(request.getParameter("motherboard_ram_max_amount"));
 
         computer.setMotherBoard(motherBoard);
+    }
 
-        return computer;
+    private void addOperationSystemToComputer(HttpServletRequest request, Computer computer) {
+        OperationSystem operationSystem = new OperationSystem();
+        if(computer != null && computer.getOperationSystem() != null) {
+            operationSystem = computer.getOperationSystem();
+        }
+
+        operationSystem.setTypeOS(TypeOS.valueOf(request.getParameter("type_operationsystem")));
+        operationSystem.setVendor(request.getParameter("vendor_operationsystem"));
+        operationSystem.setVersion(request.getParameter("version_operationsystem"));
+
+        computer.setOperationSystem(operationSystem);
     }
 
     private String setAccounting1CByEquipment(Equipment equipment, String accounting1CRadio, Long selectAccounting1CId,
@@ -218,7 +234,9 @@ public class ConfigEquipmentController {
                 modelAndView.addObject("typeEquipment", typeEquipment);
             } else {
                 if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
-                    Computer computer = addMotherboardToComputerFromReque(request, (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER));
+                    Computer computer = equipmentManager.getComputerById(equipment.getId());
+                    addMotherboardToComputer(request, computer);
+                    addOperationSystemToComputer(request, computer);
                     equipmentManager.save(computer);
                 } else {
                     equipmentManager.save(equipment);

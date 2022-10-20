@@ -122,6 +122,38 @@
     </div>
 
     <div class="wrapper_1100">
+        <h1>Операционная система</h1>
+        <%
+            out.println("<p>");
+            Computer computer = (Computer) request.getAttribute("computer");
+
+            out.println("<label for=\"type_operationsystem\">Тип операционной системы</label>");
+            out.println("<select name=\"type_operationsystem\">");
+            for(TypeOS typeOS : TypeOS.values()) {
+                if(computer.getOperationSystem() != null && computer.getOperationSystem().getTypeOS().equals(typeOS)) {
+                    out.println(String.format("<option selected value=\"%s\">%s</option>",typeOS,typeOS));
+                } else {
+                    out.println(String.format("<option value=\"%s\">%s</option>",typeOS,typeOS));
+                }
+            }
+            out.println("</select>");
+            out.println("</p>");
+
+            out.println("<p>");
+            out.println("<label for=\"vendor_operationsystem\">Название</label>");
+            out.println(String.format("<input type=\"text\" name=\"vendor_operationsystem\" id=\"vendor_operationsystem\" " + "value=\"%s\">",
+                    computer.getOperationSystem() != null ? computer.getOperationSystem().getVendor() : ""));
+
+            out.println("<label for=\"version_operationsystem\">Версия</label>");
+            out.println(String.format("<input type=\"text\" name=\"version_operationsystem\" id=\"version_operationsystem\" " + "value=\"%s\">",
+                    computer.getOperationSystem() != null ? computer.getOperationSystem().getVersion() : ""));
+            out.println("</p>");
+
+
+        %>
+    </div>
+
+    <div class="wrapper_1100">
         <p>
         <h1>Бухгалтерия</h1></p>
 
@@ -174,7 +206,7 @@
             <h1>Материнская плата</h1></p>
             <%
                 out.println("<p>");
-                Computer computer = (Computer) request.getAttribute("computer");
+                //Computer computer = (Computer) request.getAttribute("computer");
                 out.println("<label for=\"motherboard_manufacturer\">Производитель</label>");
                 out.println(String.format("<input type=\"text\" name=\"motherboard_manufacturer\" id=\"motherboard_manufacturer\" " + "value=\"%s\">",
                         computer.getMotherBoard() != null ? computer.getMotherBoard().getManufacturer() : ""));

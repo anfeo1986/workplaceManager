@@ -20,6 +20,10 @@ public class Computer extends Equipment<Computer>{
     @JoinColumn(name = "processor")
     private Processor processor;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "operationSystem")
+    private OperationSystem operationSystem;
+
     @OneToMany(mappedBy = "computer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ram> ramList = new ArrayList<>();
 

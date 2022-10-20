@@ -19,7 +19,7 @@ public class Equipment<T> implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
 
     @Column(name = "uid")
     private String uid = "";

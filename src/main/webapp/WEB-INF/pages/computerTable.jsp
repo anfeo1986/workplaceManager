@@ -14,6 +14,7 @@
     <tr>
         <th>id</th>
         <th>${title}</th>
+        <th>ОС</th>
         <th>Процессор</th>
         <th>Материнская плата</th>
         <th>Оперативная память</th>
@@ -35,6 +36,8 @@
 
             out.println(String.format("<td><a href=\"/config/equipment/addUpdateEquipment?id=%s&redirect=%s&typeEquipment=%s\">%s</a></td>",
                     computer.getId(), redirect, typeEquipment, computer));
+
+            out.println(String.format("<td>%s</td>",computer.getOperationSystem() != null ? computer.getOperationSystem() : ""));
 
             out.println(String.format("<td>%s</td>", computer.getProcessor() != null ? computer.getProcessor() : ""));
 

@@ -38,14 +38,19 @@
         <input type="hidden" name="id" value="${workplaceId}">
     </c:if>
 
-    <label for="title">Название</label>
-    <input type="text" name="title" id="title" value="${workplaceTitle}">
-
-    <p>
-        <input type="submit" value="${buttonTitle}">
-        <input type="hidden" name="redirect" value="${redirect}">
-        <a href="/${redirect}" class="button">Назад</a>
-    </p>
+    <div class="wrapper_500" align="center">
+        <p>
+            <label for="title">Название</label>
+            <input type="text" name="title" id="title" value="${workplaceTitle}">
+        </p>
+    </div>
+    <div align="center">
+        <p>
+            <input type="submit" value="${buttonTitle}">
+            <input type="hidden" name="redirect" value="${redirect}">
+            <a href="/${redirect}" class="button">Назад</a>
+        </p>
+    </div>
 </form>
 
 </body>
