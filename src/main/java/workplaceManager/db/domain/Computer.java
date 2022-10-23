@@ -24,6 +24,9 @@ public class Computer extends Equipment<Computer>{
     @JoinColumn(name = "operationSystem")
     private OperationSystem operationSystem;
 
+    @Column
+    private String ip;
+
     @OneToMany(mappedBy = "computer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ram> ramList = new ArrayList<>();
 
@@ -36,6 +39,6 @@ public class Computer extends Equipment<Computer>{
 
     @Override
     public String toString() {
-        return super.toString();
+        return String.format("%s (%s)", ip, getUid());
     }
 }

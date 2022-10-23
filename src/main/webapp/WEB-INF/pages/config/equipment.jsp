@@ -76,6 +76,7 @@
         <c:set var="accounting1СId" value="${equipment.accounting1C.id}"/>
     </c:if>
 
+
 </head>
 <body>
 <c:if test="${!empty error}">
@@ -84,6 +85,9 @@
 <c:if test="${!empty message}">
     <h3><c:out value="${message}"/></h3>
 </c:if>
+<%
+    Computer computer = (Computer) request.getAttribute("computer");
+%>
 
 <form action="${url}" method="post">
     <c:if test="${equipmentId > 0}">
@@ -97,6 +101,18 @@
             <label for="uid">UID</label>
             <input type="text" name="uid" id="uid" value="${uid}">
         </p>
+        <c:if test="${typeEquipment == 'computer'}">
+            <%
+                out.println("<p>");
+
+                out.println("<label for=\"ip\">IP</label>");
+                out.println(String.format("<input type=\"text\" name=\"ip\" id=\"ip\" value=\"%s\"",
+                        computer.getIp() == null ? "" : computer.getIp()));
+
+                out.println("</p>");
+
+            %>
+        </c:if>
 
         <p>
             <label for="manufacturer">Производитель</label>
@@ -121,37 +137,37 @@
         </p>
     </div>
 
-    <div class="wrapper_1100">
-        <h1>Операционная система</h1>
-        <%
-            out.println("<p>");
-            Computer computer = (Computer) request.getAttribute("computer");
+    <c:if test="${typeEquipment == 'computer'}">
+        <div class="wrapper_1100">"
+            "<h1> Операционная система</h1>"
+            <%
+                out.println("<p>");
 
-            out.println("<label for=\"type_operationsystem\">Тип операционной системы</label>");
-            out.println("<select name=\"type_operationsystem\">");
-            for(TypeOS typeOS : TypeOS.values()) {
-                if(computer.getOperationSystem() != null && computer.getOperationSystem().getTypeOS().equals(typeOS)) {
-                    out.println(String.format("<option selected value=\"%s\">%s</option>",typeOS,typeOS));
-                } else {
-                    out.println(String.format("<option value=\"%s\">%s</option>",typeOS,typeOS));
+                out.println("<label for=\"type_operationsystem\">Тип операционной системы</label>");
+                out.println("<select name=\"type_operationsystem\">");
+                for (TypeOS typeOS : TypeOS.values()) {
+                    if (computer.getOperationSystem() != null && computer.getOperationSystem().getTypeOS().equals(typeOS)) {
+                        out.println(String.format("<option selected value=\"%s\">%s</option>", typeOS, typeOS));
+                    } else {
+                        out.println(String.format("<option value=\"%s\">%s</option>", typeOS, typeOS));
+                    }
                 }
-            }
-            out.println("</select>");
-            out.println("</p>");
+                out.println("</select>");
+                out.println("</p>");
 
-            out.println("<p>");
-            out.println("<label for=\"vendor_operationsystem\">Название</label>");
-            out.println(String.format("<input type=\"text\" name=\"vendor_operationsystem\" id=\"vendor_operationsystem\" " + "value=\"%s\">",
-                    computer.getOperationSystem() != null ? computer.getOperationSystem().getVendor() : ""));
+                out.println("<p>");
+                out.println("<label for=\"vendor_operationsystem\">Название</label>");
+                out.println(String.format("<input type=\"text\" name=\"vendor_operationsystem\" id=\"vendor_operationsystem\" " + "value=\"%s\">",
+                        computer.getOperationSystem() != null ? computer.getOperationSystem().getVendor() : ""));
 
-            out.println("<label for=\"version_operationsystem\">Версия</label>");
-            out.println(String.format("<input type=\"text\" name=\"version_operationsystem\" id=\"version_operationsystem\" " + "value=\"%s\">",
-                    computer.getOperationSystem() != null ? computer.getOperationSystem().getVersion() : ""));
-            out.println("</p>");
+                out.println("<label for=\"version_operationsystem\">Версия</label>");
+                out.println(String.format("<input type=\"text\" name=\"version_operationsystem\" id=\"version_operationsystem\" " + "value=\"%s\">",
+                        computer.getOperationSystem() != null ? computer.getOperationSystem().getVersion() : ""));
+                out.println("</p>");
 
-
-        %>
-    </div>
+            %>
+        </div>
+    </c:if>
 
     <div class="wrapper_1100">
         <p>
@@ -159,7 +175,7 @@
 
         <p>
             <input type="radio" name="accounting1CRadio" id="noRecord" value="noRecord" onchange="changeFunc()">
-                Не привязывать к бухгалтерии
+            Не привязывать к бухгалтерии
         </p>
 
         <p>

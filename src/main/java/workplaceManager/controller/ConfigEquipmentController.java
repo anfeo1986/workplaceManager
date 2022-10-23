@@ -101,6 +101,7 @@ public class ConfigEquipmentController {
         } else {
             if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                 Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                computer.setIp(request.getParameter("ip"));
                 addMotherboardToComputer(request, computer);
                 addOperationSystemToComputer(request, computer);
                 equipmentManager.save(computer);
@@ -235,6 +236,7 @@ public class ConfigEquipmentController {
             } else {
                 if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                     Computer computer = equipmentManager.getComputerById(equipment.getId());
+                    computer.setIp(request.getParameter("ip"));
                     addMotherboardToComputer(request, computer);
                     addOperationSystemToComputer(request, computer);
                     equipmentManager.save(computer);
