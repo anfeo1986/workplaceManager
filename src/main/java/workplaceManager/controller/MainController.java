@@ -7,11 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import workplaceManager.Security;
 import workplaceManager.db.domain.*;
-import workplaceManager.db.service.Accounting1CManager;
-import workplaceManager.db.service.EmployeeManager;
-import workplaceManager.db.service.EquipmentManager;
-import workplaceManager.db.service.WorkplaceManager;
+import workplaceManager.db.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +57,23 @@ public class MainController {
         this.equipmentManager = equipmentManager;
     }
 
+    private Security security;
+
+    @Autowired
+    public void setSecurity(Security security) { this.security = security; }
+
+    private UserManager userManager;
+    @Autowired
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
     @GetMapping("/")
-    public ModelAndView getMainPage() {
+    public ModelAndView getMainPage(@RequestParam(name = "token", required = false) String token) {
+        if(!"".equals(security.verifyUser(token))) {
+            ModelAndView modelAndView = new ModelAndView("login");
+            return modelAndView;
+        }
         return getWorkplace();
     }
 
