@@ -15,7 +15,7 @@
         <%@include file='header.jsp' %>
     </div>
 </header>
-
+<input type="hidden" name="token" value="${token}">
 <div>
     <table>
         <%--  <tr valign='top' align='center'>

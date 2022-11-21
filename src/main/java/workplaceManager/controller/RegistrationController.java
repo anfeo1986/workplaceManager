@@ -7,12 +7,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import workplaceManager.Security;
+import workplaceManager.db.domain.Role;
 import workplaceManager.db.domain.Users;
+import workplaceManager.db.service.UserManager;
 
 @Controller
 public class RegistrationController {
     //@Autowired
    // private UserService userService;
+
+    private UserManager userManager;
+    @Autowired
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
 
     @GetMapping("/registration")
     public String registration(Model model) {
@@ -22,20 +31,17 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(@ModelAttribute("userForm") Users userForm, BindingResult bindingResult, Model model) {
+    public String addUser(@ModelAttribute("userForm") Users userForm, Model model) {
 
-        /*if (bindingResult.hasErrors()) {
-            return "registration";
-        }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
             model.addAttribute("passwordError", "Пароли не совпадают");
             return "registration";
         }
-        if (!userService.saveUser(userForm)){
-            model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
-            return "registration";
-        }
-*/
+        userForm.setRole(Role.ADMIN);
+        Security security = new Security();
+        userForm.setPassword(security.encode(userForm.getPassword()));
+        userManager.add(userForm);
+
         return "redirect:/";
     }
 }

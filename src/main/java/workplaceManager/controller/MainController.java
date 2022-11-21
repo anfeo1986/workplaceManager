@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import workplaceManager.Pages;
 import workplaceManager.Security;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.*;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Controller
 public class MainController {
-    private enum TypePage {
+    public enum TypePage {
         workplace,
         computer,
         monitor,
@@ -58,31 +59,41 @@ public class MainController {
     }
 
     private Security security;
-
     @Autowired
-    public void setSecurity(Security security) { this.security = security; }
+    public void setSecurity(Security security) {
+        this.security = security;
+    }
 
     private UserManager userManager;
+
     @Autowired
     public void setUserManager(UserManager userManager) {
         this.userManager = userManager;
     }
 
     @GetMapping("/")
-    public ModelAndView getMainPage(@RequestParam(name = "token", required = false) String token) {
-        if(!"".equals(security.verifyUser(token))) {
+    public ModelAndView getMain(@RequestParam(name = "token", required = false) String token) {
+        /*if (!"".equals(security.verifyUser(token))) {
             ModelAndView modelAndView = new ModelAndView("login");
             return modelAndView;
-        }
-        return getWorkplace();
+        }*/
+
+        //return getWorkplace();
+        return security.verifyUser(token, Pages.workplace);
     }
 
-    @GetMapping("/workplace")
-    @Transactional
-    public ModelAndView getWorkplace() {
+    @GetMapping(Pages.mainPage)
+    public ModelAndView getMainPageForm(@RequestParam(name = "token") String token) {
+        System.out.println("getMainPageForm");
+        return getWorkplace(token);
+    }
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("mainPage");
+    @GetMapping(Pages.workplace)
+    @Transactional
+    public ModelAndView getWorkplace(@RequestParam(name = "token") String token) {
+
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
+        //modelAndView.setViewName("mainPage");
 
         List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
         modelAndView.addObject("workplaceList", workplaceList);
@@ -93,8 +104,9 @@ public class MainController {
     }
 
     @GetMapping("/employee")
-    public ModelAndView getEmployee() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getEmployee(@RequestParam(name = "token") String token) {
+        //ModelAndView modelAndView = new ModelAndView("mainPage");
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Employee> employeeList = employeeManager.getEmployeeList();
 
@@ -105,8 +117,8 @@ public class MainController {
     }
 
     @GetMapping("/accounting1c")
-    public ModelAndView getAccounting1C() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getAccounting1C(@RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList();
 
@@ -117,8 +129,8 @@ public class MainController {
     }
 
     @GetMapping("/computer")
-    public ModelAndView getComputerForm() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getComputerForm(@RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Computer> equipmentList = equipmentManager.getComputerList();
 
@@ -131,8 +143,8 @@ public class MainController {
     }
 
     @GetMapping("/monitor")
-    public ModelAndView getMonitors() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getMonitors(@RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Monitor> equipmentList = equipmentManager.getMonitorList();
 
@@ -145,8 +157,8 @@ public class MainController {
     }
 
     @GetMapping("/printer")
-    public ModelAndView getPrinters() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getPrinters(@RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Printer> equipmentList = equipmentManager.getPrinterList();
 
@@ -159,8 +171,8 @@ public class MainController {
     }
 
     @GetMapping("/scanner")
-    public ModelAndView getScanners() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getScanners(@RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Scanner> equipmentList = equipmentManager.getScannerList();
 
@@ -173,8 +185,8 @@ public class MainController {
     }
 
     @GetMapping("/mfd")
-    public ModelAndView getMfd() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getMfd(@RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Mfd> equipmentList = equipmentManager.getMfdList();
 
@@ -187,8 +199,8 @@ public class MainController {
     }
 
     @GetMapping("/ups")
-    public ModelAndView getUps() {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+    public ModelAndView getUps(@RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = security.verifyUser(token, Pages.mainPage);
 
         List<Ups> equipmentList = equipmentManager.getUpsList();
 

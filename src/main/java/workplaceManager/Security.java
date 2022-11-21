@@ -2,16 +2,23 @@ package workplaceManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
+import workplaceManager.db.domain.Role;
 import workplaceManager.db.domain.Users;
 import workplaceManager.db.service.UserManager;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class Security {
@@ -23,19 +30,30 @@ public class Security {
         this.userManager = userManager;
     }
 
-    private String keyStr = "pxTAoY3f";
+    private String keyStr;// = "pxTAoY3f";
 
-    public String verifyUser(String token) {
+    public Security() {
+        keyStr = generateString();
+    }
+
+    public ModelAndView verifyUser(String token, String page) {
+        ModelAndView modelAndView = new ModelAndView("login");
+
         List<Users> userList = userManager.getUserList();
 
-        for(Users user : userList) {
+        for (Users user : userList) {
             String tokenForUser = getToken(user);
-            if(token != null && token.equals(tokenForUser)) {
-                return null;
+            System.out.println("token=" + token);
+            System.out.println("tokenForUser=" + tokenForUser);
+            if (token != null && token.equals(tokenForUser) && user.getRole() == Role.ADMIN) {
+                modelAndView.setViewName(page);
+                modelAndView.addObject("token", token);
+                //modelAndView.getModelMap().addAttribute("token", token);
+                return modelAndView;
             }
         }
 
-        return "login";
+        return modelAndView;
     }
 
     public String getToken(Users user) {
@@ -81,5 +99,45 @@ public class Security {
         } catch (Exception exception) {
             return null;
         }
+    }
+
+    public static void generateKey() {
+        try {
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            SecureRandom secureRandom = new SecureRandom();
+            int keyBitSize = 256;
+
+            keyGenerator.init(keyBitSize, secureRandom);
+
+            SecretKey secretKey = keyGenerator.generateKey();
+
+
+            System.out.println(secretKey);
+
+        } catch (Exception exception) {
+
+        }
+    }
+
+    public static String generateString() {
+        String uuid = UUID.randomUUID().toString();
+        return "uuid = " + uuid;
+    }
+
+    public static void main(String[] args) {
+        Security security = new Security();
+
+        String login="asd";
+        String encode = security.encode(login);
+        System.out.println(encode);
+        String decode = security.decode(encode);
+        System.out.println(decode);
+
+        security = new Security();
+
+        encode = security.encode(login);
+        System.out.println(encode);
+        decode = security.decode(encode);
+        System.out.println(decode);
     }
 }

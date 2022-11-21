@@ -3,14 +3,14 @@
 
 <table>
     <tr>
-        <td><a href="/workplace" class="button">Рабочие места</a></td>
-        <td><a href="/computer" class="button">Компьютеры</a></td>
-        <td><a href="/monitor" class="button">Мониторы</a></td>
-        <td><a href="/mfd" class="button">МФУ</a> </td>
-        <td><a href="/printer" class="button">Принтеры</a></td>
-        <td><a href="/scanner" class="button">Сканеры</a> </td>
-        <td><a href="/ups" class="button">ИБП</a> </td>
-        <td><a href="/employee" class="button">Сотрудники</a></td>
-        <td><a href="/accounting1c" class="button">Бухгалтерия</a> </td>
+        <td><a href="/workplace?token=${token}" class="button">Рабочие места</a></td>
+        <td><a href="/computer?token=${token}" class="button">Компьютеры</a></td>
+        <td><a href="/monitor?token=${token}" class="button">Мониторы</a></td>
+        <td><a href="/mfd?token=${token}" class="button">МФУ</a> </td>
+        <td><a href="/printer?token=${token}" class="button">Принтеры</a></td>
+        <td><a href="/scanner?token=${token}" class="button">Сканеры</a> </td>
+        <td><a href="/ups?token=${token}" class="button">ИБП</a> </td>
+        <td><a href="/employee?token=${token}" class="button">Сотрудники</a></td>
+        <td><a href="/accounting1c?token=${token}" class="button">Бухгалтерия</a> </td>
     </tr>
 </table>
