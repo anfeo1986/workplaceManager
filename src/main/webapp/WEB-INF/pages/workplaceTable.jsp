@@ -13,7 +13,7 @@
     Role role = (Role) request.getAttribute("role");
 
     if (Role.ADMIN.equals(role)) {
-        out.println("<a href=\"/config/workplace/addUpdateWorkplace" +
+        out.println("<a href=\"/" + Pages.addUpdateWorkplace +
                 "?token=" + token +
                 "&redirect=" + Pages.workplace +
                 "\">Добавить рабочее место</a>");
@@ -29,7 +29,7 @@
             out.println("<p><h1><a href=\"/" + Pages.employee +
                     "?token=" + token + "\">Сотрудники</a></h1></p>");
             if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEmpoyee +
+                out.println("<p><a href=\"/" + Pages.addUpdateEmployee +
                         "?redirect=" + Pages.workplace +
                         "&token=" + token + "\">Добавить сотрудника</a></p>");
             }
@@ -152,7 +152,7 @@
             out.println("<td>");
             if (!workplace.getEmployeeList().isEmpty()) {
                 for (Employee employee : workplace.getEmployeeList()) {
-                    out.println("<p><a href=\"/" + Pages.addUpdateEmpoyee +
+                    out.println("<p><a href=\"/" + Pages.addUpdateEmployee +
                             "?id=" + employee.getId() +
                             "&token=" + token +
                             "&redirect=workplace\">" + employee.getName() + "</a></p>");
@@ -227,7 +227,7 @@
             out.println("</td>");
 
             if (Role.ADMIN.equals(role)) {
-                out.println("<td><a href=\"/" + Pages.deleteWorkplcaePost +
+                out.println("<td><a href=\"/" + Pages.deleteWorkplacePost +
                         "?id=" + workplace.getId() +
                         "&redirect=" + Pages.workplace +
                         "&token=" + token + "\">Удалить</a></td>");

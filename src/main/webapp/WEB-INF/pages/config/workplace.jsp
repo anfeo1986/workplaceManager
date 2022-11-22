@@ -1,3 +1,5 @@
+<%@ page import="workplaceManager.db.domain.Role" %>
+<%@ page import="workplaceManager.db.domain.Workplace" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -46,7 +48,17 @@
     </div>
     <div align="center">
         <p>
-            <input type="submit" value="${buttonTitle}">
+            <%
+                Workplace workplace = (Workplace) request.getAttribute("workplace");
+                String buttonTitle = "Добавить";
+                if (workplace != null && workplace.getId() > 0) {
+                    buttonTitle = "Редактировать";
+                }
+                Role role = (Role) request.getAttribute("role");
+                if (Role.ADMIN.equals(role)) {
+                    out.println("<input type=\"submit\" value=\"" + buttonTitle + "\">");
+                }
+            %>
             <input type="hidden" name="redirect" value="${redirect}">
             <input type="hidden" name="token" value="${token}">
             <a href="/${redirect}?token=${token}" class="button">Назад</a>

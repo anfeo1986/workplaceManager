@@ -263,10 +263,21 @@
 
     <div align="center">
         <p>
-            <input type="submit" value="${buttonTitle}">
+            <%
+                Equipment equipment = (Equipment) request.getAttribute("equipment");
+                String buttonTitle = "Добавить";
+                if (equipment != null && equipment.getId() > 0) {
+                    buttonTitle = "Редактировать";
+                }
+                Role role = (Role) request.getAttribute("role");
+                if (Role.ADMIN.equals(role)) {
+                    out.println("<input type=\"submit\" value=\"" + buttonTitle + "\">");
+                }
+            %>
             <input type="hidden" name="redirect" value="${redirect}">
+            <input type="hidden" name="token" value="${token}">
             <input type="hidden" name="typeEquipment" value="${typeEquipment}">
-            <a href="/${redirect}" class="button">Назад</a>
+            <a href="/${redirect}?token=${token}" class="button">Назад</a>
         </p>
     </div>
 </form>

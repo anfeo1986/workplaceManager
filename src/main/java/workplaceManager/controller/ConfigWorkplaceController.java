@@ -40,18 +40,18 @@ public class ConfigWorkplaceController {
                                      @RequestParam(name = "token") String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigWorkplace);
         //ModelAndView modelAndView = new ModelAndView(Pages.formConfigWorkplace);
-        System.out.println("redirect="+redirect);
-        Workplace workplace = new Workplace();
-        if(workplaceId != null && workplaceId > 0) {
-            workplace = workplaceManager.getWorkplaceById(workplaceId);
-        }
-        modelAndView.addObject("workplace", workplace);
+        if(!modelAndView.getViewName().equals(Pages.login)) {
+            Workplace workplace = new Workplace();
+            if (workplaceId != null && workplaceId > 0) {
+                workplace = workplaceManager.getWorkplaceById(workplaceId);
+            }
+            modelAndView.addObject("workplace", workplace);
 
-        if (redirect == null) {
-            redirect = "";
+            if (redirect == null) {
+                redirect = "";
+            }
+            modelAndView.addObject("redirect", redirect);
         }
-        modelAndView.addObject("redirect", redirect);
-
         return modelAndView;
     }
 
@@ -108,7 +108,7 @@ public class ConfigWorkplaceController {
         return modelAndView;
     }
 
-    @GetMapping(Pages.deleteWorkplcaePost)
+    @GetMapping(Pages.deleteWorkplacePost)
     public ModelAndView deleteWorkplace(@RequestParam(name = "id") Long id,
                                         @RequestParam(name = "token") String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + Pages.workplace);

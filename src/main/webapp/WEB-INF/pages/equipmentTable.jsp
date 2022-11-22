@@ -3,47 +3,100 @@
 
 <h1>${title}</h1>
 
-<a href="/config/equipment/addUpdateEquipment?redirect=${page}&typeEquipment=${typeEquipment}">Добавить </a>
+<%
+    String token = (String) request.getAttribute("token");
+    Role role = (Role) request.getAttribute("role");
+    String typeEquipment = (String) request.getAttribute("typeEquipment");
+    String redirect = (String) request.getAttribute("page");
+    String title = (String) request.getAttribute("title");
+    List<Equipment> equipmentList = (List<Equipment>) request.getAttribute("equipmentList");
+
+    String typeEquipmentStr = "";
+    if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+        typeEquipmentStr = "компьютер";
+    } else if (TypeEquipment.MONITOR.equals(typeEquipment)) {
+        typeEquipmentStr = "монитор";
+    } else if (TypeEquipment.MFD.equals(typeEquipment)) {
+        typeEquipmentStr = "МФУ";
+    } else if (TypeEquipment.PRINTER.equals(typeEquipment)) {
+        typeEquipmentStr = "принтер";
+    } else if (TypeEquipment.SCANNER.equals(typeEquipment)) {
+        typeEquipmentStr = "сканер";
+    } else if (TypeEquipment.UPS.equals(typeEquipment)) {
+        typeEquipmentStr = "ИБП";
+    }
+
+    if (Role.ADMIN.equals(role)) {
+        out.println("<a href=\"/" + Pages.addUpdateEquipment +
+                "?token=" + token +
+                "&redirect=" + redirect +
+                "&typeEquipment=" + typeEquipment +
+                "\">Добавить " + typeEquipmentStr + "</a>");
+    }
+%>
+<!--<a href="/config/equipment/addUpdateEquipment?redirect=${page}&typeEquipment=${typeEquipment}">Добавить </a>-->
 
 <table>
     <tr>
-        <th>id</th>
-        <th>${title}</th>
-        <th>Рабочее место</th>
-        <th>Бухгалтерия</th>
+        <%
+            out.println("<th><h1>id</h1></th>");
+            out.println("<th><h1>" + title + "</h1></th>");
+            out.println("<th><h1>Рабочее место</h1></th>");
+            out.println("<th><h1>Бухгалтерия</h1></th>");
+        %>
     </tr>
-    <c:set var="count" value="1"/>
-    <c:forEach var="equipment" items="${equipmentList}">
-        <tr>
-            <td>${count}</td>
-            <c:set var="count" value="${count+1}"/>
 
+    <%
+        int count = 1;
+        for (Equipment equipment : equipmentList) {
+            out.println("<tr>");
 
-            <td><a href="/config/equipment/addUpdateEquipment?id=${equipment.id}&redirect=${page}&typeEquipment=${typeEquipment}">${equipment}</a></td>
+            out.println("<td>" + count + "</td>");
+            count++;
 
-            <c:if test="${!empty equipment.workplace}">
-                <td>
-                    <a href="/config/workplace/addUpdateWorkplace?id=${equipment.workplace.id}&redirect=${page}&typeEquipment=${typeEquipment}">
-                        ${equipment.workplace.title}
-                    </a>
-                </td>
-            </c:if>
-            <c:if test="${empty equipment.workplace}">
-                <td/>
-            </c:if>
+            out.println("<td>");
+            out.println("<a href=\"/" + Pages.addUpdateEquipment +
+                    "?id=" + equipment.getId() +
+                    "&token=" + token +
+                    "&redirect=" + redirect +
+                    "&typeEquipment=" + typeEquipment + "\">" + equipment + "</a>");
+            out.println("</td>");
 
-            <c:if test="${!empty equipment.accounting1C}">
-                <td>
-                    <a href="/config/accounting1c/addUpdateAccounting1C?id=${equipment.accounting1C.id}&redirect=${page}&typeEquipment=${typeEquipment}">
-                            ${equipment.accounting1C}
-                    </a>
-                </td>
-            </c:if>
-            <c:if test="${empty equipment.accounting1C}">
-                <td/>
-            </c:if>
+            if (equipment.getWorkplace() != null) {
+                out.println("<td>");
+                out.println("<a href=\"/" + Pages.addUpdateWorkplace +
+                        "?id=" + equipment.getWorkplace().getId() +
+                        "&token=" + token +
+                        "&redirect=" + redirect +
+                        "&typeEquipment=" + typeEquipment + "\">" + equipment.getWorkplace().getTitle() + "</a>");
+                out.println("</td>");
+            } else {
+                out.println("<td/>");
+            }
 
-            <td><a href="/config/equipment/deleteEquipment?id=${equipment.id}&redirect=${page}&typeEquipment=${typeEquipment}">Удалить</a> </td>
-        </tr>
-    </c:forEach>
+            if (equipment.getAccounting1C() != null) {
+                out.println("<td>");
+                out.println("<a href=\"/" + Pages.addUpdateAccounting1C +
+                        "?id=" + equipment.getAccounting1C().getId() +
+                        "&token=" + token +
+                        "&redirect=" + redirect +
+                        "&typeEquipment=" + typeEquipment + "\">" + equipment.getAccounting1C() + "</a>");
+                out.println("</td>");
+            } else {
+                out.println("<td/>");
+            }
+
+            if (Role.ADMIN.equals(role)) {
+                out.println("<td>");
+                out.println("<a href=\"/" + Pages.deleteEquipmentPost +
+                        "?id=" + equipment.getId() +
+                        "&token=" + token +
+                        "&redirect=" + redirect +
+                        "&typeEquipment=" + typeEquipment + "\">Удалить</a>");
+                out.println("</td>");
+            }
+
+            out.println("</tr>");
+        }
+    %>
 </table>
