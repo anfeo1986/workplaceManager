@@ -2,7 +2,6 @@ package workplaceManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.db.domain.Role;
 import workplaceManager.db.domain.Users;
@@ -10,18 +9,15 @@ import workplaceManager.db.service.UserManager;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @Component
-public class Security {
+public class SecurityCrypt {
 
     private UserManager userManager;
 
@@ -30,25 +26,26 @@ public class Security {
         this.userManager = userManager;
     }
 
-    private String keyStr;// = "pxTAoY3f";
-
-    public Security() {
-        keyStr = generateString();
-    }
-
     public ModelAndView verifyUser(String token, String page) {
-        ModelAndView modelAndView = new ModelAndView("login");
+        ModelAndView modelAndView = new ModelAndView(Pages.login);
+
+        System.out.println("page=" + page);
 
         List<Users> userList = userManager.getUserList();
 
         for (Users user : userList) {
             String tokenForUser = getToken(user);
-            System.out.println("token=" + token);
-            System.out.println("tokenForUser=" + tokenForUser);
-            if (token != null && token.equals(tokenForUser) && user.getRole() == Role.ADMIN) {
+            if (token != null && token.equals(tokenForUser)) {
+                String passNoCrypt = decode(user.getPassword(), user.getSalt());
+                user.setSalt(generateKey());
+                user.setPassword(encode(passNoCrypt, user.getSalt()));
+                userManager.save(user);
+
+                String tokenNew = getToken(user);
+
                 modelAndView.setViewName(page);
-                modelAndView.addObject("token", token);
-                //modelAndView.getModelMap().addAttribute("token", token);
+                modelAndView.addObject("token", tokenNew);
+                modelAndView.addObject("role", user.getRole());
                 return modelAndView;
             }
         }
@@ -57,14 +54,14 @@ public class Security {
     }
 
     public String getToken(Users user) {
-        String password = decode(user.getPassword());
+        String password = decode(user.getPassword(), user.getSalt());
         String tokenNoCrypt = String.format("%s%s", user.getUsername(), password);
-        return encode(tokenNoCrypt);
+        return encode(tokenNoCrypt, user.getSalt());
     }
 
-    public String encode(String str) {
+    public String encode(String str, String key) {
         try {
-            return DatatypeConverter.printHexBinary(crypt(Cipher.ENCRYPT_MODE, str.getBytes()));
+            return DatatypeConverter.printHexBinary(crypt(Cipher.ENCRYPT_MODE, str.getBytes(), key));
         } catch (Exception exception) {
 
         }
@@ -72,16 +69,16 @@ public class Security {
         return null;
     }
 
-    private String decode(String str) {
+    private String decode(String str, String key) {
         try {
-            return new String(crypt(Cipher.DECRYPT_MODE, DatatypeConverter.parseHexBinary(str)));
+            return new String(crypt(Cipher.DECRYPT_MODE, DatatypeConverter.parseHexBinary(str), key));
         } catch (Exception exception) {
 
         }
         return null;
     }
 
-    private byte[] crypt(int mode, byte[] valueByte) throws BadPaddingException {
+    private byte[] crypt(int mode, byte[] valueByte, String keyStr) throws BadPaddingException {
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
             String algorithm = "AES";
@@ -101,43 +98,8 @@ public class Security {
         }
     }
 
-    public static void generateKey() {
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-            SecureRandom secureRandom = new SecureRandom();
-            int keyBitSize = 256;
-
-            keyGenerator.init(keyBitSize, secureRandom);
-
-            SecretKey secretKey = keyGenerator.generateKey();
-
-
-            System.out.println(secretKey);
-
-        } catch (Exception exception) {
-
-        }
-    }
-
-    public static String generateString() {
+    public String generateKey() {
         String uuid = UUID.randomUUID().toString();
-        return "uuid = " + uuid;
-    }
-
-    public static void main(String[] args) {
-        Security security = new Security();
-
-        String login="asd";
-        String encode = security.encode(login);
-        System.out.println(encode);
-        String decode = security.decode(encode);
-        System.out.println(decode);
-
-        security = new Security();
-
-        encode = security.encode(login);
-        System.out.println(encode);
-        decode = security.decode(encode);
-        System.out.println(decode);
+        return uuid;
     }
 }

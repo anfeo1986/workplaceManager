@@ -2,7 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h1>Бухгалтерия</h1>
-<a href="/config/accounting1c/addUpdateAccounting1C?redirect=accounting1c">Добавить оборудование в бухгалтерию</a>
+<%
+    String token = (String) request.getAttribute("token");
+    out.println("<a href=\"/config/accounting1c/addUpdateAccounting1C" +
+            "?redirect=accounting1c" +
+            "&token=" + token +
+            "\">Добавить оборудование в бухгалтерию</a>");
+%>
+
 
 <table>
     <tr>
@@ -25,12 +32,14 @@
             out.println("<td>");
             out.println("<a href=\"/config/accounting1c/addUpdateAccounting1C?" +
                     "id=" + accounting1C.getId() +
+                    "&token=" + token +
                     "&redirect=accounting1c\">" + accounting1C.getInventoryNumber() + "</a>");
             out.println("</td>");
 
             out.println("<td>");
             out.println("<a href=\"/config/accounting1c/addUpdateAccounting1C?" +
                     "id=" + accounting1C.getId() +
+                    "&token=" + token +
                     "&redirect=accounting1c\">" + accounting1C.getTitle() + "</a>");
             out.println("</td>");
 
@@ -63,6 +72,7 @@
                     out.println("<p>");
                     out.println("<a href=\"/config/equipment/addUpdateEquipment" +
                             "?id=" + equipment.getId() +
+                            "&token=" + token +
                             "&redirect=accounting1c" +
                             "&typeEquipment=" + typeEquipment + "\">" +
                             equipment + "</a>");
@@ -74,7 +84,9 @@
                 out.println("<td/>");
             }
 
-            out.println("<td><a href=\"/config/accounting1c/deleteAccounting1C?id=" + accounting1C.getId() + "\">Удалить</a></td>");
+            out.println("<td><a href=\"/config/accounting1c/deleteAccounting1C" +
+                    "?id=" + accounting1C.getId() +
+                    "&token=" + token +"\">Удалить</a></td>");
 
             out.println("</tr>");
         }

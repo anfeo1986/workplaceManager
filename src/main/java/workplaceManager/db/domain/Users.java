@@ -27,4 +27,7 @@ public class Users {
 
     @Column
     private Role role;
+
+    @Column
+    private String salt;
 }

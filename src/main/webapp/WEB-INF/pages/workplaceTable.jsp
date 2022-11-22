@@ -3,41 +3,109 @@
 <%@ page import="java.util.List" %>
 <%@ page import="workplaceManager.db.domain.*" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="workplaceManager.Pages" %>
 
 
 <h1>Рабочие места</h1>
-<a href="/config/workplace/addUpdateWorkplace">Добавить рабочее место</a>
+
+<%
+    String token = (String) request.getAttribute("token");
+    Role role = (Role) request.getAttribute("role");
+
+    if (Role.ADMIN.equals(role)) {
+        out.println("<a href=\"/config/workplace/addUpdateWorkplace" +
+                "?token=" + token +
+                "&redirect=" + Pages.workplace +
+                "\">Добавить рабочее место</a>");
+    }
+%>
 
 <table>
     <tr>
         <th/>
         <th><h1>Название</h1></th>
-        <th><h1><a href="/employee">Сотрудники</a></h1></th>
-        <th><h1>Компьютеры</h1></th>
-        <th>
-            <p><h1>Мониторы</h1></p>
-            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=monitor">Добавить монитор</a></p>
-        </th>
-        <th>
-            <p><h1>МФУ</h1></p>
-            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=mfd">Добавить МФУ</a></p>
-        </th>
-        <th>
-            <p><h1>Принтеры</h1></p>
-            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=printer">Добавить принтер</a></p>
-        </th>
-        <th>
-            <p><h1>Сканеры</h1></p>
-            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=scanner">Добавить сканер</a></p>
-        </th>
-        <th>
-            <p><h1>ИБП</h1></p>
-            <p><a href="/config/equipment/addUpdateEquipment?redirect=workplace&typeEquipment=ups">Добавить ИБП</a></p>
-        </th>
+        <%
+            out.println("<th>");
+            out.println("<p><h1><a href=\"/" + Pages.employee +
+                    "?token=" + token + "\">Сотрудники</a></h1></p>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<p><a href=\"/" + Pages.addUpdateEmpoyee +
+                        "?redirect=" + Pages.workplace +
+                        "&token=" + token + "\">Добавить сотрудника</a></p>");
+            }
+            out.println("</th>");
+
+            out.println("<th>");
+            out.println("<p><h1><a href=\"/" + Pages.computer +
+                    "?token=" + token + "\">Компьютеры</a></h1></p>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?redirect=" + Pages.workplace +
+                        "&typeEquipment=" + TypeEquipment.COMPUTER +
+                        "&token=" + token + "\">Добавить компьютер</a></p>");
+            }
+            out.println("</th>");
+
+            out.println("<th>");
+            out.println("<p><h1><a href=\"/" + Pages.monitor +
+                    "?token=" + token + "\">Мониторы</a></h1></p>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?redirect=" + Pages.workplace +
+                        "&typeEquipment=" + TypeEquipment.MONITOR +
+                        "&token=" + token + "\">Добавить монитор</a></p>");
+            }
+            out.println("</th>");
+
+            out.println("<th>");
+            out.println("<p><h1><a href=\"/" + Pages.mfd +
+                    "?token=" + token + "\">МФУ</a></h1></p>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?redirect=" + Pages.workplace +
+                        "&typeEquipment=" + TypeEquipment.MFD +
+                        "&token=" + token + "\">Добавить МФУ</a></p>");
+            }
+            out.println("</th>");
+
+            out.println("<th>");
+            out.println("<p><h1><a href=\"/" + Pages.printer +
+                    "?token=" + token + "\">Принтеры</a></h1></p>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?redirect=" + Pages.workplace +
+                        "&typeEquipment=" + TypeEquipment.PRINTER +
+                        "&token=" + token + "\">Добавить принтер</a></p>");
+            }
+            out.println("</th>");
+
+            out.println("<th>");
+            out.println("<p><h1><a href=\"/" + Pages.scanner +
+                    "?token=" + token + "\">Сканеры</a></h1></p>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?redirect=" + Pages.workplace +
+                        "&typeEquipment=" + TypeEquipment.SCANNER +
+                        "&token=" + token + "\">Добавить сканер</a></p>");
+            }
+            out.println("</th>");
+
+            out.println("<th>");
+            out.println("<p><h1><a href=\"/" + Pages.ups +
+                    "?token=" + token + "\">ИБП</a></h1></p>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?redirect=" + Pages.workplace +
+                        "&typeEquipment=" + TypeEquipment.UPS +
+                        "&token=" + token + "\">Добавить ИБП</a></p>");
+            }
+            out.println("</th>");
+        %>
     </tr>
 
     <%
         List<Workplace> workplaceList = (List<Workplace>) request.getAttribute("workplaceList");
+
         int count = 1;
         for (Workplace workplace : workplaceList) {
             List<Computer> computerList1 = new ArrayList<>();
@@ -49,7 +117,7 @@
 
             if (!workplace.getEquipmentList().isEmpty()) {
                 for (Equipment equipment : workplace.getEquipmentList()) {
-                    if(equipment instanceof Computer) {
+                    if (equipment instanceof Computer) {
                         computerList1.add((Computer) equipment);
                     }
                     if (equipment instanceof Monitor) {
@@ -75,12 +143,19 @@
             out.println("<td>" + count + "</td>");
             count++;
 
-            out.println("<td><a href=\"/config/workplace/addUpdateWorkplace?id=" + workplace.getId() + "\">" + workplace.getTitle() + "</a></td>");
+            out.println("<td><a href=\"/" + Pages.addUpdateWorkplace +
+                    "?id=" + workplace.getId() +
+                    "&redirect=" + Pages.workplace +
+                    "&token=" + token +
+                    "\">" + workplace.getTitle() + "</a></td>");
 
             out.println("<td>");
             if (!workplace.getEmployeeList().isEmpty()) {
                 for (Employee employee : workplace.getEmployeeList()) {
-                    out.println("<p><a href=\"/config/employee/addUpdateEmployee?id=" + employee.getId() + "&redirect=workplace\">" + employee.getName() + "</a></p>");
+                    out.println("<p><a href=\"/" + Pages.addUpdateEmpoyee +
+                            "?id=" + employee.getId() +
+                            "&token=" + token +
+                            "&redirect=workplace\">" + employee.getName() + "</a></p>");
                 }
             }
             out.println("</td>");
@@ -88,52 +163,75 @@
             //компьютеры
             out.println("<td>");
             for (Computer computer : computerList1) {
-                out.println("<p><a href=\"/config/equipment/addUpdateEquipment?id=" + computer.getId() +
-                        "&redirect=workplace&typeEquipment=computer\">" + computer + "</a></p>");
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?id=" + computer.getId() +
+                        "&token=" + token +
+                        "&redirect=" + Pages.workplace +
+                        "&typeEquipment=computer\">" + computer + "</a></p>");
             }
             out.println("</td>");
 
             //мониторы
             out.println("<td>");
             for (Monitor monitor : monitorList) {
-                out.println("<p><a href=\"/config/equipment/addUpdateEquipment?id=" + monitor.getId() +
-                        "&redirect=workplace&typeEquipment=monitor\">" + monitor + "</a></p>");
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?id=" + monitor.getId() +
+                        "&token=" + token +
+                        "&redirect=" + Pages.workplace +
+                        "&typeEquipment=monitor\">" + monitor + "</a></p>");
             }
             out.println("</td>");
 
             //МФУ
             out.println("<td>");
             for (Mfd mfd : mfdList) {
-                out.println("<p><a href=\"/config/equipment/addUpdateEquipment?id=" + mfd.getId() +
-                        "&redirect=workplace&typeEquipment=printer\">" + mfd + "</a></p>");
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?id=" + mfd.getId() +
+                        "&token=" + token +
+                        "&redirect=" + Pages.workplace +
+                        "&typeEquipment=printer\">" + mfd + "</a></p>");
             }
             out.println("</td>");
 
             //принтеры
             out.println("<td>");
             for (Printer printer : printerList) {
-                out.println("<p><a href=\"/config/equipment/addUpdateEquipment?id=" + printer.getId() +
-                        "&redirect=workplace&typeEquipment=printer\">" + printer + "</a></p>");
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?id=" + printer.getId() +
+                        "&token=" + token +
+                        "&redirect=" + Pages.workplace +
+                        "&typeEquipment=printer\">" + printer + "</a></p>");
             }
             out.println("</td>");
 
             //Сканеры
             out.println("<td>");
             for (Scanner scanner : scannerList) {
-                out.println("<p><a href=\"/config/equipment/addUpdateEquipment?id=" + scanner.getId() +
-                        "&redirect=workplace&typeEquipment=printer\">" + scanner + "</a></p>");
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?id=" + scanner.getId() +
+                        "&token=" + token +
+                        "&redirect=" + Pages.workplace +
+                        "&typeEquipment=printer\">" + scanner + "</a></p>");
             }
             out.println("</td>");
 
             //ИБП
             out.println("<td>");
             for (Ups ups : upsList) {
-                out.println("<p><a href=\"/config/equipment/addUpdateEquipment?id=" + ups.getId() +
-                        "&redirect=workplace&typeEquipment=printer\">" + ups + "</a></p>");
+                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
+                        "?id=" + ups.getId() +
+                        "&token=" + token +
+                        "&redirect=" + Pages.workplace +
+                        "&typeEquipment=printer\">" + ups + "</a></p>");
             }
             out.println("</td>");
 
-            out.println("<td><a href=\"/config/workplace/deleteWorkplace?id=" + workplace.getId() + "\">Удалить</a></td>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<td><a href=\"/" + Pages.deleteWorkplcaePost +
+                        "?id=" + workplace.getId() +
+                        "&redirect=" + Pages.workplace +
+                        "&token=" + token + "\">Удалить</a></td>");
+            }
 
             out.println("</tr>");
         }

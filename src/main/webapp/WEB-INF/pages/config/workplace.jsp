@@ -48,7 +48,8 @@
         <p>
             <input type="submit" value="${buttonTitle}">
             <input type="hidden" name="redirect" value="${redirect}">
-            <a href="/${redirect}" class="button">Назад</a>
+            <input type="hidden" name="token" value="${token}">
+            <a href="/${redirect}?token=${token}" class="button">Назад</a>
         </p>
     </div>
 </form>
