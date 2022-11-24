@@ -4,20 +4,25 @@
 <h1>Бухгалтерия</h1>
 <%
     String token = (String) request.getAttribute("token");
-    out.println("<a href=\"/config/accounting1c/addUpdateAccounting1C" +
-            "?redirect=accounting1c" +
-            "&token=" + token +
-            "\">Добавить оборудование в бухгалтерию</a>");
-%>
+    Role role = (Role) request.getAttribute("role");
 
+    if (Role.ADMIN.equals(role)) {
+        out.println("<a href=\"/" + Pages.addUpdateAccounting1C +
+                "?redirect=accounting1c" +
+                "&token=" + token +
+                "\">Добавить оборудование в бухгалтерию</a>");
+    }
+%>
 
 <table>
     <tr>
-        <th>ID</th>
-        <th>Инвентарный номер</th>
-        <th>Название</th>
-        <th>Материально-отвественное лицо</th>
-        <th>Оборудование</th>
+        <%
+            out.println("<th><h1>ID</h1></th>");
+            out.println("<th><h1>Инвентарный номер</h1></th>");
+            out.println("<th><h1>Название</h1></th>");
+            out.println("<th><h1>Материально-отвественное лицо</h1></th>");
+            out.println("<th><h1>Оборудование</h1></th>");
+        %>
     </tr>
 
     <%
@@ -30,17 +35,17 @@
             count++;
 
             out.println("<td>");
-            out.println("<a href=\"/config/accounting1c/addUpdateAccounting1C?" +
-                    "id=" + accounting1C.getId() +
+            out.println("<a href=\"/" + Pages.addUpdateAccounting1C +
+                    "?id=" + accounting1C.getId() +
                     "&token=" + token +
-                    "&redirect=accounting1c\">" + accounting1C.getInventoryNumber() + "</a>");
+                    "&redirect=" + Pages.accounting1c + "\">" + accounting1C.getInventoryNumber() + "</a>");
             out.println("</td>");
 
             out.println("<td>");
-            out.println("<a href=\"/config/accounting1c/addUpdateAccounting1C?" +
-                    "id=" + accounting1C.getId() +
+            out.println("<a href=\"/" + Pages.addUpdateAccounting1C +
+                    "?id=" + accounting1C.getId() +
                     "&token=" + token +
-                    "&redirect=accounting1c\">" + accounting1C.getTitle() + "</a>");
+                    "&redirect=" + Pages.accounting1c + "\">" + accounting1C.getTitle() + "</a>");
             out.println("</td>");
 
             if (accounting1C.getEmployee() != null) {
@@ -70,10 +75,10 @@
                     }
 
                     out.println("<p>");
-                    out.println("<a href=\"/config/equipment/addUpdateEquipment" +
+                    out.println("<a href=\"/" + Pages.addUpdateEquipment +
                             "?id=" + equipment.getId() +
                             "&token=" + token +
-                            "&redirect=accounting1c" +
+                            "&redirect=" + Pages.accounting1c +
                             "&typeEquipment=" + typeEquipment + "\">" +
                             equipment + "</a>");
                     out.println("</p>");
@@ -84,9 +89,12 @@
                 out.println("<td/>");
             }
 
-            out.println("<td><a href=\"/config/accounting1c/deleteAccounting1C" +
-                    "?id=" + accounting1C.getId() +
-                    "&token=" + token +"\">Удалить</a></td>");
+            if (Role.ADMIN.equals(role)) {
+                out.println("<td><a href=\"/" + Pages.deleteAccounting1CPost +
+                        "?id=" + accounting1C.getId() +
+                        "&redirect=" + Pages.accounting1c +
+                        "&token=" + token + "\">Удалить</a></td>");
+            }
 
             out.println("</tr>");
         }

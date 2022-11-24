@@ -4,7 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import workplaceManager.Pages;
+import workplaceManager.SecurityCrypt;
 import workplaceManager.db.domain.Employee;
+import workplaceManager.db.domain.Role;
+import workplaceManager.db.domain.Users;
 import workplaceManager.db.domain.Workplace;
 import workplaceManager.db.service.EmployeeManager;
 import workplaceManager.db.service.WorkplaceManager;
@@ -12,7 +16,7 @@ import workplaceManager.db.service.WorkplaceManager;
 import java.util.List;
 
 @Controller
-@RequestMapping("/config/employee")
+//@RequestMapping("/config/employee")
 public class ConfigEmployeeController {
     private WorkplaceManager workplaceManager;
 
@@ -28,102 +32,131 @@ public class ConfigEmployeeController {
         this.employeeManager = employeeManager;
     }
 
-    @GetMapping("/addUpdateEmployee")
+    private SecurityCrypt securityCrypt;
+
+    @Autowired
+    public void setSecurity(SecurityCrypt securityCrypt) {
+        this.securityCrypt = securityCrypt;
+    }
+
+    @GetMapping(Pages.addUpdateEmployee)
     public ModelAndView addUpdateEmployee(@RequestParam(name = "id", required = false) Long employeeId,
-                                          @RequestParam(name = "redirect", required = false) String redirect) {
-        ModelAndView modelAndView = new ModelAndView("/config/employee");
+                                          @RequestParam(name = "redirect", required = false) String redirect,
+                                          @RequestParam(name = "token") String token) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
 
-        Employee employee = new Employee();
-        if (employeeId != null && employeeId > 0) {
-            employee = employeeManager.getEmployeeById(employeeId);
+        if (!modelAndView.getViewName().equals(Pages.login)) {
+            Employee employee = new Employee();
+            if (employeeId != null && employeeId > 0) {
+                employee = employeeManager.getEmployeeById(employeeId);
+            }
+            modelAndView.addObject("employee", employee);
+
+            List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
+            modelAndView.addObject("workplaceList", workplaceList);
+
+            if (redirect == null) {
+                redirect = "";
+            }
+            modelAndView.addObject("redirect", redirect);
         }
-        modelAndView.addObject("employee", employee);
-
-        List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-        modelAndView.addObject("workplaceList", workplaceList);
-
-        if (redirect == null) {
-            redirect = "";
-        }
-        modelAndView.addObject("redirect", redirect);
-
         return modelAndView;
     }
 
-    @PostMapping("/addEmployeePost")
+    @PostMapping(Pages.addEmployeePost)
     public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee,
                                     @ModelAttribute("workplace_id") Long workplaceId,
-                                    @RequestParam(name = "redirect", required = false) String redirect) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/config/employee");
+                                    @RequestParam(name = "redirect", required = false) String redirect,
+                                    @RequestParam(name = "token") String token) {
+        Users user = securityCrypt.getUserByToken(token);
+        if (user != null && Role.ADMIN.equals(user.getRole())) {
+            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
 
-        Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
+            if (!modelAndView.getViewName().equals(Pages.login)) {
+                Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
 
-        Employee employeeFromDb = employeeManager.getEmployeeByName(employee.getName());
-        if (employeeFromDb != null) {
-            employee.setWorkplace(workplace);
+                Employee employeeFromDb = employeeManager.getEmployeeByName(employee.getName());
+                if (employeeFromDb != null) {
+                    employee.setWorkplace(workplace);
 
-            modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
-            modelAndView.addObject("employee", employee);
+                    modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
+                    modelAndView.addObject("employee", employee);
+                } else {
+                    employee.setWorkplace(workplace);
+                    employeeManager.save(employee);
+
+                    modelAndView.addObject("message", String.format("%s успешно добавлен", employee.getName()));
+                    modelAndView.addObject("employee", new Employee());
+                }
+
+                List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
+                modelAndView.addObject("workplaceList", workplaceList);
+
+                if (redirect == null) {
+                    redirect = "";
+                }
+                modelAndView.addObject("redirect", redirect);
+            }
+            return modelAndView;
         } else {
-            employee.setWorkplace(workplace);
-            employeeManager.save(employee);
-
-            modelAndView.addObject("message", String.format("%s успешно добавлен", employee.getName()));
-            modelAndView.addObject("employee", new Employee());
+            return new ModelAndView(Pages.login);
         }
-
-        List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-        modelAndView.addObject("workplaceList", workplaceList);
-
-        if (redirect == null) {
-            redirect = "";
-        }
-        modelAndView.addObject("redirect", redirect);
-
-        return modelAndView;
     }
 
-    @PostMapping("/updateEmployeePost")
+    @PostMapping(Pages.updateEmployeePost)
     public ModelAndView updateEmployee(@ModelAttribute("employee") Employee employee,
                                        @ModelAttribute("workplace_id") Long workplaceId,
-                                       @ModelAttribute("redirect") String redirect) {
-        ModelAndView modelAndView = new ModelAndView();
+                                       @ModelAttribute("redirect") String redirect,
+                                       @RequestParam(name = "token") String token) {
+        Users user = securityCrypt.getUserByToken(token);
+        if (user != null && Role.ADMIN.equals(user.getRole())) {
+            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
 
-        Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
+            if (!modelAndView.getViewName().equals(Pages.login)) {
+                Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
 
-        Employee employeeFromDB = employeeManager.getEmployeeByName(employee.getName());
-        if (employeeFromDB != null && employeeFromDB.getId() != employee.getId()) {
-            employee.setWorkplace(workplace);
-            modelAndView.setViewName("/config/employee");
-            modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
-            modelAndView.addObject("employee", employee);
+                Employee employeeFromDB = employeeManager.getEmployeeByName(employee.getName());
+                if (employeeFromDB != null && employeeFromDB.getId() != employee.getId()) {
+                    employee.setWorkplace(workplace);
+                    //modelAndView.setViewName("/config/employee");
+                    modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
+                    modelAndView.addObject("employee", employee);
+                } else {
+                    employee.setWorkplace(workplace);
+                    employeeManager.save(employee);
+                    modelAndView.setViewName("redirect:/" + redirect);
+                }
+
+                List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
+                modelAndView.addObject("workplaceList", workplaceList);
+
+                if (redirect == null) {
+                    redirect = "";
+                }
+                modelAndView.addObject("redirect", redirect);
+            }
+
+            return modelAndView;
         } else {
-            employee.setWorkplace(workplace);
-            employeeManager.save(employee);
-            modelAndView.setViewName("redirect:/" + redirect);
+            return new ModelAndView(Pages.login);
         }
-
-        List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-        modelAndView.addObject("workplaceList", workplaceList);
-
-        if (redirect == null) {
-            redirect = "";
-        }
-        modelAndView.addObject("redirect", redirect);
-
-
-        return modelAndView;
     }
 
-    @GetMapping("/deleteEmployee")
-    public ModelAndView deleteEmployee(@RequestParam(name = "id") Long id) {
-        Employee employee = employeeManager.getEmployeeById(id);
-        employeeManager.delete(employee);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/employee");
-        return modelAndView;
+    @GetMapping(Pages.deleteEmployeePost)
+    public ModelAndView deleteEmployee(@RequestParam(name = "id") Long id,
+                                       @RequestParam(name = "token") String token) {
+        Users user = securityCrypt.getUserByToken(token);
+        if (user != null && Role.ADMIN.equals(user.getRole())) {
+            ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/"+Pages.employee);
+            if (!modelAndView.getViewName().equals(Pages.login)) {
+                Employee employee = employeeManager.getEmployeeById(id);
+                employeeManager.delete(employee);
+            }
+            //modelAndView.setViewName("redirect:/employee");
+            return modelAndView;
+        } else {
+            return new ModelAndView(Pages.login);
+        }
     }
 
 

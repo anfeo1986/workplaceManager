@@ -13,7 +13,7 @@ public class Accounting1C implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
 
     @Column
     private String inventoryNumber;

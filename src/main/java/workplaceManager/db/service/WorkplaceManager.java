@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import workplaceManager.db.domain.Employee;
 import workplaceManager.db.domain.Workplace;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,6 +21,9 @@ public class WorkplaceManager extends EntityManager<Workplace> {
         Session session = sessionFactory.getCurrentSession();
 
         List<Workplace> workplaceList = session.createQuery("from Workplace as workplace order by workplace.title asc ").list();
+        if(workplaceList == null) {
+            workplaceList = new ArrayList<>();
+        }
         workplaceList.stream().forEach(workplace -> initializeWorkplace(workplace));
 
         //return session.createQuery("from Workplace as workplace order by workplace.title asc ").list();

@@ -29,9 +29,23 @@ public class SecurityCrypt {
     public ModelAndView verifyUser(String token, String page) {
         ModelAndView modelAndView = new ModelAndView(Pages.login);
 
-        System.out.println("page=" + page);
+        //System.out.println("page=" + page);
+        Users user = getUserByToken(token);
+        if(user != null) {
+            String passNoCrypt = decode(user.getPassword(), user.getSalt());
+            user.setSalt(generateKey());
+            user.setPassword(encode(passNoCrypt, user.getSalt()));
+            userManager.save(user);
 
-        List<Users> userList = userManager.getUserList();
+            String tokenNew = getToken(user);
+
+            modelAndView.setViewName(page);
+            modelAndView.addObject("token", tokenNew);
+            modelAndView.addObject("role", user.getRole());
+            return modelAndView;
+        }
+
+        /*List<Users> userList = userManager.getUserList();
 
         for (Users user : userList) {
             String tokenForUser = getToken(user);
@@ -48,9 +62,21 @@ public class SecurityCrypt {
                 modelAndView.addObject("role", user.getRole());
                 return modelAndView;
             }
-        }
+        }*/
 
         return modelAndView;
+    }
+
+    public Users getUserByToken(String token) {
+        List<Users> userList = userManager.getUserList();
+        for(Users user : userList) {
+            String tokenForUser = getToken(user);
+            if (token != null && token.equals(tokenForUser)) {
+                return user;
+            }
+        }
+
+        return null;
     }
 
     public String getToken(Users user) {

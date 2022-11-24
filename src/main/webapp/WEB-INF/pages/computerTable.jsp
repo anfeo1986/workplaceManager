@@ -8,45 +8,62 @@
 
 <h1>${title}</h1>
 
-<a href="/config/equipment/addUpdateEquipment?redirect=${page}&typeEquipment=${typeEquipment}">Добавить </a>
+<%
+    String token = (String) request.getAttribute("token");
+    Role role = (Role) request.getAttribute("role");
+    String typeEquipment = (String) request.getAttribute("typeEquipment");
+    String redirect = (String) request.getAttribute("page");
+    String title = (String) request.getAttribute("title");
+    List<Computer> computerList = (List<Computer>) request.getAttribute("equipmentList");
+
+    if (Role.ADMIN.equals(role)) {
+        out.println("<a href=\"/" + Pages.addUpdateEquipment +
+                "?redirect=" + redirect +
+                "&token=" + token +
+                "&typeEquipment=" + typeEquipment + "\">Добавить компьютер</a>");
+    }
+%>
 
 <table>
     <tr>
-        <th>id</th>
-        <th>${title}</th>
-        <th>ОС</th>
-        <th>Процессор</th>
-        <th>Материнская плата</th>
-        <th>Оперативная память</th>
-        <th>Жесткие диски</th>
-        <th>Видеокарта</th>
-        <th>Рабочее место</th>
-        <th>Бухгалтерия</th>
+        <%
+            out.println("<th><h1>id</h1></th>");
+            out.println("<th><h1>" + title + "</h1></th>");
+            out.println("<th><h1>ОС</h1></th>");
+            out.println("<th><h1>Процессор</h1></th>");
+            out.println("<th><h1>Материнская плата</h1></th>");
+            out.println("<th><h1>Оперативная память</h1></th>");
+            out.println("<th><h1>Жесткие диски</h1></th>");
+            out.println("<th><h1>Видеокарта</h1></th>");
+            out.println("<th><h1>Рабочее место</h1></th>");
+            out.println("<th><h1>Бухгалтерия</h1></th>");
+        %>
     </tr>
     <%
-        List<Computer> computerList = (List<Computer>) request.getAttribute("equipmentList");
-        String redirect = (String) request.getAttribute("page");
-        String typeEquipment = (String) request.getAttribute("typeEquipment");
         int count = 1;
-        for(Computer computer : computerList) {
+        for (Computer computer : computerList) {
             out.println("<tr>");
 
             out.println(String.format("<td>%s</td>", count));
             count++;
 
-            out.println(String.format("<td><a href=\"/config/equipment/addUpdateEquipment?id=%s&redirect=%s&typeEquipment=%s\">%s</a></td>",
-                    computer.getId(), redirect, typeEquipment, computer));
+            out.println(String.format("<td><a href=\"/" + Pages.addUpdateEquipment +
+                            "?id=%s" +
+                            "&token=%s" +
+                            "&redirect=%s" +
+                            "&typeEquipment=%s\">%s</a></td>",
+                    computer.getId(), token, redirect, typeEquipment, computer));
 
-            out.println(String.format("<td>%s</td>",computer.getOperationSystem() != null ? computer.getOperationSystem() : ""));
+            out.println(String.format("<td>%s</td>", computer.getOperationSystem() != null ? computer.getOperationSystem() : ""));
 
             out.println(String.format("<td>%s</td>", computer.getProcessor() != null ? computer.getProcessor() : ""));
 
             out.println(String.format("<td>%s</td>", computer.getMotherBoard() != null ? computer.getMotherBoard() : ""));
 
             String ramStr = "";
-            if(!CollectionUtils.isEmpty(computer.getRamList())) {
+            if (!CollectionUtils.isEmpty(computer.getRamList())) {
                 int countRam = 1;
-                for(Ram ram : computer.getRamList()) {
+                for (Ram ram : computer.getRamList()) {
                     ramStr += String.format("%s. %s", countRam, ram);
                     countRam++;
                 }
@@ -54,9 +71,9 @@
             out.println(String.format("<td>%s</td>", ramStr));
 
             String hardDriveStr = "";
-            if(!CollectionUtils.isEmpty(computer.getHardDriveList())) {
+            if (!CollectionUtils.isEmpty(computer.getHardDriveList())) {
                 int countHardDrive = 1;
-                for(HardDrive hardDrive : computer.getHardDriveList()) {
+                for (HardDrive hardDrive : computer.getHardDriveList()) {
                     hardDriveStr += String.format("%s. %s", countHardDrive, hardDrive);
                     countHardDrive++;
                 }
@@ -65,23 +82,36 @@
 
             out.println(String.format("<td>%s</td>", computer.getVideoCard() != null ? computer.getVideoCard() : ""));
 
-            if(computer.getWorkplace() != null) {
-                out.println(String.format("<td><a href=\"/config/workplace/addUpdateWorkplace?id=%s&redirect=%s&typeEquipment=%s\">%s</a></td>",
-                        computer.getWorkplace().getId(), redirect, typeEquipment, computer.getWorkplace().getTitle()));
+            if (computer.getWorkplace() != null) {
+                out.println(String.format("<td><a href=\"/" + Pages.addUpdateWorkplace +
+                                "?id=%s" +
+                                "&token=%s" +
+                                "&redirect=%s" +
+                                "&typeEquipment=%s\">%s</a></td>",
+                        computer.getWorkplace().getId(), token, redirect, typeEquipment, computer.getWorkplace().getTitle()));
             } else {
                 out.println("<td/>");
             }
 
-            if(computer.getAccounting1C() != null) {
-                out.println(String.format("<td><a href=\"/config/accounting1c/addUpdateAccounting1C?id=%s&redirect=%s&typeEquipment=%s\">%s</a></td>",
-                        computer.getAccounting1C().getId(), redirect, typeEquipment, computer.getAccounting1C()));
+            if (computer.getAccounting1C() != null) {
+                out.println(String.format("<td><a href=\"/" + Pages.addUpdateAccounting1C +
+                                "?id=%s" +
+                                "&token=%s" +
+                                "&redirect=%s" +
+                                "&typeEquipment=%s\">%s</a></td>",
+                        computer.getAccounting1C().getId(), token, redirect, typeEquipment, computer.getAccounting1C()));
             } else {
                 out.println("<td/>");
             }
 
-            out.println(String.format("<td><a href=\"/config/equipment/deleteEquipment?id=%s&redirect=%s&typeEquipment=%s\">Удалить</a> </td>",
-                    computer.getId(), redirect, typeEquipment));
-
+            if (Role.ADMIN.equals(role)) {
+                out.println(String.format("<td><a href=\"/" + Pages.deleteEquipmentPost +
+                                "?id=%s" +
+                                "&token=%s" +
+                                "&redirect=%s" +
+                                "&typeEquipment=%s\">Удалить</a> </td>",
+                        computer.getId(), token, redirect, typeEquipment));
+            }
             out.println("</tr>");
         }
     %>

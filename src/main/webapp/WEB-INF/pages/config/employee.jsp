@@ -1,94 +1,94 @@
+<%@ page import="workplaceManager.db.domain.Employee" %>
+<%@ page import="workplaceManager.Pages" %>
+<%@ page import="workplaceManager.db.domain.Workplace" %>
+<%@ page import="java.util.List" %>
+<%@ page import="workplaceManager.db.domain.Role" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
-    <c:if test="${employee.id > 0}">
-        <title>Редактирование сотрудника</title>
-        <c:url value="/config/employee/updateEmployeePost" var="url"/>
-        <c:set var="employee_id" value="${employee.id}"/>
-        <c:set var="buttonTitle" value="Редактировать"/>
-    </c:if>
-    <c:if test="${employee.id <= 0}">
-        <title>Добавление сотрудника</title>
-        <c:url value="/config/employee/addEmployeePost" var="url"/>
-        <c:set var="employee_id" value="0"/>
-        <c:set var="buttonTitle" value="Добавить"/>
-    </c:if>
+    <%
+        Employee employee = (Employee) request.getAttribute("employee");
+        String buttonTitle = "Добавить";
+        String token = (String) request.getAttribute("token");
 
-    <c:if test="${empty employee.name}">
-        <c:set var="employeeName" value=""/>
-    </c:if>
-    <c:if test="${!empty employee.name}">
-        <c:set var="employeeName" value="${employee.name}"/>
-    </c:if>
+        String url = "";
+        if (employee != null && employee.getId() > 0) {
+            out.println("<title>Редактирование сотрудника</title>");
+            url = "/" + Pages.updateEmployeePost;
+            buttonTitle = "Редактировать";
+        } else {
+            out.println("<title>Добавление сотрудника</title>");
+            url = "/" + Pages.addEmployeePost;
+        }
+    %>
 
-    <c:if test="${empty employee.post}">
-        <c:set var="employeePost" value=""/>
-    </c:if>
-    <c:if test="${!empty employee.post}">
-        <c:set var="employeePost" value="${employee.post}"/>
-    </c:if>
-
-    <c:if test="${empty employee.workplace}">
-        <c:set var="employeeWorkplaceId" value=""/>
-    </c:if>
-    <c:if test="${!empty employee.workplace}">
-        <c:set var="employeeWorkplaceId" value="${employee.workplace.id}"/>
-    </c:if>
 </head>
 
 <body>
+<%
+    String error = (String) request.getAttribute("error");
+    if (error != null && error != "") {
+        out.println("<h3>" + error + "</h3>");
+    }
+    String message = (String) request.getAttribute("message");
+    if (message != null && message != "") {
+        out.println("<h3>" + message + "</h3>");
+    }
 
-<c:if test="${!empty error}">
-    <h3><c:out value="${error}"/></h3>
-</c:if>
-<c:if test="${!empty message}">
-    <h3><c:out value="${message}"/></h3>
-</c:if>
+    out.println("<form action=\"" + url + "\" method=\"post\">");
+    if (employee != null && employee.getId() > 0) {
+        out.println("<input type=\"hidden\" name=\"id\" value=\"" + employee.getId() + "\">");
+    }
 
-<form action="${url}" method="post">
-    <c:if test="${employee_id > 0}">
-        <input type="hidden" name="id" value="${employee_id}">
-    </c:if>
+    out.println("<div class=\"wrapper_500\">");
+    out.println("<p>");
+    out.println("<label for=\"name\">ФИО</label>");
+    String employeeName = (employee != null && employee.getName() != null) ? employee.getName() : "";
+    out.println("<input type=\"text\" name=\"name\" id=\"name\" value=\"" + employeeName + "\">");
+    out.println("</p>");
 
-    <div class="wrapper_500">
-        <p>
-            <label for="name">ФИО</label>
-            <input type="text" name="name" id="name" value="${employeeName}">
-        </p>
+    out.println("<p>");
+    out.println("<label for=\"post\">Должность</label>");
+    String employeePost = (employee != null && employee.getPost() != null) ? employee.getPost() : "";
+    out.println("<input type=\"text\" name=\"post\" id=\"post\" value=\"" + employeePost + "\">");
+    out.println("</p>");
 
-        <p>
-            <label for="post">Должность</label>
-            <input type="text" name="post" id="post" value="${employeePost}">
-        </p>
+    out.println("<p>");
+    List<Workplace> workplaceList = (List<Workplace>) request.getAttribute("workplaceList");
+    out.println("<label>Рабочее место</label>");
+    out.println("<select name=\"workplace_id\">");
+    out.println("<option value=\"-1\"/>");
+    Long workplaceId = (employee != null && employee.getWorkplace() != null) ? employee.getWorkplace().getId() : -1;
+    for (Workplace workplace : workplaceList) {
+        if (workplace.getId() == workplaceId) {
+            out.println("<option selected value=\"" + workplace.getId() + "\">" + workplace.getTitle() + "</option>");
+        } else {
+            out.println("<option value=\"" + workplace.getId() + "\">" + workplace.getTitle() + "</option>");
+        }
+    }
+    out.println("</select>");
+    out.println("</p>");
+    out.println("</div>");
 
-        <p>
-            <label>Рабочее место</label>
-            <select name="workplace_id">
-                <option value="-1"/>
-                <%--<option disabled>Выберите рабочее место</option>--%>
-                <c:forEach var="workplace" items="${workplaceList}">
-                    <c:if test="${employeeWorkplaceId == workplace.id}">
-                        <option selected value="${workplace.id}">${workplace.title}</option>
-                    </c:if>
-                    <c:if test="${employeeWorkplaceId != workplace.id}">
-                        <option value="${workplace.id}">${workplace.title}</option>
-                    </c:if>
-                </c:forEach>
-            </select>
-        </p>
-    </div>
+    out.println("<div align=\"center\">");
+    out.println("<p>");
+    Role role = (Role) request.getAttribute("role");
+    if (Role.ADMIN.equals(role)) {
+        out.println("<input type=\"submit\" value=\"" + buttonTitle + "\">");
+    }
+    String redirect = (String) request.getAttribute("redirect");
+    out.println("<input type=\"hidden\" name=\"redirect\" value=\"" + redirect + "\">");
+    out.println("<input type=\"hidden\" name=\"token\" value=\"" + token + "\">");
+    out.println("<a href=\"/" + redirect + "?token=" + token + "\" class=\"button\">Назад</a>");
 
-    <div align="center">
-        <p>
-            <input type="submit" value="${buttonTitle}">
-            <input type="hidden" name="redirect" value="${redirect}">
-            <a href="/${redirect}" class="button">Назад</a>
-        </p>
-    </div>
-</form>
+    out.println("</p>");
+    out.println("</div>");
 
+    out.println("</form>");
+%>
 </body>
 </html>
