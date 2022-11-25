@@ -25,6 +25,8 @@ public class Ram {
     @Column
     private String frequency;
 
+    private String deviceLocator;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "computer")
     private Computer computer;
