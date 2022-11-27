@@ -129,10 +129,21 @@ public class EquipmentManager extends EntityManager<Equipment> {
     @Transactional
     public Equipment getEquipmentByUid(String uid) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from Equipment as equipment where equipment.uid='" + uid + "'");
+        Query query = session.createQuery("from Equipment as equipment " +
+                "where equipment.uid is not null and equipment.uid!='' and equipment.uid='" + uid + "'");
         Equipment equipment = (Equipment) query.uniqueResult();
 
         return equipment;
+    }
+
+    @Transactional
+    public Computer getComputerByIp(String ip) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from Equipment as equipment " +
+                "where equipment.ip is not null and equipment.ip!='' and equipment.ip='" + ip + "'");
+        Computer computer = (Computer) query.uniqueResult();
+
+        return computer;
     }
 
     @Override
@@ -145,6 +156,8 @@ public class EquipmentManager extends EntityManager<Equipment> {
 
     protected void initializeComputer(Computer computer) {
         if(computer != null) {
+            Hibernate.initialize(computer.getProcessorList());
+            Hibernate.initialize(computer.getVideoCardList());
             Hibernate.initialize(computer.getHardDriveList());
             Hibernate.initialize(computer.getRamList());
         }

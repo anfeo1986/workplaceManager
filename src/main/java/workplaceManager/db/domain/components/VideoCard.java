@@ -13,12 +13,20 @@ public class VideoCard {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column
-    private String manufacturer;
+    //@Column
+    //private String manufacturer;
 
     @Column
     private String model;
 
-    @OneToOne(mappedBy = "videoCard", cascade = CascadeType.ALL)
+    //@OneToOne(mappedBy = "videoCard", cascade = CascadeType.ALL)
+    //private Computer computer;
+    @ManyToOne(optional = true,cascade = CascadeType.ALL)
+    @JoinColumn(name = "computer")
     private Computer computer;
+
+    @Override
+    public String toString() {
+        return model;
+    }
 }

@@ -21,6 +21,9 @@ public class OperationSystem {
     @Column
     private String version;
 
+    //@Column
+    //private String netName;
+
     @Override
     public String toString() {
         return String.format("%s (%s)", vendor, version);

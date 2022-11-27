@@ -17,6 +17,7 @@ public class Pages {
     public static final String formConfigEquipment = "config/equipment";
     public static final String addEquipmentPost = "config/equipment/addEquipmentPost";
     public static final String updateEquipmentPost = "config/equipment/updateEquipmentPost";
+    public static final String readConfigComputer = "config/equipment/readConfigComputer";
     public static final String computer = "computer";
     public static final String monitor = "monitor";
     public static final String printer = "printer";

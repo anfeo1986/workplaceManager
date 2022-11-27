@@ -19,17 +19,17 @@ public class MotherBoard {
     @Column
     private String model;
 
-    @Column
-    private String socket;
+    //@Column
+    //private String socket;
 
-    @Column
-    private TypeRam typeRam;
+    //@Column
+    //private TypeRam typeRam;
 
-    @Column
-    private String ramFrequency;
+    //@Column
+    //private String ramFrequency;
 
-    @Column
-    private String ramMaxAmount;
+    //@Column
+    //private String ramMaxAmount;
 
     @OneToOne(mappedBy = "motherBoard")
     private Computer computer;

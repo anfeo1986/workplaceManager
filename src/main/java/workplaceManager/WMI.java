@@ -2,7 +2,9 @@ package workplaceManager;
 
 import com.profesorfalken.wmi4java.WMI4Java;
 import com.profesorfalken.wmi4java.WMIClass;
+import workplaceManager.db.domain.Computer;
 import workplaceManager.db.domain.OperationSystem;
+import workplaceManager.db.domain.TypeOS;
 import workplaceManager.db.domain.components.*;
 
 import java.io.*;
@@ -16,6 +18,7 @@ public class WMI {
 
     private static final String getVendorOperationSystem = "OS get Caption";
     private static final String getVersionOperationSystem = "OS get Version";
+    private static final String getNetNameOperationSystem = "OS get CSName";
 
     private static final String getModelProcessor = "CPU get Name";
     private static final String getNumberOfCoresProcessor = "CPU get NumberOfCores";
@@ -40,8 +43,18 @@ public class WMI {
 
         operationSystem.setVendor(getParameter(ip, getVendorOperationSystem).get(0));
         operationSystem.setVersion(getParameter(ip, getVersionOperationSystem).get(0));
+        //operationSystem.setNetName(getParameter(ip, getNetNameOperationSystem).get(0));
+        operationSystem.setTypeOS(TypeOS.windows);
 
         return operationSystem;
+    }
+
+    public static String getNetName(String ip) throws IOException {
+        if (!ping(ip)) {
+            throw new IOException("Заданный узел не доступен");
+        }
+
+        return getParameter(ip, getNetNameOperationSystem).get(0);
     }
 
     public static MotherBoard getMotherBoard(String ip) throws IOException {
@@ -183,7 +196,6 @@ public class WMI {
         return videoCardList;
     }
 
-
     private static List<String> getParameter(String ip, String command) throws IOException {
         List<String> listConfig = new ArrayList<>();
         Runtime rt = Runtime.getRuntime();
@@ -235,80 +247,59 @@ public class WMI {
         }
     }
 
-
-    public static void main(String[] args) {
-        for(int i=2;i<=200;i++) {
-
-            Date date = new Date();
-            String ip = "10.140.40."+i;
-            System.out.println(ip);
-            if(!ping(ip)) {
-                System.out.println("Нет пинга");
-                continue;
-            }
-            try {
-                OperationSystem operationSystem = getOperationSystem(ip);
-                System.out.println(operationSystem);
-            } catch (Exception exception) {
-                System.out.println("OperationSystem: " + exception.getMessage());
-            }
-            try {
-                MotherBoard motherBoard = getMotherBoard(ip);
-                System.out.println(motherBoard);
-            } catch (Exception exception) {
-                System.out.println(exception.getMessage());
-            }
-            try {
-                List<Processor> processorList = getProcessorList(ip);
-                for(Processor processor : processorList) {
-                    System.out.println(processor);
-                }
-            } catch (Exception exception) {
-                System.out.println("MotherBoard: " + exception.getMessage());
-            }
-            try {
-                List<Ram> ramList = getRamList(ip);
-                for(Ram ram : ramList) {
-                    System.out.println(ram);
-                }
-            } catch (Exception exception) {
-                System.out.println("ramList: " + exception.getMessage());
-            }
-            try {
-                List<HardDrive> hardDriveList = getHardDriveList(ip);
-                for(HardDrive hardDrive:hardDriveList) {
-                    System.out.println(hardDrive);
-                }
-            } catch (Exception exception) {
-                System.out.println("hardDriveList: " + exception.getMessage());
-            }
-            try {
-                List<VideoCard> videoCardList = getVideoCard(ip);
-                for(VideoCard videoCard:videoCardList) {
-                    System.out.println(videoCard);
-                }
-            } catch (Exception exception) {
-                System.out.println("videoCardList: " + exception.getMessage());
-            }
-            Date date1 = new Date();
-            System.out.println(date1.getTime() - date.getTime());
+    public static void getAllConfigFormComputerWindows(Computer computer) throws Exception {
+        String ip = computer.getIp();
+        if (ip == null || ip.isEmpty()) {
+            throw new Exception("Ip не указан");
         }
 
+        System.out.println(ip);
+        if (!ping(ip)) {
+            throw new Exception("Нет пинга");
+        }
 
+        String error = "";
+        try {
+            computer.setNetName(getNetName(ip));
+        } catch (Exception exception) {
+            error += exception.getMessage() + System.lineSeparator();
+        }
 
+        try {
+            computer.setOperationSystem(getOperationSystem(ip));
+        } catch (Exception exception) {
+            error += exception.getMessage() + System.lineSeparator();
+        }
 
-        List<Map<String, String>> videocontroller = WMI4Java.get().computerName("10.140.40.12").namespace("root/cimv2").getWMIObjectList(WMIClass.WIN32_VIDEOCONTROLLER);
+        try {
+            computer.setMotherBoard(getMotherBoard(ip));
+        } catch (Exception exception) {
+            error += exception.getMessage() + System.lineSeparator();
+        }
 
-        List<Map<String, String>> diskdrive6 = WMI4Java.get().computerName("10.140.40.99").namespace("root/cimv2").getWMIObjectList(WMIClass.WIN32_DISKDRIVE);
-        List<Map<String, String>> videocontroller6 = WMI4Java.get().computerName("10.140.40.99").namespace("root/cimv2").getWMIObjectList(WMIClass.WIN32_VIDEOCONTROLLER);
+        try {
+            computer.setProcessorList(getProcessorList(ip));
+        } catch (Exception exception) {
+            error += exception.getMessage() + System.lineSeparator();
+        }
+        try {
+            computer.setRamList(getRamList(ip));
+        } catch (Exception exception) {
+            error += exception.getMessage() + System.lineSeparator();
+        }
+        try {
+            computer.setHardDriveList(getHardDriveList(ip));
+        } catch (Exception exception) {
+            error += exception.getMessage() + System.lineSeparator();
+        }
+        try {
+            computer.setVideoCardList(getVideoCard(ip));
+        } catch (Exception exception) {
+            error += exception.getMessage() + System.lineSeparator();
+        }
 
-
-        //Map<String, String> motherBoard=WMI4Java.get().computerName(".").namespace("root/cimv2").getWMIObject(WMIClass.WIN32_OPERATINGSYSTEM);
-        //Map<String, String> motherBoard1=WMI4Java.get().computerName(".").namespace("root/cimv2").getWMIObject(WMIClass.CIM_OPERATINGSYSTEM);
-        //Map<String, String> motherBoard2=WMI4Java.get().computerName(".").namespace("root/cimv2").getWMIObject(WMIClass.WIN32_OPERATINGSYSTEMQFE);
-        //Map<String, String> baseBoard6=WMI4Java.get().computerName("10.140.40.6").namespace("root/cimv2").getWMIObject("Win32_BaseBoard");
-        //Map<String, String> motherBoard6=WMI4Java.get().computerName(".").namespace("root/cimv2").getWMIObject("Win32_MotherboardDevice");
-        System.out.println("asd");
+        if(!error.isEmpty()) {
+            throw new Exception(error);
+        }
     }
-
 }

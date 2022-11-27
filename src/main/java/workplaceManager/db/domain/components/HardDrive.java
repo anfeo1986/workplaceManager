@@ -13,19 +13,24 @@ public class HardDrive {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column
-    private String manufacturer;
+    //@Column
+    //private String manufacturer;
 
     @Column
     private String model;
 
-    @Column
-    private String amount;
+    //@Column
+    //private String amount;
 
-    @Column
-    private TypeHardDrive typeHardDrive;
+    //@Column
+    //private TypeHardDrive typeHardDrive;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "computer")
     private Computer computer;
+
+    @Override
+    public String toString() {
+        return model;
+    }
 }

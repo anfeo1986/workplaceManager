@@ -25,9 +25,15 @@ public class Ram {
     @Column
     private String frequency;
 
+    @Column
     private String deviceLocator;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "computer")
     private Computer computer;
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s, %s, %s, %s)", model, typeRam, amount, frequency, deviceLocator);
+    }
 }

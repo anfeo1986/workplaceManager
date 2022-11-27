@@ -16,9 +16,11 @@ public class Computer extends Equipment<Computer>{
     @JoinColumn(name = "motherboard")
     private MotherBoard motherBoard;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "processor")
-    private Processor processor;
+    //@OneToOne(cascade = CascadeType.ALL)
+    //@JoinColumn(name = "processor")
+    //private Processor processor;
+    @OneToMany(mappedBy = "computer", fetch = FetchType.LAZY)
+    private List<Processor> processorList = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "operationSystem")
@@ -27,14 +29,19 @@ public class Computer extends Equipment<Computer>{
     @Column
     private String ip;
 
-    @OneToMany(mappedBy = "computer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column
+    private String netName;
+
+    @OneToMany(mappedBy = "computer", fetch = FetchType.LAZY)
     private List<Ram> ramList = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "videoCard")
-    private VideoCard videoCard;
+    //@OneToOne(cascade = CascadeType.ALL)
+    //@JoinColumn(name = "videoCard")
+    //private VideoCard videoCard;
+    @OneToMany(mappedBy = "computer", fetch = FetchType.LAZY)
+    private List<VideoCard> videoCardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "computer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "computer", fetch = FetchType.LAZY)
     private List<HardDrive> hardDriveList = new ArrayList<>();
 
     @Override

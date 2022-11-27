@@ -3,6 +3,8 @@
 <%@ page import="org.springframework.util.CollectionUtils" %>
 <%@ page import="workplaceManager.db.domain.components.Ram" %>
 <%@ page import="workplaceManager.db.domain.components.HardDrive" %>
+<%@ page import="workplaceManager.db.domain.components.Processor" %>
+<%@ page import="workplaceManager.db.domain.components.VideoCard" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -56,31 +58,51 @@
 
             out.println(String.format("<td>%s</td>", computer.getOperationSystem() != null ? computer.getOperationSystem() : ""));
 
-            out.println(String.format("<td>%s</td>", computer.getProcessor() != null ? computer.getProcessor() : ""));
+            if(!CollectionUtils.isEmpty(computer.getProcessorList())) {
+                out.println("<td>");
+                for(Processor processor : computer.getProcessorList()) {
+                    out.println("<p>"+processor+"</p>");
+                }
+                out.println("</td>");
+            } else {
+                out.println("<td/>");
+            }
 
             out.println(String.format("<td>%s</td>", computer.getMotherBoard() != null ? computer.getMotherBoard() : ""));
 
-            String ramStr = "";
             if (!CollectionUtils.isEmpty(computer.getRamList())) {
-                int countRam = 1;
+                out.println("<td>");
                 for (Ram ram : computer.getRamList()) {
-                    ramStr += String.format("%s. %s", countRam, ram);
-                    countRam++;
+                    out.println("<p>"+ram+"</p>");
                 }
+                out.println("</td>");
+            } else {
+                out.println("<td/>");
             }
-            out.println(String.format("<td>%s</td>", ramStr));
+            //out.println(String.format("<td>%s</td>", ramStr));
 
-            String hardDriveStr = "";
             if (!CollectionUtils.isEmpty(computer.getHardDriveList())) {
-                int countHardDrive = 1;
+                out.println("<td>");
                 for (HardDrive hardDrive : computer.getHardDriveList()) {
-                    hardDriveStr += String.format("%s. %s", countHardDrive, hardDrive);
-                    countHardDrive++;
+                    out.println("<p>"+hardDrive+"</p>");
                 }
+                out.println("</td>");
+            } else {
+                out.println("<td/>");
             }
-            out.println(String.format("<td>%s</td>", hardDriveStr));
+            //out.println(String.format("<td>%s</td>", hardDriveStr));
 
-            out.println(String.format("<td>%s</td>", computer.getVideoCard() != null ? computer.getVideoCard() : ""));
+            if(!CollectionUtils.isEmpty(computer.getVideoCardList())) {
+                out.println("<td>");
+                for(VideoCard videoCard : computer.getVideoCardList()) {
+                    out.println("<p>"+videoCard+"</p>");
+                }
+                out.println("</td>");
+            } else {
+                out.println("<td/>");
+            }
+
+            //out.println(String.format("<td>%s</td>", computer.getVideoCard() != null ? computer.getVideoCard() : ""));
 
             if (computer.getWorkplace() != null) {
                 out.println(String.format("<td><a href=\"/" + Pages.addUpdateWorkplace +

@@ -4,10 +4,11 @@ import lombok.Data;
 import workplaceManager.db.domain.Computer;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
-public class Processor {
+public class Processor implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,15 +26,25 @@ public class Processor {
     @Column
     private String socket;
 
-    @Column
-    private TypeRam typeRam;
-
-    @Column
-    private String ramMaxAmount;
-
-    @Column
-    private String graphicsCore;
-
-    @OneToOne(mappedBy = "processor")
+    @ManyToOne(optional = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "computer")
     private Computer computer;
+
+    @Override
+    public String toString() {
+        return String.format("%s (Кол-во ядер: %s, %s, %s)", model, numberOfCores, frequency, socket);
+    }
+
+    public static boolean isEmpty(Processor processor) {
+        if (processor == null) {
+            return true;
+        }
+        if ((processor.getModel() == null || processor.getModel() == "") &&
+                (processor.getNumberOfCores() == null || processor.getNumberOfCores() == "") &&
+                (processor.getFrequency() == null || processor.getFrequency() == "") &&
+                (processor.getSocket() == null || processor.getSocket() == "")) {
+            return true;
+        }
+        return false;
+    }
 }
