@@ -52,6 +52,7 @@
         }
     %>
 </head>
+
 <body>
 <%
     String error = (String) request.getAttribute(Parameters.error);
@@ -238,7 +239,7 @@
         <h2>Процессор
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddProcessor + "\" value=\"Добавить процессор\">");
+                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddProcessor + "\" value=\"Добавить\">");
                 }
             %>
         </h2>
@@ -247,27 +248,27 @@
                 countProcessor = 1;
                 if (!CollectionUtils.isEmpty(computer.getProcessorList())) {
                     for (Processor processor : computer.getProcessorList()) {
-                        String modelName = Components.inputTextProcessorModel + countProcessor;
-                        String numberCoreName = Components.inputTextProcessorNumberOfCores + countProcessor;
-                        String frequencyName = Components.inputTextProcessorFrequency + countProcessor;
-                        String socketName = Components.inputTextProcessorSocket + countProcessor;
+                        String modelName = Components.processorModelInputText + countProcessor;
+                        String numberCoreName = Components.processorNumberOfCoresInputText + countProcessor;
+                        String frequencyName = Components.processorFrequencyInputText + countProcessor;
+                        String socketName = Components.processorSocketInputText + countProcessor;
                         String buttonDeleteProcessor = Components.buttonDeleteProcessor+countProcessor;
             %>
         <p>
             <label for="<%=modelName%>">Модель</label>
-            <input type="text" name="<%=modelName%>" id="<%=modelName%>"
+            <input type="text" name="<%=modelName%>" id="<%=modelName%>" size="35"
                    value="<%=processor.getModel() != null ? processor.getModel() : ""%>">
 
             <label for="<%=numberCoreName%>">Количество ядер</label>
-            <input type="text" name="<%=numberCoreName%>" id="<%=numberCoreName%>"
+            <input type="text" name="<%=numberCoreName%>" id="<%=numberCoreName%>" size="4"
                    value="<%=processor.getNumberOfCores() != null ? processor.getNumberOfCores() : ""%>">
 
             <label for="<%=frequencyName%>">Частота</label>
-            <input type="text" name="<%=frequencyName%>" id="<%=frequencyName%>"
+            <input type="text" name="<%=frequencyName%>" id="<%=frequencyName%>" size="8"
                    value="<%=processor.getFrequency() != null ? processor.getFrequency() : ""%>">
 
             <label for="<%=socketName%>">Сокет</label>
-            <input type="text" name="<%=socketName%>" id="<%=socketName%>"
+            <input type="text" name="<%=socketName%>" id="<%=socketName%>" size="8"
                    value="<%=processor.getSocket() != null ? processor.getSocket() : ""%>">
             <%
                 if (Role.ADMIN.equals(role)) {
@@ -285,10 +286,63 @@
         <h2>Оперативная память
             <%
                 if (Role.ADMIN.equals(role)) {
-                    //out.println("<input type=\"submit\" name=\"buttonAddProcessor\" value=\"Добавить процессор\">");
+                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddRam + "\" value=\"Добавить\">");
                 }
             %>
         </h2>
+        <p>
+                <%
+                countRam = 1;
+                if (!CollectionUtils.isEmpty(computer.getRamList())) {
+                    for (Ram ram : computer.getRamList()) {
+                        String ramModelName = Components.ramModelInputText + countRam;
+                        String ramTypeRamName = Components.ramTypeRamSelect + countRam;
+                        String ramAmountName = Components.ramAmountInputText + countRam;
+                        String ramFrequencyName = Components.ramFrequencyInputText + countRam;
+                        String ramDeviceLocatorName = Components.ramDeviceLocatorInputText + countRam;
+                        String buttonDeleteRam = Components.buttonDeleteRam+countRam;
+            %>
+        <p>
+            <label for="<%=ramModelName%>">Модель</label>
+            <input type="text" name="<%=ramModelName%>" id="<%=ramModelName%>"
+                   value="<%=ram.getModel() != null ? ram.getModel() : ""%>">
+
+            <label for="<%=ramTypeRamName%>">Тип оперативной памяти</label>
+            <select name="<%=ramTypeRamName%>" id="<%=ramTypeRamName%>">
+                <%
+                    for (TypeRam typeRam : TypeRam.values()) {
+                        if (ram.getTypeRam() != null && typeRam.equals(ram.getTypeRam())) {
+                            out.println("<option selected value=\"" + typeRam + "\">" + typeRam + "</option>");
+                        } else {
+                            out.println("<option value=\"" + typeRam + "\">" + typeRam + "</option>");
+                        }
+                    }
+                %>
+            </select>
+
+            <label for="<%=ramAmountName%>">Объем</label>
+            <input type="text" name="<%=ramAmountName%>" id="<%=ramAmountName%>" size="6"
+                   value="<%=ram.getAmount() != null ? ram.getAmount() : ""%>">
+
+            <label for="<%=ramFrequencyName%>">Частота</label>
+            <input type="text" name="<%=ramFrequencyName%>" id="<%=ramFrequencyName%>" size="6"
+                   value="<%=ram.getFrequency() != null ? ram.getFrequency() : ""%>">
+
+            <label for="<%=ramDeviceLocatorName%>">Частота</label>
+            <input type="text" name="<%=ramDeviceLocatorName%>" id="<%=ramDeviceLocatorName%>" size="12"
+                   value="<%=ram.getDeviceLocator() != null ? ram.getDeviceLocator() : ""%>">
+            <%
+                if (Role.ADMIN.equals(role)) {
+                    out.println("<input type=\"submit\" name=\"" + buttonDeleteRam + "\" value=\"Удалить\">");
+                }
+            %>
+        </p>
+        <%
+                    countRam++;
+                }
+            }
+        %>
+        </p>
 
         <p>
             <!--<label for="selectTypeRam">Тип оперативной памяти</label>
@@ -320,6 +374,7 @@
             <input type="hidden" name="<%=Parameters.token%>" value="<%=token%>">
             <input type="hidden" name="<%=Parameters.typeEquipment%>" value="<%=typeEquipment%>">
             <input type="hidden" name="<%=Parameters.countProcessor%>" value="<%=countProcessor%>">
+            <input type="hidden" name="<%=Parameters.countRam%>" value="<%=countRam%>">
 
             <a href="/<%=redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
             <%

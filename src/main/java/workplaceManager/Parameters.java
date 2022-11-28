@@ -10,6 +10,7 @@ public class Parameters {
     public static final String typeOS = "type_operationsystem";
     public static final String message = "message";
     public static final String countProcessor = "countProcessor";
+    public static final String countRam = "countRam";
     public static final String error = "error";
 
     public static final String role = "role";
@@ -17,9 +18,6 @@ public class Parameters {
     public static final String workplaceId = "workplace_id";
     public static final String ip = "ip";
     public static final String netName = "netname_computer";
-
-    //public static final String motherboardManufacturer = "motherboard_manufacturer";
-    //public static final String motherboardModel = "motherboard_model";
 
     public static final String OsType = "type_operationsystem";
     public static final String OsVendor = "vendor_operationsystem";

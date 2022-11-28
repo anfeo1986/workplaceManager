@@ -14,8 +14,6 @@ import java.util.List;
 public class ProcessorManager extends EntityManager<Processor> {
     @Transactional
     public void deleteProcessorListForComputer(Computer computer) {
-        //Session session = sessionFactory.getCurrentSession();
-        //session.createQuery("delete from Processor as proc where proc.computer="+computer.getId());
         List<Processor> processorList = getProcessorListByComputer(computer.getId());
         for(Processor processor : processorList) {
             delete(processor);

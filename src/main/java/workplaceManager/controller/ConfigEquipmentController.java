@@ -8,6 +8,8 @@ import workplaceManager.*;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.domain.components.MotherBoard;
 import workplaceManager.db.domain.components.Processor;
+import workplaceManager.db.domain.components.Ram;
+import workplaceManager.db.domain.components.TypeRam;
 import workplaceManager.db.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,13 @@ import java.util.List;
 
 @Controller
 public class ConfigEquipmentController {
+
+    private enum TypeComponentsComputer {
+        processor,
+        ram,
+        hardDrive,
+        videoCard
+    }
 
     EquipmentManager equipmentManager;
 
@@ -57,6 +66,13 @@ public class ConfigEquipmentController {
     @Autowired
     public void setProcessorManager(ProcessorManager processorManager) {
         this.processorManager = processorManager;
+    }
+
+    private RamManager ramManager;
+
+    @Autowired
+    public void setRamManager(RamManager ramManager) {
+        this.ramManager = ramManager;
     }
 
     @GetMapping(Pages.addUpdateEquipment)
@@ -120,9 +136,10 @@ public class ConfigEquipmentController {
         }
     }
 
-    private ModelAndView addProcessor(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                      @RequestParam(name = Parameters.token) String token,
-                                      HttpServletRequest request) {
+    private ModelAndView addComponentComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
+                                              @RequestParam(name = Parameters.token) String token,
+                                              HttpServletRequest request,
+                                              TypeComponentsComputer typeComponentsComputer) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
@@ -136,8 +153,14 @@ public class ConfigEquipmentController {
 
                 setParameterComputer(computer, request, equipment, false);
 
-                Processor processor = new Processor();
-                computer.getProcessorList().add(processor);
+                if(TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
+                    Processor processor = new Processor();
+                    computer.getProcessorList().add(processor);
+                }
+                if(TypeComponentsComputer.ram.equals(typeComponentsComputer)) {
+                    Ram ram = new Ram();
+                    computer.getRamList().add(ram);
+                }
 
                 //equipmentManager.save(computer);
                 modelAndView.addObject(Parameters.computer, computer);
@@ -150,7 +173,55 @@ public class ConfigEquipmentController {
         }
     }
 
-    private ModelAndView deleteProcessor(@ModelAttribute(Parameters.equipment) Equipment equipment,
+    private ModelAndView deleteComponentsComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
+                                                  @RequestParam(name = Parameters.token) String token,
+                                                  HttpServletRequest request,
+                                                  TypeComponentsComputer typeComponentsComputer) {
+        Users user = securityCrypt.getUserByToken(token);
+        if (user != null && Role.ADMIN.equals(user.getRole())) {
+            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
+
+            if (!modelAndView.getViewName().equals(Pages.login)) {
+
+                setWorkplaceByEquipment(equipment, request);
+
+                setAccounting1CByEquipment(equipment, request, false);
+
+                Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+
+                setParameterComputer(computer, request, equipment, false);
+
+                if (TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
+                    int countProcessor = Integer.parseInt(request.getParameter(Parameters.countProcessor));
+                    for (int numberProcessor = 1; numberProcessor <= countProcessor; numberProcessor++) {
+                        String buttonDeleteProcessor = Components.buttonDeleteProcessor + numberProcessor;
+                        if (request.getParameter(buttonDeleteProcessor) != null) {
+                            computer.getProcessorList().remove(numberProcessor - 1);
+                        }
+                    }
+                }
+                if (TypeComponentsComputer.ram.equals(typeComponentsComputer)) {
+                    int countRam = Integer.parseInt(request.getParameter(Parameters.countRam));
+                    for (int numberRam = 1; numberRam <= countRam; numberRam++) {
+                        String buttonDeleteRam = Components.buttonDeleteRam + numberRam;
+                        if (request.getParameter(buttonDeleteRam) != null) {
+                            computer.getRamList().remove(numberRam - 1);
+                        }
+                    }
+                }
+
+                //equipmentManager.save(computer);
+                modelAndView.addObject(Parameters.computer, computer);
+                modelAndView.addObject(Parameters.equipment, equipment);
+                modelAndView.addObject(Parameters.typeEquipment, request.getParameter(Parameters.typeEquipment));
+            }
+            return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);
+        } else {
+            return new ModelAndView(Pages.login);
+        }
+    }
+
+   /* private ModelAndView deleteProcessor(@ModelAttribute(Parameters.equipment) Equipment equipment,
                                          @RequestParam(name = Parameters.token) String token,
                                          HttpServletRequest request) {
         Users user = securityCrypt.getUserByToken(token);
@@ -183,7 +254,7 @@ public class ConfigEquipmentController {
         } else {
             return new ModelAndView(Pages.login);
         }
-    }
+    }*/
 
     private ModelAndView searchPage(@ModelAttribute(Parameters.equipment) Equipment equipment,
                                     @RequestParam(name = Parameters.token) String token,
@@ -192,13 +263,23 @@ public class ConfigEquipmentController {
             return readConfigComputer(equipment, token, request);
         }
         if (request.getParameter(Components.buttonAddProcessor) != null) {
-            return addProcessor(equipment, token, request);
+            return addComponentComputer(equipment, token, request, TypeComponentsComputer.processor);
         }
         int countProcessor = Integer.parseInt(request.getParameter(Parameters.countProcessor));
         for (int i = 1; i <= countProcessor; i++) {
             String buttonDeleteProcessor = Components.buttonDeleteProcessor + i;
             if (request.getParameter(buttonDeleteProcessor) != null) {
-                return deleteProcessor(equipment, token, request);
+                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.processor);
+            }
+        }
+        if (request.getParameter(Components.buttonAddRam) != null) {
+            return addComponentComputer(equipment, token, request, TypeComponentsComputer.ram);
+        }
+        int countRam = Integer.parseInt(request.getParameter(Parameters.countRam));
+        for (int i = 1; i <= countRam; i++) {
+            String buttonDeleteRam = Components.buttonDeleteRam + i;
+            if (request.getParameter(buttonDeleteRam) != null) {
+                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.ram);
             }
         }
         return null;
@@ -207,15 +288,15 @@ public class ConfigEquipmentController {
     private String dataVerification(HttpServletRequest request, Equipment equipment) {
         String typeEquipment = request.getParameter(Parameters.typeEquipment);
         String error = "";
-        if(TypeEquipment.COMPUTER.equals(typeEquipment)) {
+        if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
             Computer computerFromDb = equipmentManager.getComputerByIp(request.getParameter(Parameters.ip));
-            if (computerFromDb != null) {
+            if (computerFromDb != null && computerFromDb.getId() != equipment.getId()) {
                 error = request.getParameter(Parameters.ip) + " уже существует ";
             }
         }
 
         Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid());
-        if (equipmentFromDb != null) {
+        if (equipmentFromDb != null && equipmentFromDb.getId() != equipment.getId()) {
             error += String.format("%s уже существует ", equipment.getUid());
         }
         return error;
@@ -238,7 +319,7 @@ public class ConfigEquipmentController {
                 String typeEquipment = request.getParameter(Parameters.typeEquipment);
 
                 String error = dataVerification(request, equipment);
-                if(!"".equals(error)) {
+                if (!"".equals(error)) {
                     error += setAccounting1CByEquipment(equipment, request, false);
                 } else {
                     error += setAccounting1CByEquipment(equipment, request, true);
@@ -248,7 +329,7 @@ public class ConfigEquipmentController {
                     modelAndView.addObject(Parameters.error, error);
                     modelAndView.addObject(Parameters.equipment, equipment);
                     modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
-                    if(TypeEquipment.COMPUTER.equals(typeEquipment)) {
+                    if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                         Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                         setParameterComputer(computer, request, equipment, false);
                         modelAndView.addObject(Parameters.computer, computer);
@@ -317,6 +398,68 @@ public class ConfigEquipmentController {
         addMotherboardToComputer(request, computer);
         addOperationSystemToComputer(request, computer);
         addProcessorListToComputer(request, computer, isNeedSave);
+        addRamListToComputer(request, computer, isNeedSave);
+    }
+
+    private void addRamListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+        if (isNeedSave) {
+            ramManager.deleteRamListForComputer(computer);
+        }
+
+        List<Ram> ramList = new ArrayList<>();
+        int countRam = Integer.parseInt(request.getParameter(Parameters.countRam));
+        System.out.println("countRam="+countRam);
+        for (int i = 1; i < countRam; i++) {
+            Ram ram = new Ram();
+            String ramModelName = Components.ramModelInputText + i;
+            String ramTypeRamName = Components.ramTypeRamSelect + i;
+            String ramAmountName = Components.ramAmountInputText + i;
+            String ramFrequencyName = Components.ramFrequencyInputText + i;
+            String ramDeviceLocatorName = Components.ramDeviceLocatorInputText + i;
+            boolean isAllNull = true;
+
+            if (request.getParameter(ramModelName) != null) {
+                System.out.println("if (request.getParameter(ramModelName) != null) {");
+                ram.setModel(request.getParameter(ramModelName));
+                isAllNull = false;
+            }
+            if (request.getParameter(ramTypeRamName) != null) {
+                System.out.println("if (request.getParameter(ramTypeRamName) != null) {");
+                ram.setTypeRam(TypeRam.valueOf(request.getParameter(ramTypeRamName)));
+                isAllNull = false;
+            }
+            if (request.getParameter(ramAmountName) != null) {
+                System.out.println("if (request.getParameter(ramAmountName) != null) {");
+                ram.setAmount(request.getParameter(ramAmountName));
+                isAllNull = false;
+            }
+            if (request.getParameter(ramFrequencyName) != null) {
+                System.out.println("if (request.getParameter(ramFrequencyName) != null) {");
+                ram.setFrequency(request.getParameter(ramFrequencyName));
+                isAllNull = false;
+            }
+            if (request.getParameter(ramDeviceLocatorName) != null) {
+                System.out.println("if (request.getParameter(ramDeviceLocatorName) != null) {");
+                ram.setDeviceLocator(request.getParameter(ramDeviceLocatorName));
+                isAllNull = false;
+            }
+
+            if (isAllNull) {
+                continue;
+            }
+            ram.setComputer(computer);
+
+            ramList.add(ram);
+
+            if (isNeedSave) {
+                System.out.println("if (isNeedSave) {");
+                if (!Ram.isEmpty(ram)) {
+                    ramManager.save(ram);
+                    System.out.println("ramManager.save(ram);"+ram);
+                }
+            }
+        }
+        computer.setRamList(ramList);
     }
 
     private void addMotherboardToComputer(HttpServletRequest request, Computer computer) {
@@ -350,13 +493,13 @@ public class ConfigEquipmentController {
         }
 
         List<Processor> processorList = new ArrayList<>();
-        int countProcessor = 1;
-        while (true) {
+        int countProcessor = Integer.parseInt(request.getParameter(Parameters.countProcessor));
+        for (int i = 1; i < countProcessor; i++) {
             Processor processor = new Processor();
-            String modelName = Components.inputTextProcessorModel + countProcessor;
-            String numberCoreName = Components.inputTextProcessorNumberOfCores + countProcessor;
-            String frequencyName = Components.inputTextProcessorFrequency + countProcessor;
-            String socketName = Components.inputTextProcessorSocket + countProcessor;
+            String modelName = Components.processorModelInputText + i;
+            String numberCoreName = Components.processorNumberOfCoresInputText + i;
+            String frequencyName = Components.processorFrequencyInputText + i;
+            String socketName = Components.processorSocketInputText + i;
             boolean isAllNull = true;
 
             if (request.getParameter(modelName) != null) {
@@ -388,7 +531,6 @@ public class ConfigEquipmentController {
                     processorManager.save(processor);
                 }
             }
-            countProcessor++;
         }
 
         computer.setProcessorList(processorList);
@@ -457,30 +599,47 @@ public class ConfigEquipmentController {
             String redirect = request.getParameter(Parameters.redirect);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid());
-                if (equipmentFromDb != null && equipmentFromDb.getId() != equipment.getId()) {
-                    modelAndView.addObject(Parameters.error, String.format("%s уже существует", equipment.getUid()));
+                String error = dataVerification(request, equipment);
+                if (!"".equals(error)) {
+                    error += setAccounting1CByEquipment(equipment, request, false);
+                } else {
+                    error += setAccounting1CByEquipment(equipment, request, true);
+                }
+
+                if (!"".equals(error)) {
+                    modelAndView.addObject(Parameters.error, error);
                     modelAndView.addObject(Parameters.equipment, equipment);
                     modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
+                    if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+                        Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                        setParameterComputer(computer, request, equipment, false);
+                        modelAndView.addObject(Parameters.computer, computer);
+                    }
                 } else {
+
+                    //Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid());
+                    //if (equipmentFromDb != null && equipmentFromDb.getId() != equipment.getId()) {
+                    //    modelAndView.addObject(Parameters.error, String.format("%s уже существует", equipment.getUid()));
+                    //    modelAndView.addObject(Parameters.equipment, equipment);
+                    //    modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
+                    //} else {
                     setWorkplaceByEquipment(equipment, request);
 
-                    String error = setAccounting1CByEquipment(equipment, request, true);
-                    if (!"".equals(error)) {
-                        //modelAndView.setViewName("/config/equipment");
-                        modelAndView.addObject(Parameters.error, error);
-                        modelAndView.addObject(Parameters.equipment, equipment);
-                        modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
+                    //String error = setAccounting1CByEquipment(equipment, request, true);
+                    // if (!"".equals(error)) {
+                    //     modelAndView.addObject(Parameters.error, error);
+                    //     modelAndView.addObject(Parameters.equipment, equipment);
+                    //    modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
+                    //} else {
+                    if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+                        Computer computer = equipmentManager.getComputerById(equipment.getId());
+                        setParameterComputer(computer, request, equipment, true);
+                        equipmentManager.save(computer);
                     } else {
-                        if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
-                            Computer computer = equipmentManager.getComputerById(equipment.getId());
-                            setParameterComputer(computer, request, equipment, true);
-                            equipmentManager.save(computer);
-                        } else {
-                            equipmentManager.save(equipment);
-                        }
-                        modelAndView.setViewName("redirect:/" + redirect);
+                        equipmentManager.save(equipment);
                     }
+                    modelAndView.setViewName("redirect:/" + redirect);
+                    //}
                 }
             }
             return getModelAndView(redirect, modelAndView);
