@@ -12,6 +12,7 @@ public class Parameters {
     public static final String countProcessor = "countProcessor";
     public static final String countRam = "countRam";
     public static final String countVideoCard = "countVideoCard";
+    public static final String countHardDrive = "countHardDrive";
     public static final String error = "error";
 
     public static final String role = "role";

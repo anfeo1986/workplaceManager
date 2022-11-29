@@ -19,6 +19,8 @@ public class Components {
     public static final String buttonDeleteRam = "buttonDeleteRam";
     public static final String buttonAddVideoCard = "buttonAddVideoCard";
     public static final String buttonDeleteVideoCard = "buttonDeleteVideoCard";
+    public static final String buttonAddHardDrive = "buttonAddHardDrive";
+    public static final String buttonDeleteHardDrive = "buttonDeleteHardDrive";
     public static final String buttonSave = "buttonSave";
 
     public static final String accounting1CRadio = "accounting1CRadio";
@@ -31,4 +33,7 @@ public class Components {
     public static final String motherboardModel = "motherboard_model";
 
     public static final String videoCardModelInputText = "videoCardModel";
+
+    public static final String hardDriveModelInputText = "hardDriveModel";
+    public static final String hardDriveSizeInputText = "hardDriveSize";
 }

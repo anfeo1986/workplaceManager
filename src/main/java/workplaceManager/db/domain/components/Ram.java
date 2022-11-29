@@ -39,7 +39,7 @@ public class Ram implements Serializable {
     @Override
     @Transient
     public String toString() {
-        return String.format("%s (%s, %s, %s, %s)", model, typeRam, amount, frequency, deviceLocator);
+        return String.format("%s (%s, %s Gb, %s, %s)", model, typeRam, amount, frequency, deviceLocator);
     }
 
     @Transient

@@ -79,6 +79,13 @@ public class ConfigEquipmentController {
         this.videoCardManager = videoCardManager;
     }
 
+    private HardDriveManager hardDriveManager;
+
+    @Autowired
+    public void setHardDriveManager(HardDriveManager hardDriveManager) {
+        this.hardDriveManager = hardDriveManager;
+    }
+
     @GetMapping(Pages.addUpdateEquipment)
     public ModelAndView getFormAddUpdateEquipment(@RequestParam(name = Parameters.id, required = false) Long id,
                                                   @RequestParam(name = Parameters.typeEquipment) String typeEquipment,
@@ -158,16 +165,16 @@ public class ConfigEquipmentController {
                 setParameterComputer(computer, request, equipment, false);
 
                 if (TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
-                    Processor processor = new Processor();
-                    computer.getProcessorList().add(processor);
+                    computer.getProcessorList().add(new Processor());
                 }
                 if (TypeComponentsComputer.ram.equals(typeComponentsComputer)) {
-                    Ram ram = new Ram();
-                    computer.getRamList().add(ram);
+                    computer.getRamList().add(new Ram());
                 }
                 if (TypeComponentsComputer.videoCard.equals(typeComponentsComputer)) {
-                    VideoCard videoCard = new VideoCard();
-                    computer.getVideoCardList().add(videoCard);
+                    computer.getVideoCardList().add(new VideoCard());
+                }
+                if (TypeComponentsComputer.hardDrive.equals(typeComponentsComputer)) {
+                    computer.getHardDriveList().add(new HardDrive());
                 }
 
                 //equipmentManager.save(computer);
@@ -226,6 +233,15 @@ public class ConfigEquipmentController {
                         }
                     }
                 }
+                if (TypeComponentsComputer.hardDrive.equals(typeComponentsComputer)) {
+                    int countHardDrive = Integer.parseInt(request.getParameter(Parameters.countHardDrive));
+                    for (int i = 1; i <= countHardDrive; i++) {
+                        String buttonDeleteHardDrive = Components.buttonDeleteHardDrive + i;
+                        if (request.getParameter(buttonDeleteHardDrive) != null) {
+                            computer.getHardDriveList().remove(i - 1);
+                        }
+                    }
+                }
 
                 //equipmentManager.save(computer);
                 modelAndView.addObject(Parameters.computer, computer);
@@ -272,6 +288,16 @@ public class ConfigEquipmentController {
             String buttonDeleteVideoCard = Components.buttonDeleteVideoCard + i;
             if (request.getParameter(buttonDeleteVideoCard) != null) {
                 return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.videoCard);
+            }
+        }
+        if (request.getParameter(Components.buttonAddHardDrive) != null) {
+            return addComponentComputer(equipment, token, request, TypeComponentsComputer.hardDrive);
+        }
+        int countHardDrive = Integer.parseInt(request.getParameter(Parameters.countHardDrive));
+        for (int i = 1; i <= countHardDrive; i++) {
+            String buttonDeleteHardDrive = Components.buttonDeleteHardDrive + i;
+            if (request.getParameter(buttonDeleteHardDrive) != null) {
+                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.hardDrive);
             }
         }
         return null;
@@ -392,6 +418,47 @@ public class ConfigEquipmentController {
         addProcessorListToComputer(request, computer, isNeedSave);
         addRamListToComputer(request, computer, isNeedSave);
         addVideoCardListToComputer(request, computer, isNeedSave);
+        addHardDriveListToComputer(request, computer, isNeedSave);
+    }
+
+    private void addHardDriveListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+        if (isNeedSave) {
+            hardDriveManager.deleteHardDriveListForComputer(computer);
+        }
+
+        List<HardDrive> hardDriveList = new ArrayList<>();
+        int countHardDrive = Integer.parseInt(request.getParameter(Parameters.countHardDrive));
+        for (int i = 1; i < countHardDrive; i++) {
+            HardDrive hardDrive = new HardDrive();
+            String hardDriveModelName = Components.hardDriveModelInputText + i;
+            String hardDriveSizeName = Components.hardDriveSizeInputText + i;
+
+            boolean isAllNull = true;
+
+            if (request.getParameter(hardDriveModelName) != null) {
+                hardDrive.setModel(request.getParameter(hardDriveModelName));
+                isAllNull = false;
+            }
+            if (request.getParameter(hardDriveSizeName) != null) {
+                hardDrive.setSize(request.getParameter(hardDriveSizeName));
+                isAllNull = false;
+            }
+
+            if(isAllNull) {
+                continue;
+            }
+
+            hardDrive.setComputer(computer);
+
+            hardDriveList.add(hardDrive);
+
+            if (isNeedSave) {
+                if (!HardDrive.isEmpty(hardDrive)) {
+                    hardDriveManager.save(hardDrive);
+                }
+            }
+        }
+        computer.setHardDriveList(hardDriveList);
     }
 
     private void addVideoCardListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {

@@ -32,6 +32,7 @@ public class WMI {
     private static final String getDeviceLocatorRam = "MEMORYCHIP get DeviceLocator";
 
     private static final String getModelHardDrive = "DISKDRIVE where \"InterfaceType!='USB'\" get Model";
+    private static final String getSizeHardDrive = "DISKDRIVE where \"InterfaceType!='USB'\" get Size";
 
     private static final String getModelVideoCard = "path WIN32_VideoController get Name";
 
@@ -143,7 +144,7 @@ public class WMI {
             parameter = parameter.replaceAll("[^0-9]", "");
             Long amount = Long.parseLong(parameter);
             amount = amount / 1024 / 1024 / 1024;
-            ramList.get(count).setAmount(amount + "Gb");
+            ramList.get(count).setAmount(amount.toString());
             count++;
         }
 
@@ -175,6 +176,16 @@ public class WMI {
             HardDrive hardDrive = new HardDrive();
             hardDrive.setModel(parameter);
             hardDriveList.add(hardDrive);
+        }
+
+        parameterList = getParameter(ip, getSizeHardDrive);
+        int count = 0;
+        for(String parameter : parameterList) {
+            parameter = parameter.replaceAll("[^0-9]", "");
+            Long size = Long.parseLong(parameter);
+            size = size / 1024 / 1024 / 1024;
+            hardDriveList.get(count).setSize(size.toString());
+            count++;
         }
 
         return hardDriveList;

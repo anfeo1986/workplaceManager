@@ -1,15 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="workplaceManager.db.domain.*" %>
-<%@ page import="workplaceManager.db.domain.components.TypeRam" %>
 <%@ page import="workplaceManager.Pages" %>
 <%@ page import="java.util.List" %>
-<%@ page import="workplaceManager.db.domain.components.Processor" %>
 <%@ page import="org.springframework.util.CollectionUtils" %>
-<%@ page import="workplaceManager.db.domain.components.Ram" %>
 <%@ page import="workplaceManager.Components" %>
 <%@ page import="workplaceManager.Parameters" %>
-<%@ page import="workplaceManager.db.domain.components.VideoCard" %>
+<%@ page import="workplaceManager.db.domain.components.*" %>
 
 <html>
 <head>
@@ -211,6 +208,7 @@
         int countProcessor = 1;
         int countRam = 1;
         int countVideoCard = 1;
+        int countHardDrive = 1;
         if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
             Computer computer = (Computer) request.getAttribute(Parameters.computer);
     %>
@@ -378,20 +376,44 @@
         %>
         </p>
 
-        <p>
-            <!--<label for="selectTypeRam">Тип оперативной памяти</label>
-            <select name="selectTypeRam" id="selectTypeRam">-->
+        <h2>Жёсткие диски
             <%
-                /*for (TypeRam typeRam : TypeRam.values()) {
-                    if (computer.getMotherBoard() != null && typeRam.equals(computer.getMotherBoard().getTypeRam())) {
-                        out.println("<option selected value=\"" + typeRam + "\">" + typeRam + "</option>");
-                    } else {
-                        out.println("<option value=\"" + typeRam + "\">" + typeRam + "</option>");
-                    }
-                }*/
+                if (Role.ADMIN.equals(role)) {
+                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddHardDrive + "\" value=\"Добавить\">");
+                }
             %>
-            <!-- </select>-->
+        </h2>
+        <p>
+                <%
+                countHardDrive = 1;
+                if (!CollectionUtils.isEmpty(computer.getHardDriveList())) {
+                    for (HardDrive hardDrive : computer.getHardDriveList()) {
+                        String hardDriveModelName = Components.hardDriveModelInputText + countHardDrive;
+                        String hardDriveSizeName = Components.hardDriveSizeInputText + countHardDrive;
+                        String buttonDelete = Components.buttonDeleteHardDrive + countHardDrive;
+            %>
+        <p>
+            <label for="<%=hardDriveModelName%>">Модель</label>
+            <input type="text" name="<%=hardDriveModelName%>" id="<%=hardDriveModelName%>"
+                   value="<%=hardDrive.getModel() != null ? hardDrive.getModel() : ""%>">
+
+            <label for="<%=hardDriveSizeName%>">Объем</label>
+            <input type="text" name="<%=hardDriveSizeName%>" id="<%=hardDriveSizeName%>"
+                   value="<%=hardDrive.getSize() != null ? hardDrive.getSize() : ""%>">
+            <%
+                if (Role.ADMIN.equals(role)) {
+                    out.println("<input type=\"submit\" name=\"" + buttonDelete + "\" value=\"Удалить\">");
+                }
+            %>
         </p>
+        <%
+                    countHardDrive++;
+                }
+            }
+        %>
+        </p>
+
+
     </div>
     <%
         }
@@ -410,6 +432,7 @@
             <input type="hidden" name="<%=Parameters.countProcessor%>" value="<%=countProcessor%>">
             <input type="hidden" name="<%=Parameters.countRam%>" value="<%=countRam%>">
             <input type="hidden" name="<%=Parameters.countVideoCard%>" value="<%=countVideoCard%>">
+            <input type="hidden" name="<%=Parameters.countHardDrive%>" value="<%=countHardDrive%>">
 
             <a href="/<%=redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
             <%
