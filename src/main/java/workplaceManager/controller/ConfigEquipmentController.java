@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.*;
 import workplaceManager.db.domain.*;
-import workplaceManager.db.domain.components.MotherBoard;
-import workplaceManager.db.domain.components.Processor;
-import workplaceManager.db.domain.components.Ram;
-import workplaceManager.db.domain.components.TypeRam;
+import workplaceManager.db.domain.components.*;
 import workplaceManager.db.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +70,13 @@ public class ConfigEquipmentController {
     @Autowired
     public void setRamManager(RamManager ramManager) {
         this.ramManager = ramManager;
+    }
+
+    private VideoCardManager videoCardManager;
+
+    @Autowired
+    public void setVideoCardManager(VideoCardManager videoCardManager) {
+        this.videoCardManager = videoCardManager;
     }
 
     @GetMapping(Pages.addUpdateEquipment)
@@ -153,13 +157,17 @@ public class ConfigEquipmentController {
 
                 setParameterComputer(computer, request, equipment, false);
 
-                if(TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
+                if (TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
                     Processor processor = new Processor();
                     computer.getProcessorList().add(processor);
                 }
-                if(TypeComponentsComputer.ram.equals(typeComponentsComputer)) {
+                if (TypeComponentsComputer.ram.equals(typeComponentsComputer)) {
                     Ram ram = new Ram();
                     computer.getRamList().add(ram);
+                }
+                if (TypeComponentsComputer.videoCard.equals(typeComponentsComputer)) {
+                    VideoCard videoCard = new VideoCard();
+                    computer.getVideoCardList().add(videoCard);
                 }
 
                 //equipmentManager.save(computer);
@@ -209,39 +217,13 @@ public class ConfigEquipmentController {
                         }
                     }
                 }
-
-                //equipmentManager.save(computer);
-                modelAndView.addObject(Parameters.computer, computer);
-                modelAndView.addObject(Parameters.equipment, equipment);
-                modelAndView.addObject(Parameters.typeEquipment, request.getParameter(Parameters.typeEquipment));
-            }
-            return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);
-        } else {
-            return new ModelAndView(Pages.login);
-        }
-    }
-
-   /* private ModelAndView deleteProcessor(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                         @RequestParam(name = Parameters.token) String token,
-                                         HttpServletRequest request) {
-        Users user = securityCrypt.getUserByToken(token);
-        if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
-
-            if (!modelAndView.getViewName().equals(Pages.login)) {
-                setWorkplaceByEquipment(equipment, request);
-
-                setAccounting1CByEquipment(equipment, request, false);
-
-                Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
-
-                setParameterComputer(computer, request, equipment, false);
-
-                int countProcessor = Integer.parseInt(request.getParameter(Parameters.countProcessor));
-                for (int numberProcessor = 1; numberProcessor <= countProcessor; numberProcessor++) {
-                    String buttonDeleteProcessor = Components.buttonDeleteProcessor + numberProcessor;
-                    if (request.getParameter(buttonDeleteProcessor) != null) {
-                        computer.getProcessorList().remove(numberProcessor - 1);
+                if (TypeComponentsComputer.videoCard.equals(typeComponentsComputer)) {
+                    int countVideoCard = Integer.parseInt(request.getParameter(Parameters.countVideoCard));
+                    for (int i = 1; i <= countVideoCard; i++) {
+                        String buttonDeleteVideoCard = Components.buttonDeleteVideoCard + i;
+                        if (request.getParameter(buttonDeleteVideoCard) != null) {
+                            computer.getVideoCardList().remove(i - 1);
+                        }
                     }
                 }
 
@@ -254,7 +236,7 @@ public class ConfigEquipmentController {
         } else {
             return new ModelAndView(Pages.login);
         }
-    }*/
+    }
 
     private ModelAndView searchPage(@ModelAttribute(Parameters.equipment) Equipment equipment,
                                     @RequestParam(name = Parameters.token) String token,
@@ -280,6 +262,16 @@ public class ConfigEquipmentController {
             String buttonDeleteRam = Components.buttonDeleteRam + i;
             if (request.getParameter(buttonDeleteRam) != null) {
                 return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.ram);
+            }
+        }
+        if (request.getParameter(Components.buttonAddVideoCard) != null) {
+            return addComponentComputer(equipment, token, request, TypeComponentsComputer.videoCard);
+        }
+        int countVideCard = Integer.parseInt(request.getParameter(Parameters.countVideoCard));
+        for (int i = 1; i <= countVideCard; i++) {
+            String buttonDeleteVideoCard = Components.buttonDeleteVideoCard + i;
+            if (request.getParameter(buttonDeleteVideoCard) != null) {
+                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.videoCard);
             }
         }
         return null;
@@ -399,6 +391,37 @@ public class ConfigEquipmentController {
         addOperationSystemToComputer(request, computer);
         addProcessorListToComputer(request, computer, isNeedSave);
         addRamListToComputer(request, computer, isNeedSave);
+        addVideoCardListToComputer(request, computer, isNeedSave);
+    }
+
+    private void addVideoCardListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+        if (isNeedSave) {
+            videoCardManager.deleteVideoCardListForComputer(computer);
+        }
+
+        List<VideoCard> videoCardList = new ArrayList<>();
+        int countVideoCard = Integer.parseInt(request.getParameter(Parameters.countVideoCard));
+        for (int i = 1; i < countVideoCard; i++) {
+            VideoCard videoCard = new VideoCard();
+            String videoCardModelName = Components.videoCardModelInputText + i;
+
+            if (request.getParameter(videoCardModelName) != null) {
+                videoCard.setModel(request.getParameter(videoCardModelName));
+            } else {
+                continue;
+            }
+
+            videoCard.setComputer(computer);
+
+            videoCardList.add(videoCard);
+
+            if (isNeedSave) {
+                if (!VideoCard.isEmpty(videoCard)) {
+                    videoCardManager.save(videoCard);
+                }
+            }
+        }
+        computer.setVideoCardList(videoCardList);
     }
 
     private void addRamListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
@@ -408,7 +431,7 @@ public class ConfigEquipmentController {
 
         List<Ram> ramList = new ArrayList<>();
         int countRam = Integer.parseInt(request.getParameter(Parameters.countRam));
-        System.out.println("countRam="+countRam);
+        System.out.println("countRam=" + countRam);
         for (int i = 1; i < countRam; i++) {
             Ram ram = new Ram();
             String ramModelName = Components.ramModelInputText + i;
@@ -455,7 +478,7 @@ public class ConfigEquipmentController {
                 System.out.println("if (isNeedSave) {");
                 if (!Ram.isEmpty(ram)) {
                     ramManager.save(ram);
-                    System.out.println("ramManager.save(ram);"+ram);
+                    System.out.println("ramManager.save(ram);" + ram);
                 }
             }
         }

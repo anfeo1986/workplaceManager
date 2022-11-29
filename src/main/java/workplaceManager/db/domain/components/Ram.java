@@ -1,13 +1,16 @@
 package workplaceManager.db.domain.components;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import workplaceManager.db.domain.Computer;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Ram implements Serializable {
     @Id
     @Column(name = "id")
@@ -34,10 +37,12 @@ public class Ram implements Serializable {
     private Computer computer;
 
     @Override
+    @Transient
     public String toString() {
         return String.format("%s (%s, %s, %s, %s)", model, typeRam, amount, frequency, deviceLocator);
     }
 
+    @Transient
     public static boolean isEmpty(Ram ram) {
         if (ram == null) {
             return true;

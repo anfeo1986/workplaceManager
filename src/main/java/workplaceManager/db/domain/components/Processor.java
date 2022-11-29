@@ -1,13 +1,16 @@
 package workplaceManager.db.domain.components;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import workplaceManager.db.domain.Computer;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Processor implements Serializable {
     @Id
     @Column(name = "id")
@@ -31,10 +34,12 @@ public class Processor implements Serializable {
     private Computer computer;
 
     @Override
+    @Transient
     public String toString() {
         return String.format("%s (Кол-во ядер: %s, %s, %s)", model, numberOfCores, frequency, socket);
     }
 
+    @Transient
     public static boolean isEmpty(Processor processor) {
         if (processor == null) {
             return true;

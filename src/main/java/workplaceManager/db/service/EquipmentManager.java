@@ -9,6 +9,8 @@ import workplaceManager.db.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository
 public class EquipmentManager extends EntityManager<Equipment> {
@@ -26,11 +28,22 @@ public class EquipmentManager extends EntityManager<Equipment> {
         List<Equipment> equipmentAllList = getEquipmentList();
 
         List<Computer> computerList = new ArrayList<>();
+        SortedMap<String, Computer> sortedMap = new TreeMap<String, Computer>();
+        List<Computer> computerListOther = new ArrayList<>();
         equipmentAllList.stream().forEach(equipment -> {
             if(equipment instanceof Computer) {
-                computerList.add((Computer) equipment);
+                Computer computer = (Computer) equipment;
+                if(computer.getIp() != null && computer.getIp() != "" && !sortedMap.containsKey(computer.getIp())) {
+                    sortedMap.put(computer.getIp(), computer);
+                } else {
+                    computerListOther.add(computer);
+                }
+                //computerList.add((Computer) equipment);
             }
         });
+
+        sortedMap.values().forEach(computer -> computerList.add(computer));
+        computerListOther.forEach(computer -> computerList.add(computer));
 
         computerList.stream().forEach(computer -> initializeComputer(computer));
 

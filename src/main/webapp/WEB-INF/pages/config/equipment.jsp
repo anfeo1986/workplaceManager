@@ -9,6 +9,7 @@
 <%@ page import="workplaceManager.db.domain.components.Ram" %>
 <%@ page import="workplaceManager.Components" %>
 <%@ page import="workplaceManager.Parameters" %>
+<%@ page import="workplaceManager.db.domain.components.VideoCard" %>
 
 <html>
 <head>
@@ -209,6 +210,7 @@
     <%
         int countProcessor = 1;
         int countRam = 1;
+        int countVideoCard = 1;
         if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
             Computer computer = (Computer) request.getAttribute(Parameters.computer);
     %>
@@ -344,6 +346,38 @@
         %>
         </p>
 
+        <h2>Видеокарты
+            <%
+                if (Role.ADMIN.equals(role)) {
+                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddVideoCard + "\" value=\"Добавить\">");
+                }
+            %>
+        </h2>
+        <p>
+                <%
+                countVideoCard = 1;
+                if (!CollectionUtils.isEmpty(computer.getVideoCardList())) {
+                    for (VideoCard videoCard : computer.getVideoCardList()) {
+                        String videocardModelName = Components.videoCardModelInputText + countVideoCard;
+                        String buttonDelete = Components.buttonDeleteVideoCard + countVideoCard;
+            %>
+        <p>
+            <label for="<%=videocardModelName%>">Модель</label>
+            <input type="text" name="<%=videocardModelName%>" id="<%=videocardModelName%>"
+                   value="<%=videoCard.getModel() != null ? videoCard.getModel() : ""%>">
+            <%
+                if (Role.ADMIN.equals(role)) {
+                    out.println("<input type=\"submit\" name=\"" + buttonDelete + "\" value=\"Удалить\">");
+                }
+            %>
+        </p>
+        <%
+                    countVideoCard++;
+                }
+            }
+        %>
+        </p>
+
         <p>
             <!--<label for="selectTypeRam">Тип оперативной памяти</label>
             <select name="selectTypeRam" id="selectTypeRam">-->
@@ -375,6 +409,7 @@
             <input type="hidden" name="<%=Parameters.typeEquipment%>" value="<%=typeEquipment%>">
             <input type="hidden" name="<%=Parameters.countProcessor%>" value="<%=countProcessor%>">
             <input type="hidden" name="<%=Parameters.countRam%>" value="<%=countRam%>">
+            <input type="hidden" name="<%=Parameters.countVideoCard%>" value="<%=countVideoCard%>">
 
             <a href="/<%=redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
             <%
