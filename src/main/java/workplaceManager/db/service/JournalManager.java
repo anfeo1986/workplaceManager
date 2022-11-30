@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import workplaceManager.db.TypeEvent;
 import workplaceManager.db.TypeObject;
 import workplaceManager.db.domain.*;
+import workplaceManager.db.domain.components.MotherBoard;
+import workplaceManager.db.domain.components.Processor;
 
 @Repository
 public class JournalManager extends EntityManager<Journal> {
@@ -40,9 +42,36 @@ public class JournalManager extends EntityManager<Journal> {
         }
         if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
             Computer computerOld = (Computer) equipmentOld;
-            Computer computernew = (Computer) equipmentNew;
-            if (computerOld.getIp() != computernew.getIp()) {
-
+            Computer computerNew = (Computer) equipmentNew;
+            if (!StringUtils.equals(computerOld.getIp(), computerNew.getIp())) {
+                saveChange(TypeEvent.UPDATE_MAIN_INFORMATION, computerOld, "IP",
+                        computerOld.getIp(), computerNew.getIp(), typeEquipment);
+            }
+            if (!StringUtils.equals(computerOld.getNetName(), computerNew.getNetName())) {
+                saveChange(TypeEvent.UPDATE_MAIN_INFORMATION, computerOld, "Сетевое имя",
+                        computerOld.getNetName(), computerNew.getNetName(), typeEquipment);
+            }
+            if(!MotherBoard.equalsMotherBoard(computerOld.getMotherBoard(), computerNew.getMotherBoard())) {
+                saveChange(TypeEvent.UPDATE_CONFIG_COMPUTER, computerOld, "Материнская плата",
+                        computerOld.getMotherBoard() != null ? computerOld.getMotherBoard().toString() : "",
+                        computerNew.getMotherBoard() != null ? computerNew.getMotherBoard().toString() : "",
+                        typeEquipment);
+            }
+            if(!Processor.equalsProcessorList(computerOld.getProcessorList(), computerNew.getProcessorList())) {
+                String oldProc = "";
+                if(computerOld.getProcessorList() != null) {
+                    for(Processor processor : computerOld.getProcessorList()) {
+                        oldProc += processor.toString();
+                    }
+                }
+                String newProc = "";
+                if(computerNew.getProcessorList() != null) {
+                    for(Processor processor : computerNew.getProcessorList()) {
+                        newProc += processor.toString();
+                    }
+                }
+                saveChange(TypeEvent.UPDATE_CONFIG_COMPUTER, computerOld, "Процессоры",
+                        oldProc, newProc, typeEquipment);
             }
 
         }

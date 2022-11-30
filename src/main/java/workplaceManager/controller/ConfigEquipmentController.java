@@ -732,10 +732,10 @@ public class ConfigEquipmentController {
                     setWorkplaceByEquipment(equipment, request);
 
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+                        Computer computerOld = equipmentManager.getComputerById(equipment.getId());
                         Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                         setParameterComputer(computer, request, equipment, true);
 
-                        Computer computerOld = equipmentManager.getComputerById(equipment.getId());
                         equipmentManager.save(computer);
                         journalManager.saveChangeEquipment(computerOld, computer, typeEquipment);
                     } else {

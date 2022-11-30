@@ -57,4 +57,9 @@ public class Ram implements Serializable {
 
         return false;
     }
+
+    //@Transient
+    //public static boolean equalsRam(Ram ram1, Ram ram2) {
+    //    if()
+    //}
 }
