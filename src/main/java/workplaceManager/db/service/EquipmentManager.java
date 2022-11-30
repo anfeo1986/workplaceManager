@@ -33,10 +33,13 @@ public class EquipmentManager extends EntityManager<Equipment> {
         equipmentAllList.stream().forEach(equipment -> {
             if(equipment instanceof Computer) {
                 Computer computer = (Computer) equipment;
-                if(computer.getIp() != null && computer.getIp() != "" && !sortedMap.containsKey(computer.getIp())) {
+                System.out.println("computer.getIp()="+computer.getIp());
+                if(computer.getIp() != null && !computer.getIp().isEmpty() && !sortedMap.containsKey(computer.getIp())) {
                     sortedMap.put(computer.getIp(), computer);
+                    System.out.println("sortedMap.size()="+sortedMap.size());
                 } else {
                     computerListOther.add(computer);
+                    System.out.println("computerList.size()="+computerList.size());
                 }
                 //computerList.add((Computer) equipment);
             }
