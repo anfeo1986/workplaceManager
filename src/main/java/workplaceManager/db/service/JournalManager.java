@@ -68,13 +68,13 @@ public class JournalManager extends EntityManager<Journal> {
                 String oldProc = "";
                 if (computerOld.getProcessorList() != null) {
                     for (Processor processor : computerOld.getProcessorList()) {
-                        oldProc += processor.toString();
+                        oldProc += processor.toString() + "; ";
                     }
                 }
                 String newProc = "";
                 if (computerNew.getProcessorList() != null) {
                     for (Processor processor : computerNew.getProcessorList()) {
-                        newProc += processor.toString();
+                        newProc += processor.toString() + "; ";
                     }
                 }
                 saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.PROCESSOR.toString(),
@@ -86,10 +86,10 @@ public class JournalManager extends EntityManager<Journal> {
 
     private void saveChange(TypeEvent typeEvent, Object objectChange, String param,
                             String oldValue, String newValue, String typeEquipment) {
-        Journal journal = new Journal(typeEvent,
-                getTypeObjectFromTypeEquipment(typeEquipment), objectChange);
-        String event = String.format("%s. Параметр: %s. Было: %s, стало: %s",
-                journal.getEvent(), param, oldValue, newValue);
+        Journal journal = new Journal(typeEvent, getTypeObjectFromTypeEquipment(typeEquipment),
+                objectChange, oldValue, newValue);
+
+        String event = String.format("%s. Параметр: %s.", journal.getEvent(), param);
         journal.setEvent(event);
         save(journal);
     }

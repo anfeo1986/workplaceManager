@@ -78,24 +78,27 @@ public class Processor implements Serializable {
     @Transient
     public static boolean equalsProcessorList(List<Processor> processorList1, List<Processor> processorList2) {
         if ((processorList1 == null && processorList2 == null) ||
-                (processorList1.isEmpty() && processorList2.isEmpty()) ||
-                (processorList1.size() != processorList2.size())) {
+                (processorList1.isEmpty() && processorList2.isEmpty())) {
+
             return true;
+        }
+        if(processorList1.size() != processorList2.size()) {
+            return false;
         }
         if ((processorList1 == null && processorList2 != null) ||
                 (processorList1 != null && processorList2 == null)) {
             return false;
         }
 
-        for(Processor processor1 : processorList1) {
+        for (Processor processor1 : processorList1) {
             boolean isExist = false;
-            for (Processor processor2:processorList2) {
-                if(equalsProcessor(processor1, processor2)) {
+            for (Processor processor2 : processorList2) {
+                if (equalsProcessor(processor1, processor2)) {
                     isExist = true;
                     break;
                 }
             }
-            if(!isExist) {
+            if (!isExist) {
                 return false;
             }
         }

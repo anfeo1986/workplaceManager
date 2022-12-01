@@ -170,7 +170,8 @@ public class ConfigEquipmentController {
 
                 setAccounting1CByEquipment(equipment, request, false);
 
-                Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                Computer computer = equipmentManager.getComputerById(equipment.getId());
 
                 setParameterComputer(computer, request, equipment, false);
 
@@ -212,7 +213,8 @@ public class ConfigEquipmentController {
 
                 setAccounting1CByEquipment(equipment, request, false);
 
-                Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                Computer computer = equipmentManager.getComputerById(equipment.getId());
 
                 setParameterComputer(computer, request, equipment, false);
 
@@ -602,11 +604,6 @@ public class ConfigEquipmentController {
     }
 
     private void addProcessorListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
-        //if (isNeedSave) {
-        //    processorManager.deleteProcessorListForComputer(computer);
-        //}
-
-        //List<Processor> processorList = new ArrayList<>();
         List<Long> processorIdList = new ArrayList<>();
         int countProcessor = Integer.parseInt(request.getParameter(Parameters.countProcessor));
         for (int i = 1; i < countProcessor; i++) {
@@ -618,7 +615,6 @@ public class ConfigEquipmentController {
             String processorIdName = Components.processorIdHiddenText + i;
 
             Long processorId = Long.parseLong(request.getParameter(processorIdName));
-            System.out.println("processorId= " + processorId);
             boolean isNewProcessor = true;
             if (processorId > 0) {
                 for (Processor processor1 : computer.getProcessorList()) {
@@ -665,48 +661,34 @@ public class ConfigEquipmentController {
             if (isNeedSave) {
                 if (!Processor.isEmpty(processor)) {
                     processorManager.save(processor);
+                    if(isNewProcessor) {
+                        processorIdList.add(processor.getId());
+                    }
                 }
             }
-        }
-
-        for (Long i : processorIdList) {
-            System.out.println(i);
         }
 
         List<Integer> processorIndexListForDelete = new ArrayList<>();
         int index = 0;
         for (Processor processor : computer.getProcessorList()) {
-            System.out.println("processor.getId()= " + processor.getId());
             boolean isExist = false;
             for (Long id : processorIdList) {
-                System.out.println("if (id == processor.getId()) {  " + id + "  " + processor.getId());
                 if (id == processor.getId()) {
                     isExist = true;
                     break;
                 }
             }
-            //if (!processorIdList.stream().filter(id -> id == processor.getId()).findFirst().isPresent()) {
             if (!isExist) {
                 processorIndexListForDelete.add(index);
             }
-            //if(!processorIdList.contains(processor.getId())) {
-            //    processorIndexListForDelete.add(index);
-            //}
             index++;
         }
-        System.out.println("processorIndexListForDelete");
         for (Integer i : processorIndexListForDelete) {
-            System.out.println(i);
-        }
-        for (Integer i : processorIndexListForDelete) {
-            System.out.println("i="+i);
-            Processor processor = computer.getProcessorList().get(i);
-            processorManager.delete(processor);
+            if(isNeedSave) {
+                Processor processor = computer.getProcessorList().get(i);
+                processorManager.delete(processor);
+            }
             computer.getProcessorList().remove(i);
-        }
-        System.out.println("computer.getProcessorList()=" + computer.getProcessorList().size());
-        for (Processor processor : computer.getProcessorList()) {
-            System.out.println(processor.getId());
         }
     }
 
@@ -796,12 +778,12 @@ public class ConfigEquipmentController {
 
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                         Computer computerOld = equipmentManager.getComputerById(equipment.getId());
-                        //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+
                         Computer computer = equipmentManager.getComputerById(equipment.getId());
-
                         setParameterComputer(computer, request, equipment, true);
-
                         equipmentManager.save(computer);
+                        computer = equipmentManager.getComputerById(equipment.getId());
+
                         journalManager.saveChangeEquipment(computerOld, computer, typeEquipment);
                     } else {
                         Equipment equipmentOld = equipmentManager.getEquipmentById(equipment.getId());

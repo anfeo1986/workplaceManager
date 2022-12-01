@@ -21,6 +21,12 @@ public class Journal {
     private String event;
 
     @Column
+    private String oldValue;
+
+    @Column
+    private String newValue;
+
+    @Column
     private String typeEvent;
 
     @Column
@@ -55,6 +61,12 @@ public class Journal {
         } else if (TypeObject.ACCOUNTING1C.equals(typeObject)) {
             addEventAndIdObject(typeEvent, typeObject, obj, ((Accounting1C) obj).getId());
         }
+    }
+
+    public Journal(TypeEvent typeEvent, TypeObject typeObject, Object obj, String oldValue, String newValue) {
+        this(typeEvent, typeObject, obj);
+        this.oldValue = oldValue;
+        this.newValue = newValue;
     }
 
     private void addEventAndIdObject(TypeEvent typeEvent, TypeObject typeObject, Object object, Long idObject) {
