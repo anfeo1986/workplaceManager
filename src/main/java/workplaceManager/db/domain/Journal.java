@@ -2,8 +2,8 @@ package workplaceManager.db.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import workplaceManager.db.TypeEvent;
-import workplaceManager.db.TypeObject;
+import workplaceManager.TypeEvent;
+import workplaceManager.TypeObject;
 
 import javax.persistence.*;
 import java.util.Date;

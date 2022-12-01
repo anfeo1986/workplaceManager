@@ -1,4 +1,4 @@
-package workplaceManager.db;
+package workplaceManager;
 
 public enum TypeObject {
     USER ("Пользователь"),

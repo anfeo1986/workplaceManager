@@ -5,6 +5,7 @@ public class Components {
     public static final String processorNumberOfCoresInputText = "processorNumberOfCores";
     public static final String processorFrequencyInputText = "processorFrequency";
     public static final String processorSocketInputText = "processorSocket";
+    public static final String processorIdHiddenText = "processorId";
 
     public static final String ramModelInputText = "ramModel";
     public static final String ramTypeRamSelect = "ramTypeRam";

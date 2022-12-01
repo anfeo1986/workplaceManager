@@ -233,7 +233,6 @@
             <label for="<%=Components.motherboardModel%>">Модель</label>
             <input type="text" name="<%=Components.motherboardModel%>" id="<%=Components.motherboardModel%>"
                    value="<%=computer.getMotherBoard() != null ? computer.getMotherBoard().getModel() : ""%>">
-
         </p>
 
         <h2>Процессор
@@ -252,6 +251,7 @@
                         String numberCoreName = Components.processorNumberOfCoresInputText + countProcessor;
                         String frequencyName = Components.processorFrequencyInputText + countProcessor;
                         String socketName = Components.processorSocketInputText + countProcessor;
+                        String processorIdName = Components.processorIdHiddenText + countProcessor;
                         String buttonDeleteProcessor = Components.buttonDeleteProcessor+countProcessor;
             %>
         <p>
@@ -270,6 +270,8 @@
             <label for="<%=socketName%>">Сокет</label>
             <input type="text" name="<%=socketName%>" id="<%=socketName%>" size="8"
                    value="<%=processor.getSocket() != null ? processor.getSocket() : ""%>">
+
+            <input type="hidden" name="<%=processorIdName%>" value="<%=processor.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
                     out.println("<input type=\"submit\" name=\"" + buttonDeleteProcessor + "\" value=\"Удалить\">");
