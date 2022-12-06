@@ -36,6 +36,22 @@ a.button:active {
     box-shadow: 0 3px rgb(33,147,90) inset;
 }
 
+a.button_select {
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    padding: .8em 1em calc(.8em + 3px);
+    border-radius: 3px;
+    background: rgb(28, 72, 201);
+    box-shadow: 0 -3px rgb(33, 53, 158) inset;
+    transition: 0.2s;
+}
+a.button_select:hover { background: rgb(26, 38, 139); }
+a.button_select:active {
+    background: rgb(26, 38, 139);
+    box-shadow: 0 3px rgb(26, 38, 139) inset;
+}
+
 #form[data-state="seamen"] .hide-if-seamen {
     display: none;
 }

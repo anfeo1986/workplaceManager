@@ -12,6 +12,7 @@ public class Components {
     public static final String ramAmountInputText = "ramAmount";
     public static final String ramFrequencyInputText = "ramFrequency";
     public static final String ramDeviceLocatorInputText = "ramDeviceLocator";
+    public static final String ramIdHiddenText = "ramId";
 
     public static final String buttonReadConfigComputer = "buttonReadConfigComputer";
     public static final String buttonAddProcessor = "buttonAddProcessor";
@@ -34,7 +35,9 @@ public class Components {
     public static final String motherboardModel = "motherboard_model";
 
     public static final String videoCardModelInputText = "videoCardModel";
+    public static final String videoCardIdHiddenText = "videoCardId";
 
     public static final String hardDriveModelInputText = "hardDriveModel";
     public static final String hardDriveSizeInputText = "hardDriveSize";
+    public static final String hardDriveIdHiddenText = "hardDriveId";
 }

@@ -1,6 +1,7 @@
 package workplaceManager;
 
 public class Parameters {
+    public static final String page = "page";
     public static final String id = "id";
     public static final String typeEquipment = "typeEquipment";
     public static final String token = "token";

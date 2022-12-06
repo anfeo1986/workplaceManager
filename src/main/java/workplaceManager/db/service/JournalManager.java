@@ -7,8 +7,11 @@ import workplaceManager.TypeEvent;
 import workplaceManager.TypeObject;
 import workplaceManager.TypeParameter;
 import workplaceManager.db.domain.*;
-import workplaceManager.db.domain.components.MotherBoard;
-import workplaceManager.db.domain.components.Processor;
+import workplaceManager.db.domain.components.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Repository
 public class JournalManager extends EntityManager<Journal> {
@@ -65,23 +68,40 @@ public class JournalManager extends EntityManager<Journal> {
                         typeEquipment);
             }
             if (!Processor.equalsProcessorList(computerOld.getProcessorList(), computerNew.getProcessorList())) {
-                String oldProc = "";
-                if (computerOld.getProcessorList() != null) {
-                    for (Processor processor : computerOld.getProcessorList()) {
-                        oldProc += processor.toString() + "; ";
-                    }
-                }
-                String newProc = "";
-                if (computerNew.getProcessorList() != null) {
-                    for (Processor processor : computerNew.getProcessorList()) {
-                        newProc += processor.toString() + "; ";
-                    }
-                }
                 saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.PROCESSOR.toString(),
-                        oldProc, newProc, typeEquipment);
+                        getStrFromList(computerOld.getProcessorList()),
+                        getStrFromList(computerNew.getProcessorList()),
+                        typeEquipment);
             }
-
+            if (!Ram.equalsRamList(computerOld.getRamList(), computerNew.getRamList())) {
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.RAM.toString(),
+                        getStrFromList(computerOld.getRamList()),
+                        getStrFromList(computerNew.getRamList()),
+                        typeEquipment);
+            }
+            if (!HardDrive.equalsHardDriveList(computerOld.getHardDriveList(), computerNew.getHardDriveList())) {
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.HARDDRIVE.toString(),
+                        getStrFromList(computerOld.getHardDriveList()),
+                        getStrFromList(computerNew.getHardDriveList()),
+                        typeEquipment);
+            }
+            if(!VideoCard.equalsVideoCardList(computerOld.getVideoCardList(), computerNew.getVideoCardList())) {
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.VIDEOCARD.toString(),
+                        getStrFromList(computerOld.getVideoCardList()),
+                        getStrFromList(computerNew.getVideoCardList()),
+                        typeEquipment);
+            }
         }
+    }
+
+    private <T> String getStrFromList(List<T> list) {
+        String str = "";
+        if (list != null) {
+            for (Object obj : list) {
+                str += obj.toString() + "; ";
+            }
+        }
+        return str;
     }
 
     private void saveChange(TypeEvent typeEvent, Object objectChange, String param,

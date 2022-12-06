@@ -11,7 +11,9 @@ public enum TypeEvent {
     //UPDATE_BINDING_WORKPLACE("Изменение привязки к рабочему месту"),
     //UPDATE_OS_COMPUTER("Изменение операционной системы"),
     //UPDATE_CONFIG_COMPUTER("Изменение конфигурации компьютера"),
-    DELETE("Удаление");
+    DELETE("Удаление"),
+
+    READ_CONFIG_COMPUTER("Считывание конфигурации компьютера");
 
     private String title;
 

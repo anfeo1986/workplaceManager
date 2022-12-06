@@ -144,6 +144,8 @@ public class ConfigEquipmentController {
                     }
                 }
 
+                journalManager.save(new Journal(TypeEvent.READ_CONFIG_COMPUTER, TypeObject.COMPUTER, computer));
+
                 //equipmentManager.save(computer);
                 modelAndView.addObject(Parameters.computer, computer);
                 modelAndView.addObject(Parameters.message, message);
@@ -446,16 +448,26 @@ public class ConfigEquipmentController {
     }
 
     private void addHardDriveListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
-        if (isNeedSave) {
-            hardDriveManager.deleteHardDriveListForComputer(computer);
-        }
 
-        List<HardDrive> hardDriveList = new ArrayList<>();
+        List<Long> hardDriveIdList = new ArrayList<>();
         int countHardDrive = Integer.parseInt(request.getParameter(Parameters.countHardDrive));
         for (int i = 1; i < countHardDrive; i++) {
             HardDrive hardDrive = new HardDrive();
             String hardDriveModelName = Components.hardDriveModelInputText + i;
             String hardDriveSizeName = Components.hardDriveSizeInputText + i;
+            String hardDriveIdName = Components.hardDriveIdHiddenText + i;
+
+            Long hardDriveId = Long.parseLong(request.getParameter(hardDriveIdName));
+            boolean isNewHardDrive = true;
+            if (hardDriveId > 0) {
+                for (HardDrive hardDrive1 : computer.getHardDriveList()) {
+                    if (hardDrive1.getId() == hardDriveId) {
+                        hardDrive = hardDrive1;
+                        isNewHardDrive = false;
+                        break;
+                    }
+                }
+            }
 
             boolean isAllNull = true;
 
@@ -471,30 +483,68 @@ public class ConfigEquipmentController {
             if (isAllNull) {
                 continue;
             }
-
-            hardDrive.setComputer(computer);
-
-            hardDriveList.add(hardDrive);
+            if (hardDriveId > 0) {
+                hardDriveIdList.add(hardDriveId);
+            }
+            if (isNewHardDrive) {
+                hardDrive.setComputer(computer);
+                computer.getHardDriveList().add(hardDrive);
+            }
 
             if (isNeedSave) {
                 if (!HardDrive.isEmpty(hardDrive)) {
                     hardDriveManager.save(hardDrive);
+                    if (isNewHardDrive) {
+                        hardDriveIdList.add(hardDrive.getId());
+                    }
                 }
             }
         }
-        computer.setHardDriveList(hardDriveList);
+
+        List<Integer> hardDiskIndexForDelete = new ArrayList<>();
+        int index = 0;
+        for (HardDrive hardDrive : computer.getHardDriveList()) {
+            boolean isExist = false;
+            for (Long id : hardDriveIdList) {
+                if (id == hardDrive.getId()) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                hardDiskIndexForDelete.add(index);
+            }
+            index++;
+        }
+        for (Integer i : hardDiskIndexForDelete) {
+            if (isNeedSave) {
+                HardDrive hardDrive = computer.getHardDriveList().get(i);
+                hardDriveManager.delete(hardDrive);
+            }
+            computer.getHardDriveList().remove(i);
+        }
+
     }
 
     private void addVideoCardListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
-        if (isNeedSave) {
-            videoCardManager.deleteVideoCardListForComputer(computer);
-        }
-
-        List<VideoCard> videoCardList = new ArrayList<>();
+        List<Long> videoCardIdList = new ArrayList<>();
         int countVideoCard = Integer.parseInt(request.getParameter(Parameters.countVideoCard));
         for (int i = 1; i < countVideoCard; i++) {
             VideoCard videoCard = new VideoCard();
             String videoCardModelName = Components.videoCardModelInputText + i;
+            String videoCardIdName = Components.videoCardIdHiddenText + i;
+
+            Long videoCardId = Long.parseLong(request.getParameter(videoCardIdName));
+            boolean isNewVideoCard = true;
+            if (videoCardId > 0) {
+                for (VideoCard videoCard1 : computer.getVideoCardList()) {
+                    if (videoCard1.getId() == videoCardId) {
+                        videoCard = videoCard1;
+                        isNewVideoCard = false;
+                        break;
+                    }
+                }
+            }
 
             if (request.getParameter(videoCardModelName) != null) {
                 videoCard.setModel(request.getParameter(videoCardModelName));
@@ -502,27 +552,50 @@ public class ConfigEquipmentController {
                 continue;
             }
 
-            videoCard.setComputer(computer);
-
-            videoCardList.add(videoCard);
+            if (videoCardId > 0) {
+                videoCardIdList.add(videoCardId);
+            }
+            if (isNewVideoCard) {
+                videoCard.setComputer(computer);
+                computer.getVideoCardList().add(videoCard);
+            }
 
             if (isNeedSave) {
                 if (!VideoCard.isEmpty(videoCard)) {
                     videoCardManager.save(videoCard);
+                    if (isNewVideoCard) {
+                        videoCardIdList.add(videoCard.getId());
+                    }
                 }
             }
         }
-        computer.setVideoCardList(videoCardList);
+        List<Integer> videoCardIndexForDelete = new ArrayList<>();
+        int index = 0;
+        for (VideoCard videoCard : computer.getVideoCardList()) {
+            boolean isExist = false;
+            for (Long id : videoCardIdList) {
+                if (id == videoCard.getId()) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                videoCardIndexForDelete.add(index);
+            }
+            index++;
+        }
+        for (Integer i : videoCardIndexForDelete) {
+            if (isNeedSave) {
+                VideoCard videoCard = computer.getVideoCardList().get(i);
+                videoCardManager.delete(videoCard);
+            }
+            computer.getVideoCardList().remove(i);
+        }
     }
 
     private void addRamListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
-        if (isNeedSave) {
-            ramManager.deleteRamListForComputer(computer);
-        }
-
-        List<Ram> ramList = new ArrayList<>();
+        List<Long> ramIdList = new ArrayList<>();
         int countRam = Integer.parseInt(request.getParameter(Parameters.countRam));
-        System.out.println("countRam=" + countRam);
         for (int i = 1; i < countRam; i++) {
             Ram ram = new Ram();
             String ramModelName = Components.ramModelInputText + i;
@@ -530,30 +603,39 @@ public class ConfigEquipmentController {
             String ramAmountName = Components.ramAmountInputText + i;
             String ramFrequencyName = Components.ramFrequencyInputText + i;
             String ramDeviceLocatorName = Components.ramDeviceLocatorInputText + i;
+            String ramIdName = Components.ramIdHiddenText + i;
+
+            Long ramId = Long.parseLong(request.getParameter(ramIdName));
+            boolean isNewRam = true;
+            if (ramId > 0) {
+                for (Ram ram1 : computer.getRamList()) {
+                    if (ram1.getId() == ramId) {
+                        ram = ram1;
+                        isNewRam = false;
+                        break;
+                    }
+                }
+            }
+
             boolean isAllNull = true;
 
             if (request.getParameter(ramModelName) != null) {
-                System.out.println("if (request.getParameter(ramModelName) != null) {");
                 ram.setModel(request.getParameter(ramModelName));
                 isAllNull = false;
             }
             if (request.getParameter(ramTypeRamName) != null) {
-                System.out.println("if (request.getParameter(ramTypeRamName) != null) {");
                 ram.setTypeRam(TypeRam.valueOf(request.getParameter(ramTypeRamName)));
                 isAllNull = false;
             }
             if (request.getParameter(ramAmountName) != null) {
-                System.out.println("if (request.getParameter(ramAmountName) != null) {");
                 ram.setAmount(request.getParameter(ramAmountName));
                 isAllNull = false;
             }
             if (request.getParameter(ramFrequencyName) != null) {
-                System.out.println("if (request.getParameter(ramFrequencyName) != null) {");
                 ram.setFrequency(request.getParameter(ramFrequencyName));
                 isAllNull = false;
             }
             if (request.getParameter(ramDeviceLocatorName) != null) {
-                System.out.println("if (request.getParameter(ramDeviceLocatorName) != null) {");
                 ram.setDeviceLocator(request.getParameter(ramDeviceLocatorName));
                 isAllNull = false;
             }
@@ -561,19 +643,46 @@ public class ConfigEquipmentController {
             if (isAllNull) {
                 continue;
             }
-            ram.setComputer(computer);
-
-            ramList.add(ram);
+            if (ramId > 0) {
+                ramIdList.add(ramId);
+            }
+            if (isNewRam) {
+                ram.setComputer(computer);
+                computer.getRamList().add(ram);
+            }
 
             if (isNeedSave) {
-                System.out.println("if (isNeedSave) {");
                 if (!Ram.isEmpty(ram)) {
                     ramManager.save(ram);
-                    System.out.println("ramManager.save(ram);" + ram);
+                    if (isNewRam) {
+                        ramIdList.add(ram.getId());
+                    }
                 }
             }
         }
-        computer.setRamList(ramList);
+
+        List<Integer> ramIndexListForDelete = new ArrayList<>();
+        int index = 0;
+        for (Ram ram : computer.getRamList()) {
+            boolean isExist = false;
+            for (Long id : ramIdList) {
+                if (id == ram.getId()) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                ramIndexListForDelete.add(index);
+            }
+            index++;
+        }
+        for (Integer i : ramIndexListForDelete) {
+            if (isNeedSave) {
+                Ram ram = computer.getRamList().get(i);
+                ramManager.delete(ram);
+            }
+            computer.getRamList().remove(i);
+        }
     }
 
     private void addMotherboardToComputer(HttpServletRequest request, Computer computer) {
@@ -661,7 +770,7 @@ public class ConfigEquipmentController {
             if (isNeedSave) {
                 if (!Processor.isEmpty(processor)) {
                     processorManager.save(processor);
-                    if(isNewProcessor) {
+                    if (isNewProcessor) {
                         processorIdList.add(processor.getId());
                     }
                 }
@@ -684,7 +793,7 @@ public class ConfigEquipmentController {
             index++;
         }
         for (Integer i : processorIndexListForDelete) {
-            if(isNeedSave) {
+            if (isNeedSave) {
                 Processor processor = computer.getProcessorList().get(i);
                 processorManager.delete(processor);
             }

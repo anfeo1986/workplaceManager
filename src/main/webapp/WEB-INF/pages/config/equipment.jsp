@@ -302,6 +302,7 @@
                         String ramAmountName = Components.ramAmountInputText + countRam;
                         String ramFrequencyName = Components.ramFrequencyInputText + countRam;
                         String ramDeviceLocatorName = Components.ramDeviceLocatorInputText + countRam;
+                        String ramIdName = Components.ramIdHiddenText + countRam;
                         String buttonDeleteRam = Components.buttonDeleteRam+countRam;
             %>
         <p>
@@ -333,6 +334,8 @@
             <label for="<%=ramDeviceLocatorName%>">Частота</label>
             <input type="text" name="<%=ramDeviceLocatorName%>" id="<%=ramDeviceLocatorName%>" size="12"
                    value="<%=ram.getDeviceLocator() != null ? ram.getDeviceLocator() : ""%>">
+
+            <input type="hidden" name="<%=ramIdName%>" value="<%=ram.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
                     out.println("<input type=\"submit\" name=\"" + buttonDeleteRam + "\" value=\"Удалить\">");
@@ -359,12 +362,15 @@
                 if (!CollectionUtils.isEmpty(computer.getVideoCardList())) {
                     for (VideoCard videoCard : computer.getVideoCardList()) {
                         String videocardModelName = Components.videoCardModelInputText + countVideoCard;
+                        String videoCardIdName = Components.videoCardIdHiddenText + countVideoCard;
                         String buttonDelete = Components.buttonDeleteVideoCard + countVideoCard;
             %>
         <p>
             <label for="<%=videocardModelName%>">Модель</label>
             <input type="text" name="<%=videocardModelName%>" id="<%=videocardModelName%>"
                    value="<%=videoCard.getModel() != null ? videoCard.getModel() : ""%>">
+
+            <input type="hidden" name="<%=videoCardIdName%>" value="<%=videoCard.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
                     out.println("<input type=\"submit\" name=\"" + buttonDelete + "\" value=\"Удалить\">");
@@ -392,6 +398,7 @@
                     for (HardDrive hardDrive : computer.getHardDriveList()) {
                         String hardDriveModelName = Components.hardDriveModelInputText + countHardDrive;
                         String hardDriveSizeName = Components.hardDriveSizeInputText + countHardDrive;
+                        String hardDriveIdName = Components.hardDriveIdHiddenText + countHardDrive;
                         String buttonDelete = Components.buttonDeleteHardDrive + countHardDrive;
             %>
         <p>
@@ -402,6 +409,8 @@
             <label for="<%=hardDriveSizeName%>">Объем</label>
             <input type="text" name="<%=hardDriveSizeName%>" id="<%=hardDriveSizeName%>"
                    value="<%=hardDrive.getSize() != null ? hardDrive.getSize() : ""%>">
+
+            <input type="hidden" name="<%=hardDriveIdName%>" value="<%=hardDrive.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
                     out.println("<input type=\"submit\" name=\"" + buttonDelete + "\" value=\"Удалить\">");

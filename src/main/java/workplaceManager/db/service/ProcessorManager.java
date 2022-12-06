@@ -3,10 +3,14 @@ package workplaceManager.db.service;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import workplaceManager.Components;
+import workplaceManager.Parameters;
 import workplaceManager.db.domain.Computer;
 import workplaceManager.db.domain.Employee;
+import workplaceManager.db.domain.components.HardDrive;
 import workplaceManager.db.domain.components.Processor;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,5 +38,4 @@ public class ProcessorManager extends EntityManager<Processor> {
         super.save(processor);
         super.delete(processor);
     }
-
 }

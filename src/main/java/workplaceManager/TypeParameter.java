@@ -10,7 +10,10 @@ public enum TypeParameter {
     NET_NAME("Сетевое имя"),
     OS("Операционная система"),
     MOTHERBOARD("Материнская плата"),
-    PROCESSOR("Процессоры");
+    PROCESSOR("Процессор"),
+    RAM("Оперативная память"),
+    HARDDRIVE("Жесткий диск"),
+    VIDEOCARD("Видеокарта");
 
     private String title;
 
