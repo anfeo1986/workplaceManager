@@ -35,4 +35,6 @@ public class Parameters {
     public static final String employeeList = "employeeList";
 
     public static final String motherBoardId = "motherBoardId";
+
+    public static final String journalList = "journalList";
 }

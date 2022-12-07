@@ -1,6 +1,8 @@
 package workplaceManager.db.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import workplaceManager.TypeEvent;
@@ -15,6 +17,13 @@ import java.util.List;
 
 @Repository
 public class JournalManager extends EntityManager<Journal> {
+    EquipmentManager equipmentManager;
+
+    @Autowired
+    public void setEquipmentManager(EquipmentManager equipmentManager) {
+        this.equipmentManager = equipmentManager;
+    }
+
     @Transactional
     public void saveChangeEquipment(Equipment equipmentOld, Equipment equipmentNew, String typeEquipment) {
         if (equipmentNew == null || equipmentOld == null) {
@@ -85,7 +94,7 @@ public class JournalManager extends EntityManager<Journal> {
                         getStrFromList(computerNew.getHardDriveList()),
                         typeEquipment);
             }
-            if(!VideoCard.equalsVideoCardList(computerOld.getVideoCardList(), computerNew.getVideoCardList())) {
+            if (!VideoCard.equalsVideoCardList(computerOld.getVideoCardList(), computerNew.getVideoCardList())) {
                 saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.VIDEOCARD.toString(),
                         getStrFromList(computerOld.getVideoCardList()),
                         getStrFromList(computerNew.getVideoCardList()),
@@ -104,13 +113,14 @@ public class JournalManager extends EntityManager<Journal> {
         return str;
     }
 
-    private void saveChange(TypeEvent typeEvent, Object objectChange, String param,
-                            String oldValue, String newValue, String typeEquipment) {
+    @Transactional
+    public void saveChange(TypeEvent typeEvent, Object objectChange, String param,
+                           String oldValue, String newValue, String typeEquipment) {
         Journal journal = new Journal(typeEvent, getTypeObjectFromTypeEquipment(typeEquipment),
-                objectChange, oldValue, newValue);
+                objectChange, oldValue, newValue, param);
 
-        String event = String.format("%s. Параметр: %s.", journal.getEvent(), param);
-        journal.setEvent(event);
+        //String event = String.format("%s. Параметр: %s.", journal.getEvent(), param);
+        //journal.setEvent(event);
         save(journal);
     }
 
@@ -129,5 +139,31 @@ public class JournalManager extends EntityManager<Journal> {
             return TypeObject.UPS;
         }
         return null;
+    }
+
+    @Transactional
+    public List<Journal> getJournalList() {
+        Session session = sessionFactory.getCurrentSession();
+        List<Journal> journalList = session.createQuery("from Journal as journal " +
+                "order by journal.time desc ").list();
+
+        for (Journal journal : journalList) {
+            TypeObject typeObject = TypeObject.valueOf(journal.getTypeObject());
+            if (TypeObject.COMPUTER.equals(typeObject)) {
+                journal.setObject(equipmentManager.getComputerById(journal.getIdObject()));
+            } else if (TypeObject.MFD.equals(typeObject) ||
+                    TypeObject.MONITOR.equals(typeObject) ||
+                    TypeObject.PRINTER.equals(typeObject) ||
+                    TypeObject.SCANNER.equals(typeObject) ||
+                    TypeObject.UPS.equals(typeObject)) {
+                journal.setObject(equipmentManager.getEquipmentById(journal.getIdObject()));
+            } else if(TypeObject.ACCOUNTING1C.equals(typeObject)) {
+
+            } else if(TypeObject.USER.equals(typeObject)) {
+
+            }
+        }
+
+        return journalList;
     }
 }

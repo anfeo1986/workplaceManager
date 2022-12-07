@@ -3,6 +3,8 @@ package workplaceManager;
 public class Pages {
     public static final String login = "login";
 
+    public static final String journal = "journal";
+
     public static final String mainPage = "mainPage";
 
     public static final String workplace = "workplace";
