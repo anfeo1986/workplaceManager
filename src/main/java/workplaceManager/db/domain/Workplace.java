@@ -1,6 +1,5 @@
 package workplaceManager.db.domain;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +21,9 @@ public class Workplace implements Serializable {
     @Column
     private String title;
 
+    @Column
+    private Boolean deleted;
+
     @OneToMany(mappedBy = "workplace", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 
@@ -31,7 +33,11 @@ public class Workplace implements Serializable {
     @Override
     @Transient
     public String toString() {
-        return title;
+        String str = title;
+        if (deleted) {
+            str += " (удалено. id=" + id + ")";
+        }
+        return str;
     }
 
     @Transient

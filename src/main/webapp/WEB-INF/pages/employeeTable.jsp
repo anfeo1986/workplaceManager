@@ -20,6 +20,7 @@
         <th><h1>ФИО</h1></th>
         <th><h1>Должность</h1></th>
         <th><h1><a href="/<%=Pages.workplace%>?token=<%=token%>">Рабочее место</a></h1></th>
+        <th><h1><a href="/<%=Pages.accounting1c%>?token=<%=token%>">Бухгалтерия</a></h1></th>
         <%
             //    out.println("<th><h1><a href=\"/" + Pages.workplace +
             //            "?token=" + token + "\">Рабочее место</a></h1></th>");

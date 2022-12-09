@@ -31,8 +31,15 @@ public class Users {
     @Column
     private String salt;
 
+    @Column
+    private Boolean deleted;
+
     @Override
     public String toString() {
-        return username;
+        String str = username;
+        if (deleted) {
+            str += " (удалено. id=" + id + ")";
+        }
+        return str;
     }
 }

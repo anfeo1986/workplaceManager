@@ -57,7 +57,7 @@ public class ConfigWorkplaceController {
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Workplace workplace = new Workplace();
             if (workplaceId != null && workplaceId > 0) {
-                workplace = workplaceManager.getWorkplaceById(workplaceId);
+                workplace = workplaceManager.getWorkplaceById(workplaceId, false);
             }
             modelAndView.addObject("workplace", workplace);
 
@@ -83,6 +83,7 @@ public class ConfigWorkplaceController {
                     modelAndView.addObject("error", String.format("%s уже существует", workplace.getTitle()));
                     modelAndView.addObject("workplace", workplace);
                 } else {
+                    workplace.setDeleted(false);
                     workplaceManager.save(workplace);
 
                     journalManager.save(new Journal(TypeEvent.ADD, TypeObject.WORKPLACE, workplace, user));
@@ -118,7 +119,8 @@ public class ConfigWorkplaceController {
                     modelAndView.addObject("error", String.format("%s уже существует", workplace.getTitle()));
                     modelAndView.addObject("workplace", workplace);
                 } else {
-                    Workplace workplaceFromDbById = workplaceManager.getWorkplaceById(workplace.getId());
+                    Workplace workplaceFromDbById = workplaceManager.getWorkplaceById(workplace.getId(), false);
+                    workplace.setDeleted(false);
                     workplaceManager.save(workplace);
 
                     journalManager.saveChangeWorkplace(workplaceFromDbById, workplace, user);
@@ -146,7 +148,7 @@ public class ConfigWorkplaceController {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + Pages.workplace);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Workplace workplace = workplaceManager.getWorkplaceById(id);
+                Workplace workplace = workplaceManager.getWorkplaceById(id, false);
                 workplaceManager.delete(workplace);
 
                 journalManager.save(new Journal(TypeEvent.DELETE, TypeObject.WORKPLACE, workplace, user));

@@ -46,6 +46,10 @@ public class Computer extends Equipment<Computer>{
 
     @Override
     public String toString() {
-        return String.format("%s (%s)", ip, getUid());
+        String str = String.format("%s (%s)", ip, getUid());
+        if (getDeleted()) {
+            str += " (удалено. id=" + getId() + ")";
+        }
+        return str;
     }
 }

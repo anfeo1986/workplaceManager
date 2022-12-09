@@ -29,13 +29,34 @@ public class JournalManager extends EntityManager<Journal> {
         this.userManager = userManager;
     }
 
+    private Accounting1CManager accounting1CManager;
+
+    @Autowired
+    public void setAccounting1CManager(Accounting1CManager accounting1CManager) {
+        this.accounting1CManager = accounting1CManager;
+    }
+
+    private WorkplaceManager workplaceManager;
+
+    @Autowired
+    public void setWorkplaceManager(WorkplaceManager workplaceManager) {
+        this.workplaceManager = workplaceManager;
+    }
+
+    private EmployeeManager employeeManager;
+
+    @Autowired
+    public void setEmployeeManager(EmployeeManager employeeManager) {
+        this.employeeManager = employeeManager;
+    }
+
     @Transactional
     public void saveChangeWorkplace(Workplace workplaceOld, Workplace workplaceNew, Users user) {
-        if(workplaceOld == null && workplaceNew == null) {
+        if (workplaceOld == null && workplaceNew == null) {
             return;
         }
 
-        if(!StringUtils.equals(workplaceOld.getTitle(), workplaceNew.getTitle())) {
+        if (!StringUtils.equals(workplaceOld.getTitle(), workplaceNew.getTitle())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.WORKPLACE, workplaceOld,
                     workplaceOld.getTitle(), workplaceNew.getTitle(),
                     TypeParameter.WORKPLACE_TITLE.toString(), user));
@@ -44,21 +65,21 @@ public class JournalManager extends EntityManager<Journal> {
 
     @Transactional
     public void saveChangeAccounting1C(Accounting1C accounting1COld, Accounting1C accounting1CNew, Users user) {
-        if(accounting1COld == null && accounting1CNew == null) {
+        if (accounting1COld == null && accounting1CNew == null) {
             return;
         }
 
-        if(!StringUtils.equals(accounting1COld.getTitle(), accounting1CNew.getTitle())) {
+        if (!StringUtils.equals(accounting1COld.getTitle(), accounting1CNew.getTitle())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.ACCOUNTING1C, accounting1COld,
                     accounting1COld.getTitle(), accounting1CNew.getTitle(),
                     TypeParameter.ACCOUNTING1C_TITLE.toString(), user));
         }
-        if(!StringUtils.equals(accounting1COld.getInventoryNumber(), accounting1CNew.getInventoryNumber())) {
+        if (!StringUtils.equals(accounting1COld.getInventoryNumber(), accounting1CNew.getInventoryNumber())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.ACCOUNTING1C, accounting1COld,
                     accounting1COld.getInventoryNumber(), accounting1CNew.getInventoryNumber(),
                     TypeParameter.ACCOUNTING1C_INVENTORY_NUMBER.toString(), user));
         }
-        if(!Employee.equalsEmployee(accounting1COld.getEmployee(), accounting1CNew.getEmployee())) {
+        if (!Employee.equalsEmployee(accounting1COld.getEmployee(), accounting1CNew.getEmployee())) {
             save(new Journal(TypeEvent.ACCOUNTING1C_MOVING, TypeObject.ACCOUNTING1C, accounting1COld,
                     accounting1COld.getEmployee() != null ? accounting1COld.getEmployee().toString() : "",
                     accounting1CNew.getEmployee() != null ? accounting1CNew.getEmployee().toString() : "",
@@ -82,7 +103,7 @@ public class JournalManager extends EntityManager<Journal> {
                     employeeOld.getPost(), employeeNew.getPost(),
                     TypeParameter.EMPLOYEE_POST.toString(), user));
         }
-        if(!Workplace.equalsWorkplace(employeeOld.getWorkplace(), employeeNew.getWorkplace())) {
+        if (!Workplace.equalsWorkplace(employeeOld.getWorkplace(), employeeNew.getWorkplace())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.EMPLOYEE, employeeOld,
                     employeeOld.getWorkplace() != null ? employeeOld.getWorkplace().toString() : "",
                     employeeNew.getWorkplace() != null ? employeeNew.getWorkplace().toString() : "",
@@ -210,26 +231,35 @@ public class JournalManager extends EntityManager<Journal> {
     }
 
     @Transactional
-    public List<Journal> getJournalList() {
+    public List<Journal> getJournalList(TypeObject typeObject) {
         Session session = sessionFactory.getCurrentSession();
-        List<Journal> journalList = session.createQuery("from Journal as journal " +
-                "order by journal.time desc ").list();
+
+        String queryStr = "from Journal as journal ";
+        if (typeObject != null) {
+            queryStr += "where journal.typeObject='" + typeObject.name() + "' ";
+        }
+        queryStr += "order by journal.time desc";
+        List<Journal> journalList = session.createQuery(queryStr).list();
 
         for (Journal journal : journalList) {
-            journal.setUser(userManager.getUserById(journal.getIdUser()));
-            TypeObject typeObject = TypeObject.valueOf(journal.getTypeObject());
-            if (TypeObject.COMPUTER.equals(typeObject)) {
-                journal.setObject(equipmentManager.getComputerById(journal.getIdObject()));
-            } else if (TypeObject.MFD.equals(typeObject) ||
-                    TypeObject.MONITOR.equals(typeObject) ||
-                    TypeObject.PRINTER.equals(typeObject) ||
-                    TypeObject.SCANNER.equals(typeObject) ||
-                    TypeObject.UPS.equals(typeObject)) {
-                journal.setObject(equipmentManager.getEquipmentById(journal.getIdObject()));
-            } else if (TypeObject.ACCOUNTING1C.equals(typeObject)) {
-
-            } else if (TypeObject.USER.equals(typeObject)) {
-
+            journal.setUser(userManager.getUserById(journal.getIdUser(), true));
+            TypeObject typeObjectFromJournal = TypeObject.valueOf(journal.getTypeObject());
+            if (TypeObject.COMPUTER.equals(typeObjectFromJournal)) {
+                journal.setObject(equipmentManager.getComputerById(journal.getIdObject(), true));
+            } else if (TypeObject.MFD.equals(typeObjectFromJournal) ||
+                    TypeObject.MONITOR.equals(typeObjectFromJournal) ||
+                    TypeObject.PRINTER.equals(typeObjectFromJournal) ||
+                    TypeObject.SCANNER.equals(typeObjectFromJournal) ||
+                    TypeObject.UPS.equals(typeObjectFromJournal)) {
+                journal.setObject(equipmentManager.getEquipmentById(journal.getIdObject(), true));
+            } else if (TypeObject.ACCOUNTING1C.equals(typeObjectFromJournal)) {
+                journal.setObject(accounting1CManager.getAccounting1CById(journal.getIdObject(), true));
+            } else if (TypeObject.USER.equals(typeObjectFromJournal)) {
+                journal.setObject(userManager.getUserById(journal.getIdObject(), true));
+            } else if (TypeObject.EMPLOYEE.equals(typeObjectFromJournal)) {
+                journal.setObject(employeeManager.getEmployeeById(journal.getIdObject(), true));
+            } else if (TypeObject.WORKPLACE.equals(typeObjectFromJournal)) {
+                journal.setObject(workplaceManager.getWorkplaceById(journal.getIdObject(), true));
             }
         }
 

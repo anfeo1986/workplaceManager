@@ -101,6 +101,8 @@ public class Journal {
             this.idObject = ((Users) obj).getId();
         } else if(TypeObject.EMPLOYEE.equals(typeObject)) {
             this.idObject = ((Employee) obj).getId();
+        } else if(TypeObject.WORKPLACE.equals(typeObject)) {
+            this.idObject = ((Workplace) obj).getId();
         }
     }
 

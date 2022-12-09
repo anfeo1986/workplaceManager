@@ -67,6 +67,7 @@ public class RegistrationController {
         userForm.setRole(Role.USER);
         userForm.setSalt(securityCrypt.generateKey());
         userForm.setPassword(securityCrypt.encode(userForm.getPassword(), userForm.getSalt()));
+        userForm.setDeleted(false);
         userManager.add(userForm);
 
         journalManager.save(new Journal(TypeEvent.USER_REGISTER, TypeObject.USER, userForm));

@@ -14,9 +14,15 @@ th {
     background: white;
 }
 td {
-    color: #669;
-    border-top: 1px solid #e8edff;
+    color: #080811;
+    border-top: 1px solid #0b121d;
     padding: 10px 15px;
+    /*background: white;*/
+}
+tr.delete {
+    background: gray;
+}
+tr.no_delete {
     background: white;
 }
 
@@ -91,3 +97,4 @@ textarea {
     border-style: solid;
     border-color: initial;
 }
+

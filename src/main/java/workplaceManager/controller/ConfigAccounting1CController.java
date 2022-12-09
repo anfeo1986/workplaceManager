@@ -56,7 +56,7 @@ public class ConfigAccounting1CController {
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Accounting1C accounting1C = new Accounting1C();
             if (id != null && id > 0) {
-                accounting1C = accounting1CManager.getAccounting1CById(id);
+                accounting1C = accounting1CManager.getAccounting1CById(id, false);
             }
             modelAndView.addObject("accounting1c", accounting1C);
         }
@@ -74,7 +74,7 @@ public class ConfigAccounting1CController {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigAccounting1C);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Employee employee = employeeManager.getEmployeeById(employeeId);
+                Employee employee = employeeManager.getEmployeeById(employeeId, false);
                 accounting1C.setEmployee(employee);
 
                 Accounting1C accounting1C1FromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1C.getInventoryNumber());
@@ -83,6 +83,7 @@ public class ConfigAccounting1CController {
                             accounting1C1FromDB.getInventoryNumber(), accounting1C1FromDB.getTitle()));
                     modelAndView.addObject("accounting1c", accounting1C);
                 } else {
+                    accounting1C.setDeleted(false);
                     accounting1CManager.save(accounting1C);
 
                     journalManager.save(new Journal(TypeEvent.ADD, TypeObject.ACCOUNTING1C, accounting1C, user));
@@ -113,12 +114,12 @@ public class ConfigAccounting1CController {
                 if (id == null || id <= 0) {
                     accounting1C = new Accounting1C(request.getParameter("inventoryNumber"), request.getParameter("title"), null);
                 } else {
-                    accounting1C = accounting1CManager.getAccounting1CById(id);
+                    accounting1C = accounting1CManager.getAccounting1CById(id, false);
                     accounting1C.setInventoryNumber(request.getParameter("inventoryNumber"));
                     accounting1C.setTitle(request.getParameter("title"));
                 }
 
-                Employee employee = employeeManager.getEmployeeById(employeeId);
+                Employee employee = employeeManager.getEmployeeById(employeeId, false);
                 accounting1C.setEmployee(employee);
 
                 Accounting1C accounting1CFromDb = accounting1CManager.getAccounting1CByInventoryNumber(accounting1C.getInventoryNumber());
@@ -128,7 +129,8 @@ public class ConfigAccounting1CController {
                             accounting1CFromDb.getInventoryNumber(), accounting1CFromDb.getTitle()));
                     modelAndView.addObject("accounting1c", accounting1C);
                 } else {
-                    Accounting1C accounting1CFromDbById = accounting1CManager.getAccounting1CById(accounting1C.getId());
+                    Accounting1C accounting1CFromDbById = accounting1CManager.getAccounting1CById(accounting1C.getId(), false);
+                    accounting1C.setDeleted(false);
                     accounting1CManager.save(accounting1C);
 
                     journalManager.saveChangeAccounting1C(accounting1CFromDbById, accounting1C, user);
@@ -163,7 +165,7 @@ public class ConfigAccounting1CController {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + Pages.accounting1c);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Accounting1C accounting1C = accounting1CManager.getAccounting1CById(id);
+                Accounting1C accounting1C = accounting1CManager.getAccounting1CById(id, false);
                 accounting1CManager.delete(accounting1C);
 
                 journalManager.save(new Journal(TypeEvent.ACCOUNTING1C_CANCELLATION, TypeObject.ACCOUNTING1C,

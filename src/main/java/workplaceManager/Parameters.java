@@ -37,4 +37,6 @@ public class Parameters {
     public static final String motherBoardId = "motherBoardId";
 
     public static final String journalList = "journalList";
+    public static final String journalFilterTypeObject = "journalFilterTypeObject";
+    public static final String journalFilterObjectId = "journalFilterObjectId";
 }

@@ -15,16 +15,22 @@ public class Accounting1CManager extends EntityManager<Accounting1C> {
     @Transactional
     public List<Accounting1C> getAccounting1cList() {
         Session session = sessionFactory.getCurrentSession();
-        List<Accounting1C> accounting1CList = session.createQuery("from Accounting1C as ac order by ac.title").list();
+        List<Accounting1C> accounting1CList = session.createQuery("from Accounting1C as ac " +
+                "where ac.deleted=false order by ac.title").list();
         accounting1CList.stream().forEach(accounting1C -> initializeAccounting1c(accounting1C));
 
         return accounting1CList;
     }
 
     @Transactional
-    public Accounting1C getAccounting1CById(Long id) {
+    public Accounting1C getAccounting1CById(Long id, boolean isReadAll) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from Accounting1C as ac where ac.id=" + id);
+        String queryStr = "from Accounting1C as ac where ";
+        if(!isReadAll) {
+            queryStr+="ac.deleted=false and ";
+        }
+        queryStr+= "ac.id=" + id;
+        Query query = session.createQuery(queryStr);
         Accounting1C accounting1C = (Accounting1C) query.uniqueResult();
         initializeAccounting1c(accounting1C);
 
@@ -63,8 +69,8 @@ public class Accounting1CManager extends EntityManager<Accounting1C> {
     @Override
     public void delete(Accounting1C accounting1C) {
         accounting1C.setEmployee(null);
+        accounting1C.setDeleted(true);
         super.save(accounting1C);
-        super.delete(accounting1C);
     }
 
 }

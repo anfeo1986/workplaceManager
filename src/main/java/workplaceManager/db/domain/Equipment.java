@@ -30,6 +30,9 @@ public class Equipment<T> implements Serializable {
     @Column(name = "model")
     private String model = "";
 
+    @Column
+    private Boolean deleted = false;
+
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "accounting1С")
     private Accounting1C accounting1C;
@@ -40,7 +43,11 @@ public class Equipment<T> implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s (%s %s)", uid, manufacturer, model);
+        String str = String.format("%s (%s %s)", uid, manufacturer, model);
+        if (deleted) {
+            str += " (удалено. id=" + id + ")";
+        }
+        return str;
     }
 
     public T getChildFromEquipment(String typeEquipment) {
@@ -66,6 +73,7 @@ public class Equipment<T> implements Serializable {
         equipment.setModel(this.getModel());
         equipment.setWorkplace(this.getWorkplace());
         equipment.setAccounting1C(this.getAccounting1C());
+        equipment.setDeleted(this.getDeleted());
 
         return (T) equipment;
     }

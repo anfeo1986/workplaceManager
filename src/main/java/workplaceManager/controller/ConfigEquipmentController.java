@@ -1,5 +1,6 @@
 package workplaceManager.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -106,13 +107,13 @@ public class ConfigEquipmentController {
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Equipment equipment = new Equipment();
             if (id != null && id > 0) {
-                equipment = equipmentManager.getEquipmentById(id);
+                equipment = equipmentManager.getEquipmentById(id, false);
             }
 
             modelAndView.addObject(Parameters.equipment, equipment);
             modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
             if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
-                Computer computer = equipmentManager.getComputerById(id);
+                Computer computer = equipmentManager.getComputerById(id, false);
                 modelAndView.addObject(Parameters.computer, computer == null ? new Computer() : computer);
             }
         }
@@ -134,6 +135,20 @@ public class ConfigEquipmentController {
                 Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
 
                 setParameterComputer(computer, request, equipment, false);
+                computer.setDeleted(false);
+                if (computer.getId() <= 0) {
+                    String error = dataVerification(request, equipment);
+                    if(error != null && !StringUtils.equals(error,"")) {
+                        modelAndView.addObject(Parameters.computer, computer);
+                        modelAndView.addObject(Parameters.error, error);
+                        modelAndView.addObject(Parameters.equipment, equipment);
+                        modelAndView.addObject(Parameters.typeEquipment, request.getParameter(Parameters.typeEquipment));
+                        return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);
+                    }
+                    equipmentManager.save(computer);
+                    equipment.setId(computer.getId());
+                    journalManager.save(new Journal(TypeEvent.ADD, TypeObject.COMPUTER, computer, user));
+                }
 
                 String message = "";
                 if (TypeOS.windows.toString().equals(request.getParameter(Parameters.typeOS))) {
@@ -173,7 +188,7 @@ public class ConfigEquipmentController {
                 setAccounting1CByEquipment(equipment, request, false, user);
 
                 //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
-                Computer computer = equipmentManager.getComputerById(equipment.getId());
+                Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
 
                 setParameterComputer(computer, request, equipment, false);
 
@@ -216,7 +231,7 @@ public class ConfigEquipmentController {
                 setAccounting1CByEquipment(equipment, request, false, user);
 
                 //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
-                Computer computer = equipmentManager.getComputerById(equipment.getId());
+                Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
 
                 setParameterComputer(computer, request, equipment, false);
 
@@ -321,13 +336,13 @@ public class ConfigEquipmentController {
         String typeEquipment = request.getParameter(Parameters.typeEquipment);
         String error = "";
         if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
-            Computer computerFromDb = equipmentManager.getComputerByIp(request.getParameter(Parameters.ip));
+            Computer computerFromDb = equipmentManager.getComputerByIp(request.getParameter(Parameters.ip), false);
             if (computerFromDb != null && computerFromDb.getId() != equipment.getId()) {
                 error = request.getParameter(Parameters.ip) + " уже существует ";
             }
         }
 
-        Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid());
+        Equipment equipmentFromDb = equipmentManager.getEquipmentByUid(equipment.getUid(), false);
         if (equipmentFromDb != null && equipmentFromDb.getId() != equipment.getId()) {
             error += String.format("%s уже существует ", equipment.getUid());
         }
@@ -338,6 +353,7 @@ public class ConfigEquipmentController {
     public ModelAndView addEquipment(@ModelAttribute(Parameters.equipment) Equipment equipment,
                                      @RequestParam(name = Parameters.token) String token,
                                      HttpServletRequest request) {
+        equipment.setDeleted(false);
         ModelAndView modelAndViewSearch = searchPage(equipment, token, request);
         if (modelAndViewSearch != null) {
             return modelAndViewSearch;
@@ -371,37 +387,45 @@ public class ConfigEquipmentController {
                         Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
 
                         setParameterComputer(computer, request, equipment, true);
-                        equipmentManager.save(computer);
-                        journalManager.save(new Journal(TypeEvent.ADD, TypeObject.COMPUTER, computer, user));
+                        computer.setDeleted(false);
+                        if (computer.getId() <= 0) {
+                            equipmentManager.save(computer);
+                            journalManager.save(new Journal(TypeEvent.ADD, TypeObject.COMPUTER, computer, user));
+                        }
                         modelAndView.addObject(Parameters.computer, new Computer());
                     }
                     if (TypeEquipment.MONITOR.equals(typeEquipment)) {
                         Monitor monitor = (Monitor) equipment.getChildFromEquipment(TypeEquipment.MONITOR);
+                        monitor.setDeleted(false);
                         equipmentManager.save(monitor);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.MONITOR, monitor, user));
                     }
                     if (TypeEquipment.PRINTER.equals(typeEquipment)) {
                         Printer printer = (Printer) equipment.getChildFromEquipment(TypeEquipment.PRINTER);
+                        printer.setDeleted(false);
                         equipmentManager.save(printer);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.PRINTER, printer, user));
                     }
                     if (TypeEquipment.SCANNER.equals(typeEquipment)) {
                         Scanner scanner = (Scanner) equipment.getChildFromEquipment(TypeEquipment.SCANNER);
+                        scanner.setDeleted(false);
                         equipmentManager.save(scanner);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.SCANNER, scanner, user));
                     }
                     if (TypeEquipment.MFD.equals(typeEquipment)) {
                         Mfd mfd = (Mfd) equipment.getChildFromEquipment(TypeEquipment.MFD);
+                        mfd.setDeleted(false);
                         equipmentManager.save(mfd);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.MFD, mfd, user));
                     }
                     if (TypeEquipment.UPS.equals(typeEquipment)) {
                         Ups ups = (Ups) equipment.getChildFromEquipment(TypeEquipment.UPS);
+                        ups.setDeleted(false);
                         equipmentManager.save(ups);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.UPS, ups, user));
                     }
 
-                    if (error == "") {
+                    if (StringUtils.equals(error, "")) {
                         modelAndView.addObject(Parameters.message, "Успешно");
                         modelAndView.addObject(Parameters.equipment, new Equipment());
                     } else {
@@ -423,7 +447,7 @@ public class ConfigEquipmentController {
         Long workplaceId = request.getParameter(Parameters.workplaceId) != null ? Long.parseLong(request.getParameter(Parameters.workplaceId)) : -1;
 
         if (equipment != null && workplaceId > 0) {
-            Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
+            Workplace workplace = workplaceManager.getWorkplaceById(workplaceId, false);
             equipment.setWorkplace(workplace);
         } else {
             equipment.setWorkplace(null);
@@ -813,7 +837,7 @@ public class ConfigEquipmentController {
             if (selectAccounting1CId < 0) {
                 equipment.setAccounting1C(null);
             } else {
-                Accounting1C accounting1C = accounting1CManager.getAccounting1CById(selectAccounting1CId);
+                Accounting1C accounting1C = accounting1CManager.getAccounting1CById(selectAccounting1CId, false);
                 equipment.setAccounting1C(accounting1C);
             }
         } else if (Parameters.accounting1CAddNewRecord.equals(accounting1CRadio)) {
@@ -822,7 +846,7 @@ public class ConfigEquipmentController {
                 return String.format("%s уже существует", accounting1CInventoryNumber);
             }
             Accounting1C accounting1C = new Accounting1C(accounting1CInventoryNumber, accounting1CTitle,
-                    employeeManager.getEmployeeById(employeeId));
+                    employeeManager.getEmployeeById(employeeId, false));
             if (isNeedSave) {
                 accounting1CManager.save(accounting1C);
                 journalManager.save(new Journal(TypeEvent.ADD, TypeObject.ACCOUNTING1C, accounting1C, user));
@@ -854,6 +878,7 @@ public class ConfigEquipmentController {
     public ModelAndView updateEquipment(@ModelAttribute(Parameters.equipment) Equipment equipment,
                                         @RequestParam(name = Parameters.token) String token,
                                         HttpServletRequest request) {
+        equipment.setDeleted(false);
         ModelAndView modelAndViewSearch = searchPage(equipment, token, request);
         if (modelAndViewSearch != null) {
             return modelAndViewSearch;
@@ -887,16 +912,18 @@ public class ConfigEquipmentController {
                     setWorkplaceByEquipment(equipment, request);
 
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
-                        Computer computerOld = equipmentManager.getComputerById(equipment.getId());
+                        Computer computerOld = equipmentManager.getComputerById(equipment.getId(), false);
 
-                        Computer computer = equipmentManager.getComputerById(equipment.getId());
+                        Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
                         setParameterComputer(computer, request, equipment, true);
+                        computer.setDeleted(false);
                         equipmentManager.save(computer);
-                        computer = equipmentManager.getComputerById(equipment.getId());
+                        computer = equipmentManager.getComputerById(equipment.getId(), false);
 
                         journalManager.saveChangeEquipment(computerOld, computer, typeEquipment, user);
                     } else {
-                        Equipment equipmentOld = equipmentManager.getEquipmentById(equipment.getId());
+                        Equipment equipmentOld = equipmentManager.getEquipmentById(equipment.getId(), false);
+                        equipment.setDeleted(false);
                         equipmentManager.save(equipment);
                         journalManager.saveChangeEquipment(equipmentOld, equipment, typeEquipment, user);
                     }
@@ -920,7 +947,7 @@ public class ConfigEquipmentController {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + redirect);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Equipment equipment = equipmentManager.getEquipmentById(id);
+                Equipment equipment = equipmentManager.getEquipmentById(id, false);
                 equipmentManager.delete(equipment);
                 journalManager.save(new Journal(TypeEvent.DELETE,
                         journalManager.getTypeObjectFromTypeEquipment(typeEquipment), equipment, user));

@@ -25,6 +25,9 @@ public class Accounting1C implements Serializable {
     @Column
     private String title;
 
+    @Column
+    private Boolean deleted = false;
+
     @ManyToOne(optional = true, cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee")
     private Employee employee;
@@ -44,7 +47,11 @@ public class Accounting1C implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s (%s, %s)", title, employee == null ? "" : employee.getName(), inventoryNumber);
+        String str = String.format("%s (%s, %s)", title, employee == null ? "" : employee.getName(), inventoryNumber);
+        if (deleted) {
+            str += " (удалено. id=" + id + ")";
+        }
+        return str;
     }
 
     @Transient

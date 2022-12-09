@@ -16,32 +16,43 @@ public class EmployeeManager extends EntityManager<Employee> {
     @Transactional
     public List<Employee> getEmployeeList() {
         Session session = sessionFactory.getCurrentSession();
-        List<Employee> employeeList = session.createQuery("from Employee as employee order by employee.name asc").list();
+        List<Employee> employeeList = session.createQuery("from Employee as employee " +
+                "where employee.deleted=false order by employee.name asc").list();
         employeeList.stream().forEach(employee -> initializeEmployee(employee));
 
         return employeeList;
     }
 
     @Transactional
-    public Employee getEmployeeById(Long id) {
+    public Employee getEmployeeById(Long id, boolean isReadAll) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from Employee as employee where employee.id=" + id);
+        String queryStr = "from Employee as employee where ";
+        if (!isReadAll) {
+            queryStr += "employee.deleted=false and ";
+        }
+        queryStr += "employee.id=" + id;
+        Query query = session.createQuery(queryStr);
         Employee employee = (Employee) query.uniqueResult();
         initializeEmployee(employee);
         return employee;
     }
 
     @Transactional
-    public Employee getEmployeeByName(String name) {
+    public Employee getEmployeeByName(String name, boolean isReadAll) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from Employee as employee where employee.name='" + name + "'");
+        String queryStr = "from Employee as employee where ";
+        if(!isReadAll) {
+            queryStr+="employee.deleted=false and ";
+        }
+        queryStr += "employee.name='" + name + "'";
+        Query query = session.createQuery(queryStr);
         Employee employee = (Employee) query.uniqueResult();
         initializeEmployee(employee);
         return employee;
     }
 
     protected void initializeEmployee(Employee employee) {
-        if(employee != null) {
+        if (employee != null) {
             Hibernate.initialize(employee.getAccounting1СList());
         }
     }
@@ -49,7 +60,7 @@ public class EmployeeManager extends EntityManager<Employee> {
     @Override
     public void delete(Employee employee) {
         employee.setWorkplace(null);
+        employee.setDeleted(true);
         super.save(employee);
-        super.delete(employee);
     }
 }

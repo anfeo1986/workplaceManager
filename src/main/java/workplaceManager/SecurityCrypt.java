@@ -35,6 +35,7 @@ public class SecurityCrypt {
             String passNoCrypt = decode(user.getPassword(), user.getSalt());
             user.setSalt(generateKey());
             user.setPassword(encode(passNoCrypt, user.getSalt()));
+            user.setDeleted(false);
             userManager.save(user);
 
             String tokenNew = getToken(user);

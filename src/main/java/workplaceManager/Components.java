@@ -40,4 +40,9 @@ public class Components {
     public static final String hardDriveModelInputText = "hardDriveModel";
     public static final String hardDriveSizeInputText = "hardDriveSize";
     public static final String hardDriveIdHiddenText = "hardDriveId";
+
+    public static final String typeObjectForJournal = "typeObject";
+    public static final String objectForJournal = "object";
+    public static final String eventForJournal = "event";
+    public static final String parameterForJournal = "parameter";
 }

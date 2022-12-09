@@ -25,6 +25,9 @@ public class Employee implements Serializable {
     @Column
     private String post;
 
+    @Column
+    private Boolean deleted;
+
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "workplace")
     private Workplace workplace;
@@ -35,7 +38,11 @@ public class Employee implements Serializable {
     @Override
     @Transient
     public String toString() {
-        return String.format("%s (%s)", name, post);
+        String str = String.format("%s (%s)", name, post);
+        if (deleted) {
+            str += " (удалено. id=" + id + ")";
+        }
+        return str;
     }
 
     @Transient

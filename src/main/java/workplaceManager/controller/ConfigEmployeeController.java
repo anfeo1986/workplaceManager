@@ -55,7 +55,7 @@ public class ConfigEmployeeController {
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Employee employee = new Employee();
             if (employeeId != null && employeeId > 0) {
-                employee = employeeManager.getEmployeeById(employeeId);
+                employee = employeeManager.getEmployeeById(employeeId, false);
             }
             modelAndView.addObject("employee", employee);
 
@@ -80,9 +80,9 @@ public class ConfigEmployeeController {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
+                Workplace workplace = workplaceManager.getWorkplaceById(workplaceId, false);
 
-                Employee employeeFromDb = employeeManager.getEmployeeByName(employee.getName());
+                Employee employeeFromDb = employeeManager.getEmployeeByName(employee.getName(), false);
                 if (employeeFromDb != null) {
                     employee.setWorkplace(workplace);
 
@@ -90,6 +90,7 @@ public class ConfigEmployeeController {
                     modelAndView.addObject("employee", employee);
                 } else {
                     employee.setWorkplace(workplace);
+                    employee.setDeleted(false);
                     employeeManager.save(employee);
 
                     journalManager.save(new Journal(TypeEvent.ADD, TypeObject.EMPLOYEE, employee, user));
@@ -122,17 +123,18 @@ public class ConfigEmployeeController {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Workplace workplace = workplaceManager.getWorkplaceById(workplaceId);
+                Workplace workplace = workplaceManager.getWorkplaceById(workplaceId, false);
 
-                Employee employeeFromDB = employeeManager.getEmployeeByName(employee.getName());
+                Employee employeeFromDB = employeeManager.getEmployeeByName(employee.getName(), false);
                 if (employeeFromDB != null && employeeFromDB.getId() != employee.getId()) {
                     employee.setWorkplace(workplace);
                     //modelAndView.setViewName("/config/employee");
                     modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
                     modelAndView.addObject("employee", employee);
                 } else {
-                    Employee employeeFromDbByID = employeeManager.getEmployeeById(employee.getId());
+                    Employee employeeFromDbByID = employeeManager.getEmployeeById(employee.getId(), false);
                     employee.setWorkplace(workplace);
+                    employee.setDeleted(false);
                     employeeManager.save(employee);
 
                     journalManager.saveChangeEmployee(employeeFromDbByID, employee, user);
@@ -162,7 +164,7 @@ public class ConfigEmployeeController {
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/"+Pages.employee);
             if (!modelAndView.getViewName().equals(Pages.login)) {
-                Employee employee = employeeManager.getEmployeeById(id);
+                Employee employee = employeeManager.getEmployeeById(id, false);
                 employeeManager.delete(employee);
 
                 journalManager.save(new Journal(TypeEvent.DELETE, TypeObject.EMPLOYEE, employee, user));
