@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.Pages;
 import workplaceManager.SecurityCrypt;
-import workplaceManager.db.domain.Accounting1C;
-import workplaceManager.db.domain.Employee;
-import workplaceManager.db.domain.Role;
-import workplaceManager.db.domain.Users;
+import workplaceManager.TypeEvent;
+import workplaceManager.TypeObject;
+import workplaceManager.db.domain.*;
 import workplaceManager.db.service.Accounting1CManager;
 import workplaceManager.db.service.EmployeeManager;
+import workplaceManager.db.service.JournalManager;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,8 +36,15 @@ public class ConfigAccounting1CController {
     private SecurityCrypt securityCrypt;
 
     @Autowired
-    public void setSecurity(SecurityCrypt securityCrypt) {
+    public void setSecurityCrypt(SecurityCrypt securityCrypt) {
         this.securityCrypt = securityCrypt;
+    }
+
+    JournalManager journalManager;
+
+    @Autowired
+    public void setJournalManager(JournalManager journalManager) {
+        this.journalManager = journalManager;
     }
 
     @GetMapping(Pages.addUpdateAccounting1C)
@@ -77,6 +84,8 @@ public class ConfigAccounting1CController {
                     modelAndView.addObject("accounting1c", accounting1C);
                 } else {
                     accounting1CManager.save(accounting1C);
+
+                    journalManager.save(new Journal(TypeEvent.ADD, TypeObject.ACCOUNTING1C, accounting1C, user));
 
                     modelAndView.addObject("message", String.format("%s успешно добавлен", accounting1C));
                     modelAndView.addObject("accounting1c", new Accounting1C());
@@ -119,7 +128,11 @@ public class ConfigAccounting1CController {
                             accounting1CFromDb.getInventoryNumber(), accounting1CFromDb.getTitle()));
                     modelAndView.addObject("accounting1c", accounting1C);
                 } else {
+                    Accounting1C accounting1CFromDbById = accounting1CManager.getAccounting1CById(accounting1C.getId());
                     accounting1CManager.save(accounting1C);
+
+                    journalManager.saveChangeAccounting1C(accounting1CFromDbById, accounting1C, user);
+
                     modelAndView.setViewName("redirect:/" + redirect);
                 }
             }
@@ -152,6 +165,9 @@ public class ConfigAccounting1CController {
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Accounting1C accounting1C = accounting1CManager.getAccounting1CById(id);
                 accounting1CManager.delete(accounting1C);
+
+                journalManager.save(new Journal(TypeEvent.ACCOUNTING1C_CANCELLATION, TypeObject.ACCOUNTING1C,
+                        accounting1C, user));
             }
 
             return modelAndView;

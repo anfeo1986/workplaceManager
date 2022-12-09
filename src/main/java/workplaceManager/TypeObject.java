@@ -8,7 +8,9 @@ public enum TypeObject {
     SCANNER ("Сканер"),
     MFD ("МФУ"),
     UPS ("ИБП"),
-    ACCOUNTING1C("Бухгалтерия");
+    ACCOUNTING1C("Бухгалтерия"),
+    EMPLOYEE("Сотрудник"),
+    WORKPLACE("Рабочее место");
 
     private String title;
 

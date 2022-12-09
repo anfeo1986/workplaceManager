@@ -30,4 +30,9 @@ public class Users {
 
     @Column
     private String salt;
+
+    @Override
+    public String toString() {
+        return username;
+    }
 }

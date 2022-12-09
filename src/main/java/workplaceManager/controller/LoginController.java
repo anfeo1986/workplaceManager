@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.Pages;
 import workplaceManager.SecurityCrypt;
+import workplaceManager.TypeEvent;
+import workplaceManager.TypeObject;
+import workplaceManager.db.domain.Journal;
 import workplaceManager.db.domain.Users;
+import workplaceManager.db.service.JournalManager;
 import workplaceManager.db.service.UserManager;
 import workplaceManager.db.service.WorkplaceManager;
 
@@ -35,6 +39,13 @@ public class LoginController {
         this.userManager = userManager;
     }
 
+    private JournalManager journalManager;
+
+    @Autowired
+    public void setJournalManager(JournalManager journalManager) {
+        this.journalManager = journalManager;
+    }
+
     @GetMapping(Pages.login)
     public ModelAndView getLogin(@ModelAttribute("userForm") Users userForm) {
         Users userFromDB = userManager.getUserByLogin(userForm.getUsername());
@@ -45,6 +56,12 @@ public class LoginController {
         user.setPassword(securityCrypt.encode(userForm.getPassword(), user.getSalt()));
         String token = securityCrypt.getToken(user);
 
-        return securityCrypt.verifyUser(token, "redirect:/" + Pages.mainPage);
+        ModelAndView modelAndView =securityCrypt.verifyUser(token, "redirect:/" + Pages.mainPage);
+
+        if (!modelAndView.getViewName().equals(Pages.login)) {
+            journalManager.save(new Journal(TypeEvent.USER_LOGIN, TypeObject.USER, userFromDB, userFromDB));
+        }
+
+        return modelAndView;
     }
 }

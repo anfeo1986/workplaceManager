@@ -1,6 +1,7 @@
+<%@ page import="workplaceManager.Parameters" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 
 <!DOCTYPE html>
 <html>
@@ -13,6 +14,12 @@
 <div>
     <form:form method="POST" modelAttribute="userForm">
         <h2>Регистрация</h2>
+        <%
+            String error = (String) request.getAttribute(Parameters.error);
+            if (error != null && !error.isEmpty()) {
+                out.println("<h1>" + error + "</h1>");
+            }
+        %>
         <div>
             <form:input type="text" path="username" placeholder="Username"
                         autofocus="true"></form:input>

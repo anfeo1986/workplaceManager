@@ -13,7 +13,16 @@ public enum TypeParameter {
     PROCESSOR("Процессор"),
     RAM("Оперативная память"),
     HARDDRIVE("Жесткий диск"),
-    VIDEOCARD("Видеокарта");
+    VIDEOCARD("Видеокарта"),
+
+    EMPLOYEE_USERNAME("ФИО"),
+    EMPLOYEE_POST("Должность"),
+
+    ACCOUNTING1C_TITLE("Название"),
+    ACCOUNTING1C_INVENTORY_NUMBER("Инвентарный номер"),
+    ACCOUNTING1C_EMPLOYEE("Сотрудник"),
+
+    WORKPLACE_TITLE("Название");
 
     private String title;
 

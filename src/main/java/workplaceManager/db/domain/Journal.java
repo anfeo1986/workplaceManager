@@ -2,6 +2,7 @@ package workplaceManager.db.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.userdetails.User;
 import workplaceManager.TypeEvent;
 import workplaceManager.TypeObject;
 
@@ -44,11 +45,28 @@ public class Journal {
     @Column
     private Long idObject;
 
+    @Column
+    private Long idUser;
+
+    @Column
+    private String userStr;
+
     @Transient
     private Object object;
 
+    @Transient
+    private Users user;
+
     public Journal() {
 
+    }
+
+    public Journal(TypeEvent typeEvent, TypeObject typeObject, Object obj, Users user) {
+        this(typeEvent, typeObject, obj);
+        if (user != null) {
+            this.idUser = user.getId();
+            this.userStr = user.toString();
+        }
     }
 
     public Journal(TypeEvent typeEvent, TypeObject typeObject, Object obj) {
@@ -57,6 +75,7 @@ public class Journal {
         this.time = new Date();
         this.typeObject = typeObject.name();
         this.objectStr = obj != null ? obj.toString() : "";
+
         if (TypeObject.COMPUTER.equals(typeObject)) {
             this.idObject = ((Computer) obj).getId();
             //addEventAndIdObject(typeEvent, typeObject, obj, ((Computer) obj).getId());
@@ -78,21 +97,20 @@ public class Journal {
         } else if (TypeObject.ACCOUNTING1C.equals(typeObject)) {
             this.idObject = ((Accounting1C) obj).getId();
             //addEventAndIdObject(typeEvent, typeObject, obj, ((Accounting1C) obj).getId());
+        } else if (TypeObject.USER.equals(typeObject)) {
+            this.idObject = ((Users) obj).getId();
+        } else if(TypeObject.EMPLOYEE.equals(typeObject)) {
+            this.idObject = ((Employee) obj).getId();
         }
     }
 
     public Journal(TypeEvent typeEvent, TypeObject typeObject, Object obj,
-                   String oldValue, String newValue, String parameter) {
-        this(typeEvent, typeObject, obj);
+                   String oldValue, String newValue, String parameter, Users user) {
+        this(typeEvent, typeObject, obj, user);
         this.oldValue = oldValue;
         this.newValue = newValue;
         this.parameter = parameter;
     }
 
-    private void addEventAndIdObject(TypeEvent typeEvent, Long idObject) {
-        //this.event = String.format("%s. Тип объекта: %s. Объект: %s",typeEvent, typeObject, object);
-        this.event = typeEvent.getTitle();
-        this.idObject = idObject;
-    }
 
 }

@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.Pages;
 import workplaceManager.SecurityCrypt;
-import workplaceManager.db.domain.Employee;
-import workplaceManager.db.domain.Role;
-import workplaceManager.db.domain.Users;
-import workplaceManager.db.domain.Workplace;
+import workplaceManager.TypeEvent;
+import workplaceManager.TypeObject;
+import workplaceManager.db.domain.*;
 import workplaceManager.db.service.EmployeeManager;
+import workplaceManager.db.service.JournalManager;
 import workplaceManager.db.service.WorkplaceManager;
 
 import java.util.List;
@@ -37,6 +37,13 @@ public class ConfigEmployeeController {
     @Autowired
     public void setSecurity(SecurityCrypt securityCrypt) {
         this.securityCrypt = securityCrypt;
+    }
+
+    private JournalManager journalManager;
+
+    @Autowired
+    public void setJournalManager(JournalManager journalManager) {
+        this.journalManager = journalManager;
     }
 
     @GetMapping(Pages.addUpdateEmployee)
@@ -85,6 +92,8 @@ public class ConfigEmployeeController {
                     employee.setWorkplace(workplace);
                     employeeManager.save(employee);
 
+                    journalManager.save(new Journal(TypeEvent.ADD, TypeObject.EMPLOYEE, employee, user));
+
                     modelAndView.addObject("message", String.format("%s успешно добавлен", employee.getName()));
                     modelAndView.addObject("employee", new Employee());
                 }
@@ -122,8 +131,12 @@ public class ConfigEmployeeController {
                     modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
                     modelAndView.addObject("employee", employee);
                 } else {
+                    Employee employeeFromDbByID = employeeManager.getEmployeeById(employee.getId());
                     employee.setWorkplace(workplace);
                     employeeManager.save(employee);
+
+                    journalManager.saveChangeEmployee(employeeFromDbByID, employee, user);
+
                     modelAndView.setViewName("redirect:/" + redirect);
                 }
 
@@ -151,6 +164,8 @@ public class ConfigEmployeeController {
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Employee employee = employeeManager.getEmployeeById(id);
                 employeeManager.delete(employee);
+
+                journalManager.save(new Journal(TypeEvent.DELETE, TypeObject.EMPLOYEE, employee, user));
             }
             //modelAndView.setViewName("redirect:/employee");
             return modelAndView;

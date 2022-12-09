@@ -36,7 +36,7 @@
 %>
 <!--<a href="/config/equipment/addUpdateEquipment?redirect=${page}&typeEquipment=${typeEquipment}">Добавить </a>-->
 
-<table>
+<table class="table">
     <tr>
         <%
             out.println("<th><h1>id</h1></th>");

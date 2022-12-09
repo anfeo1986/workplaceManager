@@ -28,18 +28,17 @@
 
 <table>
     <tr>
-        <%
-            out.println("<th><h1>id</h1></th>");
-            out.println("<th><h1>" + title + "</h1></th>");
-            out.println("<th><h1>ОС</h1></th>");
-            out.println("<th><h1>Процессор</h1></th>");
-            out.println("<th><h1>Материнская плата</h1></th>");
-            out.println("<th><h1>Оперативная память</h1></th>");
-            out.println("<th><h1>Жесткие диски</h1></th>");
-            out.println("<th><h1>Видеокарта</h1></th>");
-            out.println("<th><h1>Рабочее место</h1></th>");
-            out.println("<th><h1>Бухгалтерия</h1></th>");
-        %>
+        <td>id</td>
+        <td><h1><%=title%>
+        </h1></td>
+        <td><h1>ОС</h1></td>
+        <td><h1>Процессор</h1></td>
+        <td><h1>Материнская плата</h1></td>
+        <td><h1>Оперативная память</h1></td>
+        <td><h1>Жесткие диски</h1></td>
+        <td><h1>Видеокарта</h1></td>
+        <td><h1>Рабочее место</h1></td>
+        <td><h1>Бухгалтерия</h1></td>
     </tr>
     <%
         int count = 1;
@@ -58,10 +57,10 @@
 
             out.println(String.format("<td>%s</td>", computer.getOperationSystem() != null ? computer.getOperationSystem() : ""));
 
-            if(!CollectionUtils.isEmpty(computer.getProcessorList())) {
+            if (!CollectionUtils.isEmpty(computer.getProcessorList())) {
                 out.println("<td>");
-                for(Processor processor : computer.getProcessorList()) {
-                    out.println("<p>"+processor+"</p>");
+                for (Processor processor : computer.getProcessorList()) {
+                    out.println("<p>" + processor + "</p>");
                 }
                 out.println("</td>");
             } else {
@@ -73,7 +72,7 @@
             if (!CollectionUtils.isEmpty(computer.getRamList())) {
                 out.println("<td>");
                 for (Ram ram : computer.getRamList()) {
-                    out.println("<p>"+ram+"</p>");
+                    out.println("<p>" + ram + "</p>");
                 }
                 out.println("</td>");
             } else {
@@ -84,7 +83,7 @@
             if (!CollectionUtils.isEmpty(computer.getHardDriveList())) {
                 out.println("<td>");
                 for (HardDrive hardDrive : computer.getHardDriveList()) {
-                    out.println("<p>"+hardDrive+"</p>");
+                    out.println("<p>" + hardDrive + "</p>");
                 }
                 out.println("</td>");
             } else {
@@ -92,10 +91,10 @@
             }
             //out.println(String.format("<td>%s</td>", hardDriveStr));
 
-            if(!CollectionUtils.isEmpty(computer.getVideoCardList())) {
+            if (!CollectionUtils.isEmpty(computer.getVideoCardList())) {
                 out.println("<td>");
-                for(VideoCard videoCard : computer.getVideoCardList()) {
-                    out.println("<p>"+videoCard+"</p>");
+                for (VideoCard videoCard : computer.getVideoCardList()) {
+                    out.println("<p>" + videoCard + "</p>");
                 }
                 out.println("</td>");
             } else {

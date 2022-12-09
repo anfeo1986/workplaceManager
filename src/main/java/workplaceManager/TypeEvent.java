@@ -1,8 +1,9 @@
 package workplaceManager;
 
 public enum TypeEvent {
-    REGISTER_USER("Регистрация пользователя"),
-    DELETE_USER("Удаление пользователя"),
+    USER_REGISTER("Регистрация пользователя"),
+    USER_LOGIN("Вход пользователя"),
+    USER_DELETE("Удаление пользователя"),
 
     ADD("Добавление"),
     UPDATE("Редактирование"),
@@ -12,6 +13,9 @@ public enum TypeEvent {
     //UPDATE_OS_COMPUTER("Изменение операционной системы"),
     //UPDATE_CONFIG_COMPUTER("Изменение конфигурации компьютера"),
     DELETE("Удаление"),
+
+    ACCOUNTING1C_MOVING("Перемещение"),
+    ACCOUNTING1C_CANCELLATION("Списание"),
 
     READ_CONFIG_COMPUTER("Считывание конфигурации компьютера");
 

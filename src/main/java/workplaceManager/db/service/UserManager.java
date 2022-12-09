@@ -27,4 +27,12 @@ public class UserManager extends EntityManager<Users> {
         return (Users) query.uniqueResult();
     }
 
+    @Transactional
+    public Users getUserById(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from Users as users where users.id=" + id);
+
+        return (Users) query.uniqueResult();
+    }
+
 }

@@ -15,11 +15,12 @@
 <html>
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
+    <meta http-equiv="Refresh" content="5"/>
 
-    <title>JSP Templates</title>
+    <title>Журнал</title>
 </head>
 <body>
-
+<p>Выберите дату: <input type="date" name="calendar"></p>
 <%
     List<Journal> journalList = new ArrayList<>();
     journalList = (List<Journal>) request.getAttribute(Parameters.journalList);
@@ -31,6 +32,7 @@
             <th><h1>Событие</h1></th>
             <th><h1>Состояние</h1></th>
             <th><h1>Объект</h1></th>
+            <th><h1>Пользователь</h1></th>
         </tr>
         <%
             for (Journal journal : journalList) {
@@ -39,13 +41,20 @@
             <td><%=journal.getTime()%>
             </td>
             <td>
-                <b><%=journal.getEvent()%>.</b><br>
+                <h3><%=journal.getEvent()%>.</h3>
                 <b>Тип объекта: </b><%=TypeObject.valueOf(journal.getTypeObject())%>
-                <b>Объект: </b><%=journal.getObjectStr()%>.
+                <%
+                    if (journal.getParameter() != null && !journal.getParameter().isEmpty()) {
+                %>
+                <b>Параметр: </b><%=journal.getParameter()%>.
+                <%
+                    }
+                %>
+
             </td>
             <%
                 TypeEvent typeEvent = TypeEvent.valueOf(journal.getTypeEvent());
-                if (TypeEvent.UPDATE.equals(typeEvent)) {
+                if (TypeEvent.UPDATE.equals(typeEvent) || TypeEvent.ACCOUNTING1C_MOVING.equals(typeEvent)) {
             %>
             <td>
                 <p>Было:  <%=journal.getOldValue()%>
@@ -60,7 +69,10 @@
             <%
                 }
             %>
-            <td><%=journal.getObject() == null ? "" : journal.getObject().toString()%>
+            <td><%=journal.getObject() != null ? journal.getObject().toString() : journal.getObjectStr()%>
+            </td>
+            <td><%=journal.getUser() != null ? journal.getUser().toString() :
+                    journal.getUserStr() != null ? journal.getUserStr() : ""%>
             </td>
         </tr>
         <%
