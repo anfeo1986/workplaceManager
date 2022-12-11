@@ -49,7 +49,7 @@ public class Accounting1C implements Serializable {
     public String toString() {
         String str = String.format("%s (%s, %s)", title, employee == null ? "" : employee.getName(), inventoryNumber);
         if (deleted) {
-            str += " (удалено. id=" + id + ")";
+            str += " (списано. id=" + id + ")";
         }
         return str;
     }

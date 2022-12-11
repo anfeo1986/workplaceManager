@@ -11,7 +11,7 @@ import workplaceManager.TypeParameter;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.domain.components.*;
 
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class JournalManager extends EntityManager<Journal> {
@@ -231,16 +231,62 @@ public class JournalManager extends EntityManager<Journal> {
     }
 
     @Transactional
-    public List<Journal> getJournalList(TypeObject typeObject) {
+    public SortedMap<String, Long> getObjectIdListForTypeObject(TypeObject typeObject) {
         Session session = sessionFactory.getCurrentSession();
 
         String queryStr = "from Journal as journal ";
         if (typeObject != null) {
-            queryStr += "where journal.typeObject='" + typeObject.name() + "' ";
+            queryStr += "where journal.typeObject='" + typeObject.name() + "'";
         }
+        List<Journal> journalList = session.createQuery(queryStr).list();
+        setObjectFromJournalList(journalList);
+
+        SortedMap<String, Long> objectIdList = new TreeMap<>();
+        for (Journal journal : journalList) {
+            if (journal.getObject() == null) {
+                continue;
+            }
+            if (!objectIdList.containsKey(journal.getObject().toString())) {
+                objectIdList.put(journal.getObject().toString(), journal.getIdObject());
+            }
+        }
+
+        return objectIdList;
+    }
+
+    @Transactional
+    public List<Journal> getJournalList(TypeObject typeObject, Long idObject, TypeEvent typeEvent) {
+        Session session = sessionFactory.getCurrentSession();
+
+        String queryStr = "from Journal as journal ";
+        if (typeObject != null || (idObject != null && idObject > 0) || typeEvent != null) {
+            queryStr += "where ";
+            if (typeObject != null) {
+                queryStr += "journal.typeObject='" + typeObject.name() + "' ";
+                if ((idObject != null && idObject > 0) || typeEvent != null) {
+                    queryStr += "and ";
+                }
+            }
+            if (idObject != null && idObject > 0) {
+                queryStr += "journal.idObject=" + idObject;
+                if (typeEvent != null) {
+                    queryStr += "and ";
+                }
+            }
+            if (typeEvent != null) {
+                queryStr += "journal.typeEvent='" + typeEvent.name() + "' ";
+            }
+        }
+
         queryStr += "order by journal.time desc";
         List<Journal> journalList = session.createQuery(queryStr).list();
 
+        setObjectFromJournalList(journalList);
+
+        return journalList;
+    }
+
+    private void setObjectFromJournalList(List<Journal> journalList) {
         for (Journal journal : journalList) {
             journal.setUser(userManager.getUserById(journal.getIdUser(), true));
             TypeObject typeObjectFromJournal = TypeObject.valueOf(journal.getTypeObject());
@@ -262,7 +308,5 @@ public class JournalManager extends EntityManager<Journal> {
                 journal.setObject(workplaceManager.getWorkplaceById(journal.getIdObject(), true));
             }
         }
-
-        return journalList;
     }
 }

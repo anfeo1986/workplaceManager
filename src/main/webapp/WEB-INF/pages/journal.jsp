@@ -18,7 +18,10 @@
     <title>Журнал</title>
     <script type="text/javascript">
         function changeTypeObject() {
+            document.getElementById('<%=Components.objectForJournal%>').selectedIndex = 0;
+            document.getElementById('<%=Components.eventForJournal%>').selectedIndex = 0;
 
+            document.getElementById('filterForm').submit();
         }
     </script>
 </head>
@@ -36,6 +39,14 @@
 
     Long objectId = request.getAttribute(Parameters.journalFilterObjectId) != null ?
             (Long) request.getAttribute(Parameters.journalFilterObjectId) : -1;
+    SortedMap<String, Long> objectIdList = (SortedMap<String, Long>) request.getAttribute(Parameters.journalObjectIdList);
+
+    String typeEventStr = (String) request.getAttribute(Parameters.journalFilterTypeEvent);
+    TypeEvent typeEvent = null;
+    if(typeEventStr != null && !typeEventStr.isEmpty()) {
+        typeEvent = TypeEvent.valueOf(typeEventStr);
+    }
+    List<TypeEvent> typeEventList = (List<TypeEvent>) request.getAttribute(Parameters.journalTypeEventList);
 
 %>
 
@@ -46,17 +57,18 @@
             От: <input type="date" name="calendarFrom">
             До: <input type="date" name="calendarBefore">
 
+            <!--Тип объекта-->
             <label for="<%=Components.typeObjectForJournal%>">Тип объекта</label>
             <select name="<%=Components.typeObjectForJournal%>" id="<%=Components.typeObjectForJournal%>"
-                    onchange="document.getElementById('filterForm').submit()">
+                    onchange="changeTypeObject()">
                 <%
                     if (typeObject == null) {
                 %>
-                <option selected value=""/>
+                <option selected value="">Все</option>
                 <%
                 } else {
                 %>
-                <option value=""/>
+                <option value="">Все</option>
                 <%
                     }
                 %>
@@ -78,45 +90,34 @@
                     }
                 %>
             </select>
+            <!--Тип объекта.Конец-->
 
+            <!--Объект-->
             <label for="<%=Components.objectForJournal%>">Объект</label>
             <select name="<%=Components.objectForJournal%>" id="<%=Components.objectForJournal%>"
                     onchange="document.getElementById('filterForm').submit()">
                 <%
                     if (objectId == null || objectId <= 0) {
                 %>
-                <option selected value="-1"/>
+                <option selected value="-1">Все</option>
                 <%
                 } else {
                 %>
-                <option value="-1"/>
+                <option value="-1">Все</option>
                 <%
                     }
                 %>
                 <%
-                    HashSet<Long> objectIdSet = new HashSet<>();
-
-                    for (Journal journal : journalList) {
-                        if (journal.getIdObject() == null || journal.getIdObject() <= 0) {
-                            continue;
-                        }
-                        if (!objectIdSet.contains(journal.getIdObject())) {
-                            objectIdSet.add(journal.getIdObject());
-                        } else {
-                            continue;
-                        }
-                        if (objectId == journal.getIdObject()) {
+                    for (String objectStr : objectIdList.keySet()) {
+                        Long id = objectIdList.get(objectStr);
+                        if (objectId.equals(id)) {
                 %>
-                <option selected value="<%=journal.getIdObject()%>">
-                    <%=journal.getObject() != null ? journal.getObject().toString() :
-                            journal.getObjectStr() != null ? journal.getObjectStr() : ""%>
+                <option selected value="<%=id%>"><%=objectStr%>
                 </option>
                 <%
                 } else {
                 %>
-                <option value="<%=journal.getIdObject()%>">
-                    <%=journal.getObject() != null ? journal.getObject().toString() :
-                            journal.getObjectStr() != null ? journal.getObjectStr() : ""%>
+                <option value="<%=id%>"><%=objectStr%>
                 </option>
                 <%
                     }
@@ -125,6 +126,42 @@
                     }
                 %>
             </select>
+            <!--Объект.Конец-->
+
+            <!--Тип события-->
+            <label for="<%=Components.eventForJournal%>">Событие</label>
+            <select name="<%=Components.eventForJournal%>" id="<%=Components.eventForJournal%>"
+                    onchange="document.getElementById('filterForm').submit()">
+                <%
+                    if (typeEvent == null) {
+                %>
+                <option selected value="">Все</option>
+                <%
+                } else {
+                %>
+                <option value="">Все</option>
+                <%
+                    }
+                %>
+                <%
+                    for (TypeEvent type : typeEventList) {
+                        if (typeEvent != null && typeEvent.equals(type)) {
+                %>
+                <option selected value="<%=type.name()%>"><%=type.getTitle()%>
+                </option>
+                <%
+                } else {
+                %>
+                <option value="<%=type.name()%>"><%=type.getTitle()%>
+                </option>
+                <%
+                    }
+                %>
+                <%
+                    }
+                %>
+            </select>
+            <!--Тип события.Конец-->
         </p>
     </form>
 </div>
@@ -141,54 +178,53 @@
         <%
             for (Journal journal : journalList) {
                 String classTr = "no_delete";
-                if (journal.getTypeObject() != null && !journal.getTypeObject().isEmpty() &&
-                        journal.getObject() != null && typeObject != null) {
-                    if (TypeObject.EMPLOYEE.equals(typeObject)) {
+                if (journal.getObject() != null) {
+                    if (Employee.class.equals(journal.getObject().getClass())) {
                         Employee object = (Employee) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.WORKPLACE.equals(typeObject)) {
+                    } else if (Workplace.class.equals(journal.getObject().getClass())) {
                         Workplace object = (Workplace) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.USER.equals(typeObject)) {
+                    } else if (Users.class.equals(journal.getObject().getClass())) {
                         Users object = (Users) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.ACCOUNTING1C.equals(typeObject)) {
+                    } else if (Accounting1C.class.equals(journal.getObject().getClass())) {
                         Accounting1C object = (Accounting1C) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.COMPUTER.equals(typeObject)) {
+                    } else if (Computer.class.equals(journal.getObject().getClass())) {
                         Computer object = (Computer) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.MFD.equals(typeObject)) {
+                    } else if (Mfd.class.equals(journal.getObject().getClass())) {
                         Mfd object = (Mfd) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.MONITOR.equals(typeObject)) {
+                    } else if (Monitor.class.equals(journal.getObject().getClass())) {
                         Monitor object = (Monitor) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.PRINTER.equals(typeObject)) {
+                    } else if (Printer.class.equals(journal.getObject().getClass())) {
                         Printer object = (Printer) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.SCANNER.equals(typeObject)) {
+                    } else if (Scanner.class.equals(journal.getObject().getClass())) {
                         Scanner object = (Scanner) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
                         }
-                    } else if (TypeObject.UPS.equals(typeObject)) {
+                    } else if (Ups.class.equals(journal.getObject().getClass())) {
                         Ups object = (Ups) journal.getObject();
                         if (object.getDeleted() != null && object.getDeleted()) {
                             classTr = "delete";
@@ -213,8 +249,8 @@
 
             </td>
             <%
-                TypeEvent typeEvent = TypeEvent.valueOf(journal.getTypeEvent());
-                if (TypeEvent.UPDATE.equals(typeEvent) || TypeEvent.ACCOUNTING1C_MOVING.equals(typeEvent)) {
+                TypeEvent typeEventForJournal = TypeEvent.valueOf(journal.getTypeEvent());
+                if (TypeEvent.UPDATE.equals(typeEventForJournal) || TypeEvent.ACCOUNTING1C_MOVING.equals(typeEventForJournal)) {
             %>
             <td>
                 <p>
