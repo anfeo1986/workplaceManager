@@ -1,3 +1,6 @@
+select {
+    width: 150px; /* Ширина списка в пикселах */
+}
 table {
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
     font-size: 14px;
@@ -97,4 +100,6 @@ textarea {
     border-style: solid;
     border-color: initial;
 }
+
+
 

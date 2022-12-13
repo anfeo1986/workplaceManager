@@ -37,10 +37,18 @@ public class Parameters {
     public static final String motherBoardId = "motherBoardId";
 
     public static final String journalList = "journalList";
-    public static final String journalObjectIdList = "journalObjectIdList";
-    public static final String journalTypeEventList = "journalTypeEventList";
+    public static final String journalObjectIdListForFilter = "journalObjectIdList";
+    public static final String journalParametersListForFilter = "journalParametersList";
+    public static final String journalTypeEventListForFilter = "journalTypeEventList";
+    public static final String journalUsersListForFilter = "journalUsersList";
     public static final String journalFilterTypeObject = "journalFilterTypeObject";
     public static final String journalFilterObjectId = "journalFilterObjectId";
     public static final String journalFilterTypeEvent = "journalFilterTypeEvent";
+    public static final String journalFilterTypeParameter = "journalFilterTypeParameter";
+    public static final String journalFilterUser = "journalFilterUser";
+    public static final String journalFilterStateObject = "journalFilterStateObject";
+    public static final String journalStateObjectListForFilter = "journalStateObjectListForFilter";
+    public static final String journalDateStartForFilter = "journalDateStartForFilter";
+    public static final String journalDateEndForFilter = "journalDateEndForFilter";
 
 }

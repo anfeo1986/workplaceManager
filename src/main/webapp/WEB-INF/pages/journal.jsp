@@ -3,7 +3,9 @@
 <%@ page import="org.apache.commons.lang3.StringUtils" %>
 <%@ page import="java.util.*" %>
 <%@ page import="workplaceManager.db.domain.*" %>
-<%@ page import="workplaceManager.db.domain.Scanner" %><%--
+<%@ page import="workplaceManager.db.domain.Scanner" %>
+<%@ page import="org.springframework.security.core.parameters.P" %>
+<%@ page import="java.text.SimpleDateFormat" %><%--
   Created by IntelliJ IDEA.
   User: feoktistov
   Date: 07.12.2022
@@ -18,12 +20,19 @@
     <title>Журнал</title>
     <script type="text/javascript">
         function changeTypeObject() {
-            document.getElementById('<%=Components.objectForJournal%>').selectedIndex = 0;
-            document.getElementById('<%=Components.eventForJournal%>').selectedIndex = 0;
+            document.getElementById('<%=Components.objectForFilterJournal%>').selectedIndex = 0;
+            document.getElementById('<%=Components.eventForFilterJournal%>').selectedIndex = 0;
+            document.getElementById('<%=Components.parameterForFilterJournal%>').selectedIndex = 0;
 
             document.getElementById('filterForm').submit();
         }
     </script>
+
+    <!--<style>
+        select {
+            width: 200px;
+        }
+    </style>-->
 </head>
 <body>
 
@@ -39,132 +48,296 @@
 
     Long objectId = request.getAttribute(Parameters.journalFilterObjectId) != null ?
             (Long) request.getAttribute(Parameters.journalFilterObjectId) : -1;
-    SortedMap<String, Long> objectIdList = (SortedMap<String, Long>) request.getAttribute(Parameters.journalObjectIdList);
+    SortedMap<String, Long> objectIdList = (SortedMap<String, Long>) request.getAttribute(Parameters.journalObjectIdListForFilter);
 
     String typeEventStr = (String) request.getAttribute(Parameters.journalFilterTypeEvent);
     TypeEvent typeEvent = null;
-    if(typeEventStr != null && !typeEventStr.isEmpty()) {
+    if (typeEventStr != null && !typeEventStr.isEmpty()) {
         typeEvent = TypeEvent.valueOf(typeEventStr);
     }
-    List<TypeEvent> typeEventList = (List<TypeEvent>) request.getAttribute(Parameters.journalTypeEventList);
+    List<TypeEvent> typeEventList = (List<TypeEvent>) request.getAttribute(Parameters.journalTypeEventListForFilter);
 
+    String typeParameterStr = (String) request.getAttribute(Parameters.journalFilterTypeParameter);
+    TypeParameter typeParameter = null;
+    if (typeParameterStr != null && !typeParameterStr.isEmpty()) {
+        typeParameter = TypeParameter.valueOf(typeParameterStr);
+    }
+    List<TypeParameter> typeParameterList = (List<TypeParameter>) request.getAttribute(Parameters.journalParametersListForFilter);
+
+    Users user = (Users) request.getAttribute(Parameters.journalFilterUser);
+    List<Users> usersList = (List<Users>) request.getAttribute(Parameters.journalUsersListForFilter);
+
+    String stateObjectForFilterStr = (String) request.getAttribute(Parameters.journalFilterStateObject);
+    StateObject stateObjectForFilter = null;
+    if (stateObjectForFilterStr != null && !stateObjectForFilterStr.isEmpty()) {
+        stateObjectForFilter = StateObject.valueOf(stateObjectForFilterStr);
+    }
+    List<StateObject> stateObjectList = (List<StateObject>) request.getAttribute(Parameters.journalStateObjectListForFilter);
+
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat formatWithTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+    Date dateStart = (Date) request.getAttribute(Parameters.journalDateStartForFilter);
+    String dateStartStr = "";
+    if (dateStart == null) {
+        dateStartStr = format.format(dateStart) + "T00:00";
+    } else {
+        dateStartStr = formatWithTime.format(dateStart);
+    }
+    Date dateEnd = (Date) request.getAttribute(Parameters.journalDateEndForFilter);
+    String dateEndStr = "";
+    if (dateEnd == null) {
+        dateEndStr = format.format(dateEnd) + "T23:59";
+    } else {
+        dateEndStr = formatWithTime.format(dateEnd);
+    }
 %>
 
-<div align="center">
-    <h1>Фильтры</h1>
-    <form action="<%=Pages.journal%>" method="get" id="filterForm">
-        <p>
-            От: <input type="date" name="calendarFrom">
-            До: <input type="date" name="calendarBefore">
+<form action="<%=Pages.journal%>" method="get" id="filterForm">
+    <div align="center" vertical-align="middle">
+        <h1>Фильтры</h1>
 
-            <!--Тип объекта-->
-            <label for="<%=Components.typeObjectForJournal%>">Тип объекта</label>
-            <select name="<%=Components.typeObjectForJournal%>" id="<%=Components.typeObjectForJournal%>"
-                    onchange="changeTypeObject()">
-                <%
-                    if (typeObject == null) {
-                %>
-                <option selected value="">Все</option>
-                <%
-                } else {
-                %>
-                <option value="">Все</option>
-                <%
-                    }
-                %>
-                <%
-                    for (TypeObject type : TypeObject.values()) {
-                        if (type.equals(typeObject)) {
-                %>
-                <option selected value="<%=type.name()%>"><%=type.getTitle()%>
-                </option>
-                <%
-                } else {
-                %>
-                <option value="<%=type.name()%>"><%=type.getTitle()%>
-                </option>
-                <%
-                    }
-                %>
-                <%
-                    }
-                %>
-            </select>
-            <!--Тип объекта.Конец-->
+        <div style="float:left; width:20%;vertical-align: center;">
+            <p align="center">
+                <b>Начальная дата:</b><input id="<%=Components.dateStartForFilterJournal%>"
+                                             type="datetime-local"
+                                             name="<%=Components.dateStartForFilterJournal%>"
+                                             value="<%=dateStartStr%>"
+                                             onchange="changeTypeObject()">
+            </p>
+            <p>
+                <b>Конечная дата:</b><input id="<%=Components.dateEndForFilterJournal%>"
+                                            type="datetime-local"
+                                            name="<%=Components.dateEndForFilterJournal%>"
+                                            value="<%=dateEndStr%>"
+                                            onchange="changeTypeObject()">
+            </p>
+        </div>
 
-            <!--Объект-->
-            <label for="<%=Components.objectForJournal%>">Объект</label>
-            <select name="<%=Components.objectForJournal%>" id="<%=Components.objectForJournal%>"
-                    onchange="document.getElementById('filterForm').submit()">
-                <%
-                    if (objectId == null || objectId <= 0) {
-                %>
-                <option selected value="-1">Все</option>
-                <%
-                } else {
-                %>
-                <option value="-1">Все</option>
-                <%
-                    }
-                %>
-                <%
-                    for (String objectStr : objectIdList.keySet()) {
-                        Long id = objectIdList.get(objectStr);
-                        if (objectId.equals(id)) {
-                %>
-                <option selected value="<%=id%>"><%=objectStr%>
-                </option>
-                <%
-                } else {
-                %>
-                <option value="<%=id%>"><%=objectStr%>
-                </option>
-                <%
-                    }
-                %>
-                <%
-                    }
-                %>
-            </select>
-            <!--Объект.Конец-->
+        <div style="float:left; width:60%;vertical-align: center;">
+            <p align="center">
+                <!--Тип объекта-->
+                <label for="<%=Components.typeObjectForFilterJournal%>"><b>Тип объекта</b></label>
+                <select name="<%=Components.typeObjectForFilterJournal%>"
+                        id="<%=Components.typeObjectForFilterJournal%>"
+                        onchange="changeTypeObject()">
+                    <%
+                        if (typeObject == null) {
+                    %>
+                    <option selected value="">Все</option>
+                    <%
+                    } else {
+                    %>
+                    <option value="">Все</option>
+                    <%
+                        }
+                    %>
+                    <%
+                        for (TypeObject type : TypeObject.values()) {
+                            if (type.equals(typeObject)) {
+                    %>
+                    <option selected value="<%=type.name()%>"><%=type.getTitle()%>
+                    </option>
+                    <%
+                    } else {
+                    %>
+                    <option value="<%=type.name()%>"><%=type.getTitle()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                    <%
+                        }
+                    %>
+                </select>
+                <!--Тип объекта.Конец-->
 
-            <!--Тип события-->
-            <label for="<%=Components.eventForJournal%>">Событие</label>
-            <select name="<%=Components.eventForJournal%>" id="<%=Components.eventForJournal%>"
-                    onchange="document.getElementById('filterForm').submit()">
-                <%
-                    if (typeEvent == null) {
-                %>
-                <option selected value="">Все</option>
-                <%
-                } else {
-                %>
-                <option value="">Все</option>
-                <%
-                    }
-                %>
-                <%
-                    for (TypeEvent type : typeEventList) {
-                        if (typeEvent != null && typeEvent.equals(type)) {
-                %>
-                <option selected value="<%=type.name()%>"><%=type.getTitle()%>
-                </option>
-                <%
-                } else {
-                %>
-                <option value="<%=type.name()%>"><%=type.getTitle()%>
-                </option>
-                <%
-                    }
-                %>
-                <%
-                    }
-                %>
-            </select>
-            <!--Тип события.Конец-->
-        </p>
-    </form>
-</div>
+                <!--Тип события-->
+                <label for="<%=Components.eventForFilterJournal%>"><b>Событие</b></label>
+                <select name="<%=Components.eventForFilterJournal%>" id="<%=Components.eventForFilterJournal%>"
+                        onchange="document.getElementById('filterForm').submit()">
+                    <%
+                        if (typeEvent == null) {
+                    %>
+                    <option selected value="">Все</option>
+                    <%
+                    } else {
+                    %>
+                    <option value="">Все</option>
+                    <%
+                        }
+                    %>
+                    <%
+                        for (TypeEvent type : typeEventList) {
+                            if (typeEvent != null && typeEvent.equals(type)) {
+                    %>
+                    <option selected value="<%=type.name()%>"><%=type.getTitle()%>
+                    </option>
+                    <%
+                    } else {
+                    %>
+                    <option value="<%=type.name()%>"><%=type.getTitle()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                    <%
+                        }
+                    %>
+                </select>
+                <!--Тип события.Конец-->
+
+                <!--Параметр-->
+                <label for="<%=Components.parameterForFilterJournal%>"><b>Параметр</b></label>
+                <select name="<%=Components.parameterForFilterJournal%>" id="<%=Components.parameterForFilterJournal%>"
+                        onchange="document.getElementById('filterForm').submit()">
+                    <%
+                        if (typeParameter == null) {
+                    %>
+                    <option selected value="">Все</option>
+                    <%
+                    } else {
+                    %>
+                    <option value="">Все</option>
+                    <%
+                        }
+                    %>
+                    <%
+                        for (TypeParameter type : typeParameterList) {
+                            if (typeParameter != null && typeParameter.equals(type)) {
+                    %>
+                    <option selected value="<%=type.name()%>"><%=type.getTitle()%>
+                    </option>
+                    <%
+                    } else {
+                    %>
+                    <option value="<%=type.name()%>"><%=type.getTitle()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                    <%
+                        }
+                    %>
+                </select>
+                <!--Параметр.Конец-->
+
+            </p>
+            <p align="center">
+                <!--Объект-->
+                <label for="<%=Components.objectForFilterJournal%>"><b>Объект</b></label>
+                <select name="<%=Components.objectForFilterJournal%>" id="<%=Components.objectForFilterJournal%>"
+                        onchange="document.getElementById('filterForm').submit()">
+                    <%
+                        if (objectId == null || objectId <= 0) {
+                    %>
+                    <option selected value="-1">Все</option>
+                    <%
+                    } else {
+                    %>
+                    <option value="-1">Все</option>
+                    <%
+                        }
+                    %>
+                    <%
+                        for (String objectStr : objectIdList.keySet()) {
+                            Long id = objectIdList.get(objectStr);
+                            if (objectId.equals(id)) {
+                    %>
+                    <option selected value="<%=id%>"><%=objectStr%>
+                    </option>
+                    <%
+                    } else {
+                    %>
+                    <option value="<%=id%>"><%=objectStr%>
+                    </option>
+                    <%
+                        }
+                    %>
+                    <%
+                        }
+                    %>
+                </select>
+                <!--Объект.Конец-->
+
+                <!--Состояние-->
+                <label for="<%=Components.stateObjectForFilterJournal%>"><b>Состояние</b></label>
+                <select name="<%=Components.stateObjectForFilterJournal%>"
+                        id="<%=Components.stateObjectForFilterJournal%>"
+                        onchange="document.getElementById('filterForm').submit()">
+                    <%
+                        if (stateObjectForFilter == null) {
+                    %>
+                    <option selected value="">Все</option>
+                    <%
+                    } else {
+                    %>
+                    <option value="">Все</option>
+                    <%
+                        }
+                    %>
+                    <%
+                        for (StateObject stateObject : stateObjectList) {
+                            if (stateObjectForFilter != null && stateObjectForFilter.equals(stateObject)) {
+                    %>
+                    <option selected value="<%=stateObject.name()%>"><%=stateObject.toString()%>
+                    </option>
+                    <%
+                    } else {
+                    %>
+                    <option value="<%=stateObject.name()%>"><%=stateObject.toString()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                    <%
+                        }
+                    %>
+                </select>
+                <!--Пользователь.Конец-->
+            </p>
+        </div>
+
+        <div style="float:left; width:15%;vertical-align: center;">
+            <p align="center">
+                <!--Пользователь-->
+                <label for="<%=Components.userForFilterJournal%>"><b>Пользователь</b></label>
+                <select name="<%=Components.userForFilterJournal%>" id="<%=Components.userForFilterJournal%>"
+                        onchange="document.getElementById('filterForm').submit()">
+                    <%
+                        if (user == null) {
+                    %>
+                    <option selected value="-1">Все</option>
+                    <%
+                    } else {
+                    %>
+                    <option value="-1">Все</option>
+                    <%
+                        }
+                    %>
+                    <%
+                        for (Users userFromList : usersList) {
+                            if (user != null && user.getId().equals(userFromList.getId())) {
+                    %>
+                    <option selected value="<%=userFromList.getId()%>"><%=userFromList.toString()%>
+                    </option>
+                    <%
+                    } else {
+                    %>
+                    <option value="<%=userFromList.getId()%>"><%=userFromList.toString()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                    <%
+                        }
+                    %>
+                </select>
+                <!--Пользователь.Конец-->
+            </p>
+        </div>
+
+    </div>
+</form>
 
 <div>
     <table>
@@ -242,7 +415,7 @@
                 <%
                     if (journal.getParameter() != null && !journal.getParameter().isEmpty()) {
                 %>
-                <b>Параметр: </b><%=journal.getParameter()%>.
+                <b>Параметр: </b><%=TypeParameter.valueOf(journal.getParameter())%>.
                 <%
                     }
                 %>

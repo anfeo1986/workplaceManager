@@ -41,8 +41,13 @@ public class Components {
     public static final String hardDriveSizeInputText = "hardDriveSize";
     public static final String hardDriveIdHiddenText = "hardDriveId";
 
-    public static final String typeObjectForJournal = "typeObject";
-    public static final String objectForJournal = "object";
-    public static final String eventForJournal = "event";
-    public static final String parameterForJournal = "parameter";
+    public static final String dateStartForFilterJournal = "dateStart";
+    public static final String dateEndForFilterJournal = "dateEnd";
+
+    public static final String typeObjectForFilterJournal = "typeObject";
+    public static final String objectForFilterJournal = "object";
+    public static final String eventForFilterJournal = "event";
+    public static final String parameterForFilterJournal = "parameter";
+    public static final String userForFilterJournal = "user";
+    public static final String stateObjectForFilterJournal = "stateObjectForJournal";
 }

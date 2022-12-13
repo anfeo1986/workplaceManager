@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import workplaceManager.StateObject;
 import workplaceManager.TypeEvent;
 import workplaceManager.TypeObject;
 import workplaceManager.TypeParameter;
@@ -59,7 +60,7 @@ public class JournalManager extends EntityManager<Journal> {
         if (!StringUtils.equals(workplaceOld.getTitle(), workplaceNew.getTitle())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.WORKPLACE, workplaceOld,
                     workplaceOld.getTitle(), workplaceNew.getTitle(),
-                    TypeParameter.WORKPLACE_TITLE.toString(), user));
+                    TypeParameter.WORKPLACE_TITLE, user));
         }
     }
 
@@ -72,18 +73,18 @@ public class JournalManager extends EntityManager<Journal> {
         if (!StringUtils.equals(accounting1COld.getTitle(), accounting1CNew.getTitle())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.ACCOUNTING1C, accounting1COld,
                     accounting1COld.getTitle(), accounting1CNew.getTitle(),
-                    TypeParameter.ACCOUNTING1C_TITLE.toString(), user));
+                    TypeParameter.ACCOUNTING1C_TITLE, user));
         }
         if (!StringUtils.equals(accounting1COld.getInventoryNumber(), accounting1CNew.getInventoryNumber())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.ACCOUNTING1C, accounting1COld,
                     accounting1COld.getInventoryNumber(), accounting1CNew.getInventoryNumber(),
-                    TypeParameter.ACCOUNTING1C_INVENTORY_NUMBER.toString(), user));
+                    TypeParameter.ACCOUNTING1C_INVENTORY_NUMBER, user));
         }
         if (!Employee.equalsEmployee(accounting1COld.getEmployee(), accounting1CNew.getEmployee())) {
             save(new Journal(TypeEvent.ACCOUNTING1C_MOVING, TypeObject.ACCOUNTING1C, accounting1COld,
                     accounting1COld.getEmployee() != null ? accounting1COld.getEmployee().toString() : "",
                     accounting1CNew.getEmployee() != null ? accounting1CNew.getEmployee().toString() : "",
-                    TypeParameter.ACCOUNTING1C_EMPLOYEE.toString(), user));
+                    TypeParameter.ACCOUNTING1C_EMPLOYEE, user));
         }
     }
 
@@ -96,18 +97,18 @@ public class JournalManager extends EntityManager<Journal> {
         if (!StringUtils.equals(employeeOld.getName(), employeeNew.getName())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.EMPLOYEE, employeeOld,
                     employeeOld.getName(), employeeNew.getName(),
-                    TypeParameter.EMPLOYEE_USERNAME.toString(), user));
+                    TypeParameter.EMPLOYEE_USERNAME, user));
         }
         if (!StringUtils.equals(employeeOld.getPost(), employeeNew.getPost())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.EMPLOYEE, employeeOld,
                     employeeOld.getPost(), employeeNew.getPost(),
-                    TypeParameter.EMPLOYEE_POST.toString(), user));
+                    TypeParameter.EMPLOYEE_POST, user));
         }
         if (!Workplace.equalsWorkplace(employeeOld.getWorkplace(), employeeNew.getWorkplace())) {
             save(new Journal(TypeEvent.UPDATE, TypeObject.EMPLOYEE, employeeOld,
                     employeeOld.getWorkplace() != null ? employeeOld.getWorkplace().toString() : "",
                     employeeNew.getWorkplace() != null ? employeeNew.getWorkplace().toString() : "",
-                    TypeParameter.WORKPLACE.toString(), user));
+                    TypeParameter.WORKPLACE, user));
         }
 
     }
@@ -119,25 +120,25 @@ public class JournalManager extends EntityManager<Journal> {
             return;
         }
         if (!StringUtils.equals(equipmentNew.getUid(), equipmentOld.getUid())) {
-            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.UID.toString(),
+            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.UID,
                     equipmentOld.getUid(), equipmentNew.getUid(), typeEquipment, user);
         }
         if (!StringUtils.equals(equipmentOld.getManufacturer(), equipmentNew.getManufacturer())) {
-            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.MANUFACTURER.toString(),
+            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.MANUFACTURER,
                     equipmentOld.getManufacturer(), equipmentNew.getManufacturer(), typeEquipment, user);
         }
         if (!StringUtils.equals(equipmentNew.getModel(), equipmentOld.getModel())) {
-            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.MODEL.toString(),
+            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.MODEL,
                     equipmentOld.getModel(), equipmentNew.getModel(), typeEquipment, user);
         }
         if (!Workplace.equalsWorkplace(equipmentOld.getWorkplace(), equipmentNew.getWorkplace())) {
-            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.WORKPLACE.toString(),
+            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.WORKPLACE,
                     equipmentOld.getWorkplace() != null ? equipmentOld.getWorkplace().toString() : "",
                     equipmentNew.getWorkplace() != null ? equipmentNew.getWorkplace().toString() : "",
                     typeEquipment, user);
         }
         if (!Accounting1C.equalsAccounting1C(equipmentOld.getAccounting1C(), equipmentNew.getAccounting1C())) {
-            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.ACCOUNTING1C.toString(),
+            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.ACCOUNTING1C,
                     equipmentOld.getAccounting1C() != null ? equipmentOld.getAccounting1C().toString() : "",
                     equipmentNew.getAccounting1C() != null ? equipmentNew.getAccounting1C().toString() : "",
                     typeEquipment, user);
@@ -146,45 +147,45 @@ public class JournalManager extends EntityManager<Journal> {
             Computer computerOld = (Computer) equipmentOld;
             Computer computerNew = (Computer) equipmentNew;
             if (!StringUtils.equals(computerOld.getIp(), computerNew.getIp())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.IP.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.IP,
                         computerOld.getIp(), computerNew.getIp(), typeEquipment, user);
             }
             if (!StringUtils.equals(computerOld.getNetName(), computerNew.getNetName())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.NET_NAME.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.NET_NAME,
                         computerOld.getNetName(), computerNew.getNetName(), typeEquipment, user);
             }
             if (!OperationSystem.equalsOS(computerOld.getOperationSystem(), computerNew.getOperationSystem())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.OS.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.OS,
                         computerOld.getOperationSystem() != null ? computerOld.getOperationSystem().toString() : "",
                         computerNew.getOperationSystem() != null ? computerNew.getOperationSystem().toString() : "",
                         typeEquipment, user);
             }
             if (!MotherBoard.equalsMotherBoard(computerOld.getMotherBoard(), computerNew.getMotherBoard())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.MOTHERBOARD.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.MOTHERBOARD,
                         computerOld.getMotherBoard() != null ? computerOld.getMotherBoard().toString() : "",
                         computerNew.getMotherBoard() != null ? computerNew.getMotherBoard().toString() : "",
                         typeEquipment, user);
             }
             if (!Processor.equalsProcessorList(computerOld.getProcessorList(), computerNew.getProcessorList())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.PROCESSOR.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.PROCESSOR,
                         getStrFromList(computerOld.getProcessorList()),
                         getStrFromList(computerNew.getProcessorList()),
                         typeEquipment, user);
             }
             if (!Ram.equalsRamList(computerOld.getRamList(), computerNew.getRamList())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.RAM.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.RAM,
                         getStrFromList(computerOld.getRamList()),
                         getStrFromList(computerNew.getRamList()),
                         typeEquipment, user);
             }
             if (!HardDrive.equalsHardDriveList(computerOld.getHardDriveList(), computerNew.getHardDriveList())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.HARDDRIVE.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.HARDDRIVE,
                         getStrFromList(computerOld.getHardDriveList()),
                         getStrFromList(computerNew.getHardDriveList()),
                         typeEquipment, user);
             }
             if (!VideoCard.equalsVideoCardList(computerOld.getVideoCardList(), computerNew.getVideoCardList())) {
-                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.VIDEOCARD.toString(),
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.VIDEOCARD,
                         getStrFromList(computerOld.getVideoCardList()),
                         getStrFromList(computerNew.getVideoCardList()),
                         typeEquipment, user);
@@ -203,7 +204,7 @@ public class JournalManager extends EntityManager<Journal> {
     }
 
     @Transactional
-    public void saveChange(TypeEvent typeEvent, Object objectChange, String param,
+    public void saveChange(TypeEvent typeEvent, Object objectChange, TypeParameter param,
                            String oldValue, String newValue, String typeEquipment, Users user) {
         Journal journal = new Journal(typeEvent, getTypeObjectFromTypeEquipment(typeEquipment),
                 objectChange, oldValue, newValue, param, user);
@@ -231,6 +232,27 @@ public class JournalManager extends EntityManager<Journal> {
     }
 
     @Transactional
+    public List<Users> getUserIdForFilter(boolean isReadAll) {
+        Session session = sessionFactory.getCurrentSession();
+
+        String queryStr = "select distinct idUser from Journal as journal where journal.idUser!=null";
+        List<Long> userIdList = new ArrayList<>();
+        userIdList = session.createQuery(queryStr).list();
+
+        List<Users> usersList = new ArrayList<>();
+        if (userIdList != null) {
+            for (Long id : userIdList) {
+                Users users = userManager.getUserById(id, isReadAll);
+                if (users != null) {
+                    usersList.add(users);
+                }
+            }
+        }
+
+        return usersList;
+    }
+
+    @Transactional
     public SortedMap<String, Long> getObjectIdListForTypeObject(TypeObject typeObject) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -239,10 +261,10 @@ public class JournalManager extends EntityManager<Journal> {
             queryStr += "where journal.typeObject='" + typeObject.name() + "'";
         }
         List<Journal> journalList = session.createQuery(queryStr).list();
-        setObjectFromJournalList(journalList);
+        List<Journal> journalListNew = setObjectFromJournalList(journalList, null);
 
         SortedMap<String, Long> objectIdList = new TreeMap<>();
-        for (Journal journal : journalList) {
+        for (Journal journal : journalListNew) {
             if (journal.getObject() == null) {
                 continue;
             }
@@ -255,58 +277,144 @@ public class JournalManager extends EntityManager<Journal> {
     }
 
     @Transactional
-    public List<Journal> getJournalList(TypeObject typeObject, Long idObject, TypeEvent typeEvent) {
+    public List<Journal> getJournalList(TypeObject typeObject, Long idObject, TypeEvent typeEvent,
+                                        TypeParameter typeParameter, Users user, StateObject stateObject,
+                                        Date dateStart, Date dateEnd) {
         Session session = sessionFactory.getCurrentSession();
 
         String queryStr = "from Journal as journal ";
-        if (typeObject != null || (idObject != null && idObject > 0) || typeEvent != null) {
+        if (typeObject != null || (idObject != null && idObject > 0) ||
+                typeEvent != null || typeParameter != null || user != null ||
+                dateStart != null || dateEnd != null) {
             queryStr += "where ";
             if (typeObject != null) {
                 queryStr += "journal.typeObject='" + typeObject.name() + "' ";
-                if ((idObject != null && idObject > 0) || typeEvent != null) {
+                if ((idObject != null && idObject > 0) || typeEvent != null || typeParameter != null ||
+                        user != null || dateStart != null || dateEnd != null) {
                     queryStr += "and ";
                 }
             }
             if (idObject != null && idObject > 0) {
                 queryStr += "journal.idObject=" + idObject;
-                if (typeEvent != null) {
+                if (typeEvent != null || typeParameter != null || user != null
+                        || dateStart != null || dateEnd != null) {
                     queryStr += "and ";
                 }
             }
             if (typeEvent != null) {
                 queryStr += "journal.typeEvent='" + typeEvent.name() + "' ";
+                if (typeParameter != null || user != null || dateStart != null || dateEnd != null) {
+                    queryStr += "and ";
+                }
+            }
+            if (typeParameter != null) {
+                queryStr += "journal.parameter='" + typeParameter.name() + "' ";
+                if (user != null || dateStart != null || dateEnd != null) {
+                    queryStr += "and ";
+                }
+            }
+            if (user != null) {
+                queryStr += "journal.idUser=" + user.getId() + " ";
+                if (dateStart != null || dateEnd != null) {
+                    queryStr += "and ";
+                }
+            }
+            if (dateStart != null) {
+                queryStr += "journal.time >= '" + dateStart + "' ";
+                if (dateEnd != null) {
+                    queryStr += "and ";
+                }
+            }
+            if (dateEnd != null) {
+                queryStr += "journal.time <= '" + dateEnd + "' ";
             }
         }
 
         queryStr += "order by journal.time desc";
         List<Journal> journalList = session.createQuery(queryStr).list();
 
-        setObjectFromJournalList(journalList);
+        List<Journal> journalListNew = setObjectFromJournalList(journalList, stateObject);
 
-        return journalList;
+        return journalListNew;
     }
 
-    private void setObjectFromJournalList(List<Journal> journalList) {
+    private List<Journal> setObjectFromJournalList(List<Journal> journalList, StateObject stateObject) {
+        List<Journal> journalListNew = new ArrayList<>();
         for (Journal journal : journalList) {
             journal.setUser(userManager.getUserById(journal.getIdUser(), true));
             TypeObject typeObjectFromJournal = TypeObject.valueOf(journal.getTypeObject());
             if (TypeObject.COMPUTER.equals(typeObjectFromJournal)) {
-                journal.setObject(equipmentManager.getComputerById(journal.getIdObject(), true));
+                Computer computer = equipmentManager.getComputerById(journal.getIdObject(), true);
+                journal.setObject(computer);
+                if (stateObject != null) {
+                    if ((StateObject.DELETED.equals(stateObject) && computer.getDeleted()) ||
+                            (StateObject.NO_DELETED.equals(stateObject) && !computer.getDeleted())) {
+                        journalListNew.add(journal);
+                    }
+                } else {
+                    journalListNew.add(journal);
+                }
             } else if (TypeObject.MFD.equals(typeObjectFromJournal) ||
                     TypeObject.MONITOR.equals(typeObjectFromJournal) ||
                     TypeObject.PRINTER.equals(typeObjectFromJournal) ||
                     TypeObject.SCANNER.equals(typeObjectFromJournal) ||
                     TypeObject.UPS.equals(typeObjectFromJournal)) {
-                journal.setObject(equipmentManager.getEquipmentById(journal.getIdObject(), true));
+                Equipment equipment = equipmentManager.getEquipmentById(journal.getIdObject(), true);
+                journal.setObject(equipment);
+                if (stateObject != null) {
+                    if ((StateObject.DELETED.equals(stateObject) && equipment.getDeleted()) ||
+                            (StateObject.NO_DELETED.equals(stateObject) && !equipment.getDeleted())) {
+                        journalListNew.add(journal);
+                    }
+                } else {
+                    journalListNew.add(journal);
+                }
             } else if (TypeObject.ACCOUNTING1C.equals(typeObjectFromJournal)) {
-                journal.setObject(accounting1CManager.getAccounting1CById(journal.getIdObject(), true));
+                Accounting1C accounting1C = accounting1CManager.getAccounting1CById(journal.getIdObject(), true);
+                journal.setObject(accounting1C);
+                if (stateObject != null) {
+                    if ((StateObject.DELETED.equals(stateObject) && accounting1C.getDeleted()) ||
+                            (StateObject.NO_DELETED.equals(stateObject) && !accounting1C.getDeleted())) {
+                        journalListNew.add(journal);
+                    }
+                } else {
+                    journalListNew.add(journal);
+                }
             } else if (TypeObject.USER.equals(typeObjectFromJournal)) {
-                journal.setObject(userManager.getUserById(journal.getIdObject(), true));
+                Users user = userManager.getUserById(journal.getIdObject(), true);
+                journal.setObject(user);
+                if (stateObject != null) {
+                    if ((StateObject.DELETED.equals(stateObject) && user.getDeleted()) ||
+                            (StateObject.NO_DELETED.equals(stateObject) && !user.getDeleted())) {
+                        journalListNew.add(journal);
+                    }
+                } else {
+                    journalListNew.add(journal);
+                }
             } else if (TypeObject.EMPLOYEE.equals(typeObjectFromJournal)) {
-                journal.setObject(employeeManager.getEmployeeById(journal.getIdObject(), true));
+                Employee employee = employeeManager.getEmployeeById(journal.getIdObject(), true);
+                journal.setObject(employee);
+                if (stateObject != null) {
+                    if ((StateObject.DELETED.equals(stateObject) && employee.getDeleted()) ||
+                            (StateObject.NO_DELETED.equals(stateObject) && !employee.getDeleted())) {
+                        journalListNew.add(journal);
+                    }
+                } else {
+                    journalListNew.add(journal);
+                }
             } else if (TypeObject.WORKPLACE.equals(typeObjectFromJournal)) {
-                journal.setObject(workplaceManager.getWorkplaceById(journal.getIdObject(), true));
+                Workplace workplace = workplaceManager.getWorkplaceById(journal.getIdObject(), true);
+                journal.setObject(workplace);
+                if (stateObject != null) {
+                    if ((StateObject.DELETED.equals(stateObject) && workplace.getDeleted()) ||
+                            (StateObject.NO_DELETED.equals(stateObject) && !workplace.getDeleted())) {
+                        journalListNew.add(journal);
+                    }
+                } else {
+                    journalListNew.add(journal);
+                }
             }
         }
+        return journalListNew;
     }
 }

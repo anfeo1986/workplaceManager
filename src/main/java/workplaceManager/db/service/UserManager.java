@@ -21,6 +21,7 @@ public class UserManager extends EntityManager<Users> {
         return userList;
     }
 
+
     @Transactional
     public Users getUserByLogin(String login) {
         Session session = sessionFactory.getCurrentSession();

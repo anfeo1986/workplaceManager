@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.security.core.userdetails.User;
 import workplaceManager.TypeEvent;
 import workplaceManager.TypeObject;
+import workplaceManager.TypeParameter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -107,11 +108,13 @@ public class Journal {
     }
 
     public Journal(TypeEvent typeEvent, TypeObject typeObject, Object obj,
-                   String oldValue, String newValue, String parameter, Users user) {
+                   String oldValue, String newValue, TypeParameter parameter, Users user) {
         this(typeEvent, typeObject, obj, user);
         this.oldValue = oldValue;
         this.newValue = newValue;
-        this.parameter = parameter;
+        if(parameter != null) {
+            this.parameter = parameter.name();
+        }
     }
 
 
