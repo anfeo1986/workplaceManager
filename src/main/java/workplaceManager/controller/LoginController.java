@@ -5,10 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
-import workplaceManager.Pages;
-import workplaceManager.SecurityCrypt;
-import workplaceManager.TypeEvent;
-import workplaceManager.TypeObject;
+import workplaceManager.*;
 import workplaceManager.db.domain.Journal;
 import workplaceManager.db.domain.Users;
 import workplaceManager.db.service.JournalManager;
@@ -47,7 +44,7 @@ public class LoginController {
     }
 
     @GetMapping(Pages.login)
-    public ModelAndView getLogin(@ModelAttribute("userForm") Users userForm) {
+    public ModelAndView getLogin(@ModelAttribute(Parameters.userForm) Users userForm) {
         Users userFromDB = userManager.getUserByLogin(userForm.getUsername());
 
         Users user = new Users();

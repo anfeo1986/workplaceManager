@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.Pages;
+import workplaceManager.Parameters;
 import workplaceManager.SecurityCrypt;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.*;
@@ -70,139 +71,139 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public ModelAndView getMain(@RequestParam(name = "token", required = false) String token) {
+    public ModelAndView getMain(@RequestParam(name = Parameters.token, required = false) String token) {
         return securityCrypt.verifyUser(token, Pages.workplace);
     }
 
     @GetMapping(Pages.mainPage)
-    public ModelAndView getMainPageForm(@RequestParam(name = "token") String token) {
+    public ModelAndView getMainPageForm(@RequestParam(name = Parameters.token) String token) {
         return getWorkplace(token);
     }
 
     @GetMapping(Pages.workplace)
     @Transactional
-    public ModelAndView getWorkplace(@RequestParam(name = "token") String token) {
+    public ModelAndView getWorkplace(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-        modelAndView.addObject("workplaceList", workplaceList);
+        modelAndView.addObject(Parameters.workplaceList, workplaceList);
 
-        modelAndView.addObject("page", TypePage.workplace.toString());
+        modelAndView.addObject(Parameters.page, TypePage.workplace.toString());
 
         return modelAndView;
     }
 
     @GetMapping(Pages.employee)
-    public ModelAndView getEmployee(@RequestParam(name = "token") String token) {
+    public ModelAndView getEmployee(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Employee> employeeList = employeeManager.getEmployeeList();
 
-            modelAndView.addObject("employeeList", employeeList);
-            modelAndView.addObject("page", TypePage.employee.toString());
+            modelAndView.addObject(Parameters.employeeList, employeeList);
+            modelAndView.addObject(Parameters.page, TypePage.employee.toString());
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.accounting1c)
-    public ModelAndView getAccounting1C(@RequestParam(name = "token") String token) {
+    public ModelAndView getAccounting1C(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList();
 
-            modelAndView.addObject("accounting1CList", accounting1CList);
-            modelAndView.addObject("page", TypePage.accounting1c.toString());
+            modelAndView.addObject(Parameters.accounting1CList, accounting1CList);
+            modelAndView.addObject(Parameters.page, TypePage.accounting1c.toString());
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.computer)
-    public ModelAndView getComputerForm(@RequestParam(name = "token") String token) {
+    public ModelAndView getComputerForm(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Computer> equipmentList = equipmentManager.getComputerList();
 
-            modelAndView.addObject("equipmentList", equipmentList);
-            modelAndView.addObject("page", TypePage.computer.toString());
-            modelAndView.addObject("typeEquipment", TypeEquipment.COMPUTER);
-            modelAndView.addObject("title", "Компьютеры");
+            modelAndView.addObject(Parameters.equipmentList, equipmentList);
+            modelAndView.addObject(Parameters.page, TypePage.computer.toString());
+            modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.COMPUTER);
+            modelAndView.addObject(Parameters.title, "Компьютеры");
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.monitor)
-    public ModelAndView getMonitors(@RequestParam(name = "token") String token) {
+    public ModelAndView getMonitors(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Monitor> equipmentList = equipmentManager.getMonitorList();
 
-            modelAndView.addObject("equipmentList", equipmentList);
-            modelAndView.addObject("page", TypePage.monitor.toString());
-            modelAndView.addObject("typeEquipment", TypeEquipment.MONITOR);
-            modelAndView.addObject("title", "Мониторы");
+            modelAndView.addObject(Parameters.equipmentList, equipmentList);
+            modelAndView.addObject(Parameters.page, TypePage.monitor.toString());
+            modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.MONITOR);
+            modelAndView.addObject(Parameters.title, "Мониторы");
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.printer)
-    public ModelAndView getPrinters(@RequestParam(name = "token") String token) {
+    public ModelAndView getPrinters(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Printer> equipmentList = equipmentManager.getPrinterList();
 
-            modelAndView.addObject("equipmentList", equipmentList);
-            modelAndView.addObject("page", TypePage.printer.toString());
-            modelAndView.addObject("typeEquipment", TypeEquipment.PRINTER);
-            modelAndView.addObject("title", "Принтеры");
+            modelAndView.addObject(Parameters.equipmentList, equipmentList);
+            modelAndView.addObject(Parameters.page, TypePage.printer.toString());
+            modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.PRINTER);
+            modelAndView.addObject(Parameters.title, "Принтеры");
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.scanner)
-    public ModelAndView getScanners(@RequestParam(name = "token") String token) {
+    public ModelAndView getScanners(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Scanner> equipmentList = equipmentManager.getScannerList();
 
-            modelAndView.addObject("equipmentList", equipmentList);
-            modelAndView.addObject("page", TypePage.scanner.toString());
-            modelAndView.addObject("typeEquipment", TypeEquipment.SCANNER);
-            modelAndView.addObject("title", "Сканеры");
+            modelAndView.addObject(Parameters.equipmentList, equipmentList);
+            modelAndView.addObject(Parameters.page, TypePage.scanner.toString());
+            modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.SCANNER);
+            modelAndView.addObject(Parameters.title, "Сканеры");
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.mfd)
-    public ModelAndView getMfd(@RequestParam(name = "token") String token) {
+    public ModelAndView getMfd(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Mfd> equipmentList = equipmentManager.getMfdList();
 
-            modelAndView.addObject("equipmentList", equipmentList);
-            modelAndView.addObject("page", TypePage.mfd.toString());
-            modelAndView.addObject("typeEquipment", TypeEquipment.MFD);
-            modelAndView.addObject("title", "МФУ");
+            modelAndView.addObject(Parameters.equipmentList, equipmentList);
+            modelAndView.addObject(Parameters.page, TypePage.mfd.toString());
+            modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.MFD);
+            modelAndView.addObject(Parameters.title, "МФУ");
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.ups)
-    public ModelAndView getUps(@RequestParam(name = "token") String token) {
+    public ModelAndView getUps(@RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Ups> equipmentList = equipmentManager.getUpsList();
 
-            modelAndView.addObject("equipmentList", equipmentList);
-            modelAndView.addObject("page", TypePage.ups.toString());
-            modelAndView.addObject("typeEquipment", TypeEquipment.UPS);
-            modelAndView.addObject("title", "ИБП");
+            modelAndView.addObject(Parameters.equipmentList, equipmentList);
+            modelAndView.addObject(Parameters.page, TypePage.ups.toString());
+            modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.UPS);
+            modelAndView.addObject(Parameters.title, "ИБП");
         }
         return modelAndView;
     }

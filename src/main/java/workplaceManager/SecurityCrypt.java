@@ -1,6 +1,7 @@
 package workplaceManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.db.domain.Role;
@@ -26,12 +27,19 @@ public class SecurityCrypt {
         this.userManager = userManager;
     }
 
+    private Environment environment;
+
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
     public ModelAndView verifyUser(String token, String page) {
         ModelAndView modelAndView = new ModelAndView(Pages.login);
 
         //System.out.println("page=" + page);
         Users user = getUserByToken(token);
-        if(user != null) {
+        if (user != null) {
             String passNoCrypt = decode(user.getPassword(), user.getSalt());
             user.setSalt(generateKey());
             user.setPassword(encode(passNoCrypt, user.getSalt()));
@@ -41,36 +49,18 @@ public class SecurityCrypt {
             String tokenNew = getToken(user);
 
             modelAndView.setViewName(page);
-            modelAndView.addObject("token", tokenNew);
-            modelAndView.addObject("role", user.getRole());
+            modelAndView.addObject(Parameters.token, tokenNew);
+            modelAndView.addObject(Parameters.role, user.getRole());
+            modelAndView.addObject(Parameters.baseUrl, environment.getRequiredProperty("base.url"));
             return modelAndView;
         }
-
-        /*List<Users> userList = userManager.getUserList();
-
-        for (Users user : userList) {
-            String tokenForUser = getToken(user);
-            if (token != null && token.equals(tokenForUser)) {
-                String passNoCrypt = decode(user.getPassword(), user.getSalt());
-                user.setSalt(generateKey());
-                user.setPassword(encode(passNoCrypt, user.getSalt()));
-                userManager.save(user);
-
-                String tokenNew = getToken(user);
-
-                modelAndView.setViewName(page);
-                modelAndView.addObject("token", tokenNew);
-                modelAndView.addObject("role", user.getRole());
-                return modelAndView;
-            }
-        }*/
 
         return modelAndView;
     }
 
     public Users getUserByToken(String token) {
         List<Users> userList = userManager.getUserList();
-        for(Users user : userList) {
+        for (Users user : userList) {
             String tokenForUser = getToken(user);
             if (token != null && token.equals(tokenForUser)) {
                 return user;

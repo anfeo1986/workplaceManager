@@ -50,9 +50,9 @@ public class RegistrationController {
 
     //@PostMapping("/registration")
     @PostMapping(Pages.registration)
-    public String addUser(@ModelAttribute("userForm") Users userForm, Model model) {
+    public String addUser(@ModelAttribute(Parameters.userForm) Users userForm, Model model) {
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
-            model.addAttribute("passwordError", "Пароли не совпадают");
+            model.addAttribute(Parameters.passwordError, "Пароли не совпадают");
             //return "registration";
             return Pages.registration;
         }

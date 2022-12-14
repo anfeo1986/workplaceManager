@@ -43,13 +43,13 @@
     %>
     <title>Редактирование</title>
     <%
-        url = "/" + Pages.updateEquipmentPost;
+        url = Pages.updateEquipmentPost;
         buttonTitle = "Редактировать";
     } else {
     %>
     <title>Добавление</title>
     <%
-            url = "/" + Pages.addEquipmentPost;
+            url = Pages.addEquipmentPost;
         }
     %>
 </head>

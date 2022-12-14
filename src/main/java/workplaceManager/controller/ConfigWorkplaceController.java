@@ -1,13 +1,11 @@
 package workplaceManager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import workplaceManager.Pages;
-import workplaceManager.SecurityCrypt;
-import workplaceManager.TypeEvent;
-import workplaceManager.TypeObject;
+import workplaceManager.*;
 import workplaceManager.db.domain.Journal;
 import workplaceManager.db.domain.Role;
 import workplaceManager.db.domain.Users;
@@ -47,32 +45,32 @@ public class ConfigWorkplaceController {
         this.journalManager = journalManager;
     }
 
-    @GetMapping(Pages.addUpdateWorkplace)
-    public ModelAndView addWorkplace(@RequestParam(name = "id", required = false) Long workplaceId,
-                                     @RequestParam(name = "redirect", required = false) String redirect,
-                                     @RequestParam(name = "token") String token) {
 
+
+    @GetMapping(Pages.addUpdateWorkplace)
+    public ModelAndView addWorkplace(@RequestParam(name = Parameters.id, required = false) Long workplaceId,
+                                     @RequestParam(name = Parameters.redirect, required = false) String redirect,
+                                     @RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigWorkplace);
-        //ModelAndView modelAndView = new ModelAndView(Pages.formConfigWorkplace);
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Workplace workplace = new Workplace();
             if (workplaceId != null && workplaceId > 0) {
                 workplace = workplaceManager.getWorkplaceById(workplaceId, false);
             }
-            modelAndView.addObject("workplace", workplace);
-
+            modelAndView.addObject(Parameters.workplace, workplace);
             if (redirect == null) {
                 redirect = "";
             }
-            modelAndView.addObject("redirect", redirect);
+
+            modelAndView.addObject(Parameters.redirect, redirect);
         }
         return modelAndView;
     }
 
     @PostMapping(Pages.addWorkplacePost)
-    public ModelAndView addWorkplace(@ModelAttribute("workplace") Workplace workplace,
-                                     @ModelAttribute("redirect") String redirect,
-                                     @RequestParam(name = "token") String token) {
+    public ModelAndView addWorkplace(@ModelAttribute(Parameters.workplace) Workplace workplace,
+                                     @ModelAttribute(Parameters.redirect) String redirect,
+                                     @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigWorkplace);
@@ -80,22 +78,22 @@ public class ConfigWorkplaceController {
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Workplace workplaceFromDb = workplaceManager.getWorkplaceByTitle(workplace.getTitle());
                 if (workplaceFromDb != null) {
-                    modelAndView.addObject("error", String.format("%s уже существует", workplace.getTitle()));
-                    modelAndView.addObject("workplace", workplace);
+                    modelAndView.addObject(Parameters.error, String.format("%s уже существует", workplace.getTitle()));
+                    modelAndView.addObject(Parameters.workplace, workplace);
                 } else {
                     workplace.setDeleted(false);
                     workplaceManager.save(workplace);
 
                     journalManager.save(new Journal(TypeEvent.ADD, TypeObject.WORKPLACE, workplace, user));
 
-                    modelAndView.addObject("message", String.format("%s успешно добавлен", workplace.getTitle()));
-                    modelAndView.addObject("workplace", new Workplace());
+                    modelAndView.addObject(Parameters.message, String.format("%s успешно добавлен", workplace.getTitle()));
+                    modelAndView.addObject(Parameters.workplace, new Workplace());
                 }
 
                 if (redirect == null) {
                     redirect = "";
                 }
-                modelAndView.addObject("redirect", redirect);
+                modelAndView.addObject(Parameters.redirect, redirect);
             }
 
             return modelAndView;
@@ -105,9 +103,9 @@ public class ConfigWorkplaceController {
     }
 
     @PostMapping(Pages.updateWorkplacePost)
-    public ModelAndView updateWorkplace(@ModelAttribute("workplace") Workplace workplace,
-                                        @ModelAttribute("redirect") String redirect,
-                                        @RequestParam(name = "token") String token) {
+    public ModelAndView updateWorkplace(@ModelAttribute(Parameters.workplace) Workplace workplace,
+                                        @ModelAttribute(Parameters.redirect) String redirect,
+                                        @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigWorkplace);
@@ -116,8 +114,8 @@ public class ConfigWorkplaceController {
                 Workplace workplaceFromDb = workplaceManager.getWorkplaceByTitle(workplace.getTitle());
                 if (workplaceFromDb != null && workplaceFromDb.getId() != workplace.getId()) {
                     //modelAndView.setViewName("/config/workplace");
-                    modelAndView.addObject("error", String.format("%s уже существует", workplace.getTitle()));
-                    modelAndView.addObject("workplace", workplace);
+                    modelAndView.addObject(Parameters.error, String.format("%s уже существует", workplace.getTitle()));
+                    modelAndView.addObject(Parameters.workplace, workplace);
                 } else {
                     Workplace workplaceFromDbById = workplaceManager.getWorkplaceById(workplace.getId(), false);
                     workplace.setDeleted(false);
@@ -131,7 +129,7 @@ public class ConfigWorkplaceController {
                 if (redirect == null) {
                     redirect = "";
                 }
-                modelAndView.addObject("redirect", redirect);
+                modelAndView.addObject(Parameters.redirect, redirect);
             }
 
             return modelAndView;
@@ -141,8 +139,8 @@ public class ConfigWorkplaceController {
     }
 
     @GetMapping(Pages.deleteWorkplacePost)
-    public ModelAndView deleteWorkplace(@RequestParam(name = "id") Long id,
-                                        @RequestParam(name = "token") String token) {
+    public ModelAndView deleteWorkplace(@RequestParam(name = Parameters.id) Long id,
+                                        @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + Pages.workplace);

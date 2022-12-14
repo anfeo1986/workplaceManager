@@ -8,12 +8,11 @@
 
 <h1>Рабочие места</h1>
 <%
-    String token = (String) request.getAttribute("token");
-    Role role = (Role) request.getAttribute("role");
+    Role role = (Role) request.getAttribute(Parameters.role);
 
     if (Role.ADMIN.equals(role)) {
 %>
-<a href="<%=Pages.addUpdateWorkplace%>?token=<%=token%>&redirect=<%=Pages.workplace%>">
+<a href="<%=Pages.addUpdateWorkplace%>?<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>">
     Добавить рабочее место
 </a>
 <%
@@ -26,12 +25,12 @@
         <th><h1>Название</h1></th>
         <th>
             <p>
-            <h1><a href="<%=Pages.employee%>?token=<%=token%>">Сотрудники</a></h1>
+            <h1><a href="<%=Pages.employee%>?<%=Parameters.token%>=<%=token%>">Сотрудники</a></h1>
             </p>
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
-            <p><a href="<%=Pages.addUpdateEmployee%>?redirect=<%=Pages.workplace%>&token=<%=token%>">Добавить
+            <p><a href="<%=Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.token%>=<%=token%>">Добавить
                 сотрудника</a></p>
             <%
                 }
@@ -39,38 +38,39 @@
         </th>
         <th>
             <p>
-            <h1><a href="<%=Pages.computer%>?token=<%=token%>">Компьютеры</a></h1></p>
+            <h1><a href="<%=Pages.computer%>?<%=Parameters.token%>=<%=token%>">Компьютеры</a></h1></p>
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.COMPUTER%>
-            &token=<%=token%>">Добавить компьютер</a></p>
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>
+            &<%=Parameters.token%>=<%=token%>">Добавить компьютер</a></p>
             <%
                 }
             %>
         </th>
         <th>
             <p>
-            <h1><a href="<%=Pages.monitor%>?token=<%=token%>">Мониторы</a></h1></p>
+            <h1><a href="<%=Pages.monitor%>?<%=Parameters.token%>=<%=token%>">Мониторы</a></h1></p>
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MONITOR%>
-            &token=<%=token%>">Добавить монитор</a></p>
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>
+            &<%=Parameters.token%>=<%=token%>">Добавить монитор</a></p>
             <%
                 }
             %>
         </th>
         <th>
             <p>
-            <h1><a href="<%=Pages.mfd%>?token=<%=token%>">МФУ</a></h1></p>
+            <h1><a href="<%=Pages.mfd%>?<%=Parameters.token%>=<%=token%>">МФУ</a></h1></p>
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MFD%>&token=<%=token%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>
+                &<%=Parameters.token%>=<%=token%>">
                     Добавить МФУ</a></p>
             <%
                 }
@@ -78,12 +78,13 @@
         </th>
         <th>
             <p>
-            <h1><a href="<%=Pages.printer%>?token="<%=token%>">Принтеры</a></h1></p>
+            <h1><a href="<%=Pages.printer%>?<%=Parameters.token%>="<%=token%>">Принтеры</a></h1></p>
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.PRINTER%>&token=<%=token%>">Добавить
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>
+                &<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>&<%=Parameters.token%>=<%=token%>">Добавить
                     принтер</a></p>
             <%
                 }
@@ -91,12 +92,13 @@
         </th>
         <th>
             <p>
-            <h1><a href="<%=Pages.scanner%>?token=<%=token%>">Сканеры</a></h1></p>
+            <h1><a href="<%=Pages.scanner%>?<%=Parameters.token%>=<%=token%>">Сканеры</a></h1></p>
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.SCANNER%>&token=<%=token%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>
+                &<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>&<%=Parameters.token%>=<%=token%>">
                     Добавить сканер</a></p>");
             <%
                 }
@@ -104,12 +106,13 @@
         </th>
         <th>
             <p>
-            <h1><a href="<%=Pages.ups%>?token=<%=token%>">ИБП</a></h1></p>
+            <h1><a href="<%=Pages.ups%>?<%=Parameters.token%>=<%=token%>">ИБП</a></h1></p>
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.UPS%>&token=<%=token%>">Добавить
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>
+                &<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>&<%=Parameters.token%>=<%=token%>">Добавить
                     ИБП</a></p>
             <%
                 }
@@ -118,7 +121,7 @@
     </tr>
 
     <%
-        List<Workplace> workplaceList = (List<Workplace>) request.getAttribute("workplaceList");
+        List<Workplace> workplaceList = (List<Workplace>) request.getAttribute(Parameters.workplaceList);
 
         int count = 1;
         for (Workplace workplace : workplaceList) {
@@ -159,7 +162,8 @@
             count++;
         %>
         <td>
-            <a href="<%=Pages.addUpdateWorkplace%>?id=<%=workplace.getId()%>&redirect=<%=Pages.workplace%>&token=<%=token%>">
+            <a href="<%=Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=workplace.getId()%>
+            &<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.token%>=<%=token%>">
                 <%=workplace.getTitle()%>
             </a></td>
 
@@ -169,7 +173,8 @@
                     for (Employee employee : workplace.getEmployeeList()) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEmployee%>?id=<%=employee.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>">
+                <a href="<%=Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>
+                &<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>">
                     <%=employee.getName()%>
                 </a></p>
             <%
@@ -183,7 +188,8 @@
                 for (Computer computer : computerList1) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.COMPUTER%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.token%>=<%=token%>
+                &<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>">
                     <%=computer%>
                 </a></p>
             <%
@@ -196,7 +202,8 @@
                 for (Monitor monitor : monitorList) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?id=<%=monitor.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MONITOR%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=monitor.getId()%>
+                &<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>">
                     <%=monitor%>
                 </a></p>
             <%
@@ -209,7 +216,8 @@
                 for (Mfd mfd : mfdList) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?id=<%=mfd.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MFD%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=mfd.getId()%>&<%=Parameters.token%>=<%=token%>
+                &<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>">
                     <%=mfd%>
                 </a></p>
             <%
@@ -222,7 +230,8 @@
                 for (Printer printer : printerList) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?id=<%=printer.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.PRINTER%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=printer.getId()%>&<%=Parameters.token%>=<%=token%>
+                &<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>">
                     <%=printer%>
                 </a></p>
             <%
@@ -235,7 +244,8 @@
                 for (Scanner scanner : scannerList) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?id=<%=scanner.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.SCANNER%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=scanner.getId()%>&<%=Parameters.token%>=<%=token%>
+                &<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>">
                     <%=scanner%>
                 </a></p>
             <%
@@ -248,7 +258,8 @@
                 for (Ups ups : upsList) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?id=<%=ups.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.UPS%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=ups.getId()%>&<%=Parameters.token%>=<%=token%>
+                &<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>">
                     <%=ups%>
                 </a></p>"
             <%
@@ -260,7 +271,8 @@
             if (Role.ADMIN.equals(role)) {
         %>
         <td>
-            <a href="<%=Pages.deleteWorkplacePost%>?id=<%=workplace.getId()%>&redirect=<%=Pages.workplace%>&token=<%=token%>">
+            <a href="<%=Pages.deleteWorkplacePost%>?<%=Parameters.id%>=<%=workplace.getId()%>
+            &<%=Parameters.typeEquipment%>=<%=Pages.workplace%>&<%=Parameters.token%>=<%=token%>">
                 Удалить</a></td>
         <%
             }

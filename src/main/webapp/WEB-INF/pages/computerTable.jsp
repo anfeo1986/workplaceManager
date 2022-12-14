@@ -11,16 +11,15 @@
 <h1>${title}</h1>
 
 <%
-    String token = (String) request.getAttribute("token");
-    Role role = (Role) request.getAttribute("role");
-    String typeEquipment = (String) request.getAttribute("typeEquipment");
-    String redirect = (String) request.getAttribute("page");
-    String title = (String) request.getAttribute("title");
-    List<Computer> computerList = (List<Computer>) request.getAttribute("equipmentList");
+    Role role = (Role) request.getAttribute(Parameters.role);
+    String typeEquipment = (String) request.getAttribute(Parameters.typeEquipment);
+    String redirect = (String) request.getAttribute(Parameters.page);
+    String title = (String) request.getAttribute(Parameters.title);
+    List<Computer> computerList = (List<Computer>) request.getAttribute(Parameters.equipmentList);
 
     if (Role.ADMIN.equals(role)) {
 %>
-<a href="<%=Pages.addUpdateEquipment%>?redirect=<%=redirect%>&token=<%=token%>&typeEquipment=<%=typeEquipment%>">
+<a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
     Добавить компьютер
 </a>
 <%
@@ -52,7 +51,7 @@
             count++;
         %>
         <td><a href="<%=Pages.addUpdateEquipment%>
-        ?id=<%=computer.getId()%>&token=<%=token%>&redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>">
+        ?id=<%=computer.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
             <%=computer%>
         </a>
         </td>
@@ -144,7 +143,8 @@
             if (computer.getWorkplace() != null) {
         %>
         <td>
-            <a href="<%=Pages.addUpdateWorkplace%>?id=<%=computer.getWorkplace().getId()%>&token=<%=token%>&redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>\">
+            <a href="<%=Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>
+            &<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>\">
                 <%=computer.getWorkplace().getTitle()%>
             </a>
         </td>
@@ -159,7 +159,8 @@
             if (computer.getAccounting1C() != null) {
         %>
         <td>
-            <a href="<%=Pages.addUpdateAccounting1C%>?id=<%=computer.getAccounting1C().getId()%>&token=<%=token%>&redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>\">
+            <a href="<%=Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=computer.getAccounting1C().getId()%>
+            &<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>\">
                 <%=computer.getAccounting1C()%>
             </a>
         </td>
@@ -174,7 +175,8 @@
             if (Role.ADMIN.equals(role)) {
         %>
         <td>
-            <a href="<%=Pages.deleteEquipmentPost%>?id=<%=computer.getId()%>&token=<%=token%>&redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>">
+            <a href="<%=Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.token%>=<%=token%>
+            &<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                 Удалить
             </a>
         </td>

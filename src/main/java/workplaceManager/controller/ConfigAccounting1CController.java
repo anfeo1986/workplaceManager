@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import workplaceManager.Pages;
-import workplaceManager.SecurityCrypt;
-import workplaceManager.TypeEvent;
-import workplaceManager.TypeObject;
+import workplaceManager.*;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.Accounting1CManager;
 import workplaceManager.db.service.EmployeeManager;
@@ -48,27 +45,26 @@ public class ConfigAccounting1CController {
     }
 
     @GetMapping(Pages.addUpdateAccounting1C)
-    public ModelAndView getForm(@RequestParam(name = "id", required = false) Long id,
-                                @RequestParam(name = "redirect", required = false) String redirect,
-                                @RequestParam(name = "token") String token) {
-        //ModelAndView modelAndView = new ModelAndView("/config/accounting1c");
+    public ModelAndView getForm(@RequestParam(name = Parameters.id, required = false) Long id,
+                                @RequestParam(name = Parameters.redirect, required = false) String redirect,
+                                @RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigAccounting1C);
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Accounting1C accounting1C = new Accounting1C();
             if (id != null && id > 0) {
                 accounting1C = accounting1CManager.getAccounting1CById(id, false);
             }
-            modelAndView.addObject("accounting1c", accounting1C);
+            modelAndView.addObject(Parameters.accounting1C, accounting1C);
         }
 
         return getModelAndView(redirect, modelAndView);
     }
 
     @PostMapping(Pages.addAccounting1CPost)
-    public ModelAndView addAccounting1C(@ModelAttribute("accounting1c") Accounting1C accounting1C,
-                                        @RequestParam(name = "redirect", required = false) String redirect,
-                                        @RequestParam(name = "employee_id", required = false) Long employeeId,
-                                        @RequestParam(name = "token") String token) {
+    public ModelAndView addAccounting1C(@ModelAttribute(Parameters.accounting1C) Accounting1C accounting1C,
+                                        @RequestParam(name = Parameters.redirect, required = false) String redirect,
+                                        @RequestParam(name = Parameters.employeeId, required = false) Long employeeId,
+                                        @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigAccounting1C);
@@ -79,17 +75,17 @@ public class ConfigAccounting1CController {
 
                 Accounting1C accounting1C1FromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1C.getInventoryNumber());
                 if (accounting1C1FromDB != null) {
-                    modelAndView.addObject("error", String.format("%s (%s) уже существует",
+                    modelAndView.addObject(Parameters.error, String.format("%s (%s) уже существует",
                             accounting1C1FromDB.getInventoryNumber(), accounting1C1FromDB.getTitle()));
-                    modelAndView.addObject("accounting1c", accounting1C);
+                    modelAndView.addObject(Parameters.accounting1C, accounting1C);
                 } else {
                     accounting1C.setDeleted(false);
                     accounting1CManager.save(accounting1C);
 
                     journalManager.save(new Journal(TypeEvent.ADD, TypeObject.ACCOUNTING1C, accounting1C, user));
 
-                    modelAndView.addObject("message", String.format("%s успешно добавлен", accounting1C));
-                    modelAndView.addObject("accounting1c", new Accounting1C());
+                    modelAndView.addObject(Parameters.message, String.format("%s успешно добавлен", accounting1C));
+                    modelAndView.addObject(Parameters.accounting1C, new Accounting1C());
                 }
             }
 
@@ -100,9 +96,9 @@ public class ConfigAccounting1CController {
     }
 
     @PostMapping(Pages.updateAccounting1CPost)
-    public ModelAndView updateAccounting(@RequestParam(name = "redirect", required = false) String redirect,
-                                         @RequestParam(name = "employee_id", required = false) Long employeeId,
-                                         @RequestParam(name = "token") String token,
+    public ModelAndView updateAccounting(@RequestParam(name = Parameters.redirect, required = false) String redirect,
+                                         @RequestParam(name = Parameters.employeeId, required = false) Long employeeId,
+                                         @RequestParam(name = Parameters.token) String token,
                                          HttpServletRequest request) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -110,13 +106,13 @@ public class ConfigAccounting1CController {
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Accounting1C accounting1C = null;
-                Long id = Long.parseLong(request.getParameter("id"));
+                Long id = Long.parseLong(request.getParameter(Parameters.id));
                 if (id == null || id <= 0) {
-                    accounting1C = new Accounting1C(request.getParameter("inventoryNumber"), request.getParameter("title"), null);
+                    accounting1C = new Accounting1C(request.getParameter(Parameters.inventoryNumber), request.getParameter(Parameters.title), null);
                 } else {
                     accounting1C = accounting1CManager.getAccounting1CById(id, false);
-                    accounting1C.setInventoryNumber(request.getParameter("inventoryNumber"));
-                    accounting1C.setTitle(request.getParameter("title"));
+                    accounting1C.setInventoryNumber(request.getParameter(Parameters.inventoryNumber));
+                    accounting1C.setTitle(request.getParameter(Parameters.title));
                 }
 
                 Employee employee = employeeManager.getEmployeeById(employeeId, false);
@@ -125,9 +121,9 @@ public class ConfigAccounting1CController {
                 Accounting1C accounting1CFromDb = accounting1CManager.getAccounting1CByInventoryNumber(accounting1C.getInventoryNumber());
                 if (accounting1CFromDb != null && accounting1CFromDb.getId() != accounting1C.getId()) {
                     //modelAndView.setViewName("/config/accounting1c");
-                    modelAndView.addObject("error", String.format("%s (%s) уже существует",
+                    modelAndView.addObject(Parameters.error, String.format("%s (%s) уже существует",
                             accounting1CFromDb.getInventoryNumber(), accounting1CFromDb.getTitle()));
-                    modelAndView.addObject("accounting1c", accounting1C);
+                    modelAndView.addObject(Parameters.accounting1C, accounting1C);
                 } else {
                     Accounting1C accounting1CFromDbById = accounting1CManager.getAccounting1CById(accounting1C.getId(), false);
                     accounting1C.setDeleted(false);
@@ -145,21 +141,21 @@ public class ConfigAccounting1CController {
         }
     }
 
-    private ModelAndView getModelAndView(@RequestParam(name = "redirect", required = false) String redirect, ModelAndView modelAndView) {
+    private ModelAndView getModelAndView(@RequestParam(name = Parameters.redirect, required = false) String redirect, ModelAndView modelAndView) {
         if (redirect == null) {
             redirect = "";
         }
-        modelAndView.addObject("redirect", redirect);
+        modelAndView.addObject(Parameters.redirect, redirect);
 
         List<Employee> employeeList = employeeManager.getEmployeeList();
-        modelAndView.addObject("employeeList", employeeList);
+        modelAndView.addObject(Parameters.employeeList, employeeList);
 
         return modelAndView;
     }
 
     @GetMapping(Pages.deleteAccounting1CPost)
-    public ModelAndView deleteAccounting1C(@RequestParam(name = "id") Long id,
-                                           @RequestParam(name = "token") String token) {
+    public ModelAndView deleteAccounting1C(@RequestParam(name = Parameters.id) Long id,
+                                           @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + Pages.accounting1c);

@@ -19,10 +19,10 @@ public class Workplace implements Serializable {
     private long id;
 
     @Column
-    private String title;
+    private String title = "";
 
     @Column
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @OneToMany(mappedBy = "workplace", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();

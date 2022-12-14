@@ -5,7 +5,7 @@
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
 
-    <title>JSP Templates</title>
+    <title>Главная страница</title>
 
 </head>
 <!--<body background='graphics/background.jpg'>-->
@@ -15,7 +15,7 @@
         <%@include file='header.jsp' %>
     </div>
 </header>
-<input type="hidden" name="token" value="${token}">
+<input type="hidden" name="token" value="<%=token%>">
 <div>
     <table>
         <tr valign='top' align='center'>

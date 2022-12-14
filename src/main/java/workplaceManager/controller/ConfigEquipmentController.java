@@ -161,7 +161,6 @@ public class ConfigEquipmentController {
 
                 journalManager.save(new Journal(TypeEvent.READ_CONFIG_COMPUTER, TypeObject.COMPUTER, computer, user));
 
-                //equipmentManager.save(computer);
                 modelAndView.addObject(Parameters.computer, computer);
                 modelAndView.addObject(Parameters.message, message);
                 modelAndView.addObject(Parameters.equipment, equipment);

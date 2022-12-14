@@ -3,13 +3,13 @@
 
 <h1>Сотрудники</h1>
 <%
-    String token = (String) request.getAttribute("token");
-    Role role = (Role) request.getAttribute("role");
-    List<Employee> employeeList = (List<Employee>) request.getAttribute("employeeList");
+    Role role = (Role) request.getAttribute(Parameters.role);
+    List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
+    String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
 
     if (Role.ADMIN.equals(role)) {
 %>
-<a href="<%=Pages.addUpdateEmployee%>?redirect=<%=Pages.employee%>&token=<%=token%>">
+<a href="<%=Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.employee%>&<%=Parameters.token%>=<%=token%>">
     Добавить сотрудника
 </a>
 <%
@@ -21,8 +21,8 @@
         <th><h1>id</h1></th>
         <th><h1>ФИО</h1></th>
         <th><h1>Должность</h1></th>
-        <th><h1><a href="<%=Pages.workplace%>?token=<%=token%>">Рабочее место</a></h1></th>
-        <th><h1><a href="<%=Pages.accounting1c%>?token=<%=token%>">Бухгалтерия</a></h1></th>
+        <th><h1><a href="<%=baseUrl+Pages.workplace%>?<%=Parameters.token%>=<%=token%>">Рабочее место</a></h1></th>
+        <th><h1><a href="<%=baseUrl+Pages.accounting1c%>?<%=Parameters.token%>=<%=token%>">Бухгалтерия</a></h1></th>
     </tr>
     <%
         for (Employee employee : employeeList) {
@@ -31,15 +31,14 @@
         <td><%=employee.getId()%>
         </td>
         <td>
-            <a href="<%=Pages.addUpdateEmployee%>?id=<%=employee.getId()%>&token=<%=token%>&redirect=<%=Pages.employee%>"><%=employee.getName()%>
+            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>"><%=employee.getName()%>
             </a></td>
         <td><%=employee.getPost()%>
         </td>
         <%
             if (employee.getWorkplace() != null) {
         %>
-        <td><a href="<%=Pages.addUpdateWorkplace%>?id="
-               <%=employee.getWorkplace().getId()%>&token=<%=token%>&redirect="<%=Pages.employee%>"><%=employee.getWorkplace().getTitle()%>
+        <td><a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>"><%=employee.getWorkplace().getTitle()%>
         </a></td>
         <%
         } else {
@@ -54,8 +53,7 @@
                 for (Accounting1C accounting1C : employee.getAccounting1СList()) {
             %>
             <p>
-                <a href="<%=Pages.addUpdateAccounting1C%>?id=<%=accounting1C.getId()%>
-                    &token=<%=token%>&redirect=<%=Pages.employee%>">
+                <a href="<%=baseUrl+Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
                     <%=accounting1C%>
                 </a>
             </p>
@@ -74,7 +72,7 @@
             if (Role.ADMIN.equals(role)) {
         %>
         <td>
-            <a href="<%=Pages.deleteEmployeePost%>?id=<%=employee.getId()%>&token=<%=token%>">
+            <a href="<%=baseUrl+Pages.deleteEmployeePost%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.token%>=<%=token%>">
                 Удалить
             </a>
         </td>

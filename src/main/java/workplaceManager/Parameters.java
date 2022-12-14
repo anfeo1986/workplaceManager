@@ -1,12 +1,17 @@
 package workplaceManager;
 
 public class Parameters {
+    public static final String baseUrl="baseUrl";
+    public static final String userForm = "userForm";
+    public static final String passwordError = "passwordError";
+
     public static final String page = "page";
     public static final String id = "id";
     public static final String typeEquipment = "typeEquipment";
     public static final String token = "token";
     public static final String redirect = "redirect";
     public static final String equipment = "equipment";
+    public static final String equipmentList = "equipmentList";
     public static final String computer = "computer";
     public static final String typeOS = "type_operationsystem";
     public static final String message = "message";
@@ -18,6 +23,7 @@ public class Parameters {
 
     public static final String role = "role";
 
+    public static final String workplace = "workplace";
     public static final String workplaceId = "workplace_id";
     public static final String ip = "ip";
     public static final String netName = "netname_computer";
@@ -26,12 +32,17 @@ public class Parameters {
     public static final String OsVendor = "vendor_operationsystem";
     public static final String OsVersion = "version_operationsystem";
 
+    public static final String accounting1C = "accounting1C";
     public static final String accounting1CUseRecord = "useRecord";
     public static final String accounting1CAddNewRecord = "addNewRecord";
     public static final String accounting1CList = "accounting1CList";
+    public static final String inventoryNumber = "inventoryNumber";
+    public static final String title = "title";
 
     public static final String workplaceList = "workplaceList";
 
+    public static final String employee = "employee";
+    public static final String employeeId = "employeeId";
     public static final String employeeList = "employeeList";
 
     public static final String motherBoardId = "motherBoardId";

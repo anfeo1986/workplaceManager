@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import workplaceManager.Pages;
-import workplaceManager.SecurityCrypt;
-import workplaceManager.TypeEvent;
-import workplaceManager.TypeObject;
+import workplaceManager.*;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.EmployeeManager;
 import workplaceManager.db.service.JournalManager;
@@ -47,9 +44,9 @@ public class ConfigEmployeeController {
     }
 
     @GetMapping(Pages.addUpdateEmployee)
-    public ModelAndView addUpdateEmployee(@RequestParam(name = "id", required = false) Long employeeId,
-                                          @RequestParam(name = "redirect", required = false) String redirect,
-                                          @RequestParam(name = "token") String token) {
+    public ModelAndView addUpdateEmployee(@RequestParam(name = Parameters.id, required = false) Long employeeId,
+                                          @RequestParam(name = Parameters.redirect, required = false) String redirect,
+                                          @RequestParam(name = Parameters.token) String token) {
         ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
@@ -57,24 +54,24 @@ public class ConfigEmployeeController {
             if (employeeId != null && employeeId > 0) {
                 employee = employeeManager.getEmployeeById(employeeId, false);
             }
-            modelAndView.addObject("employee", employee);
+            modelAndView.addObject(Parameters.employee, employee);
 
             List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-            modelAndView.addObject("workplaceList", workplaceList);
+            modelAndView.addObject(Parameters.workplaceList, workplaceList);
 
             if (redirect == null) {
                 redirect = "";
             }
-            modelAndView.addObject("redirect", redirect);
+            modelAndView.addObject(Parameters.redirect, redirect);
         }
         return modelAndView;
     }
 
     @PostMapping(Pages.addEmployeePost)
-    public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee,
-                                    @ModelAttribute("workplace_id") Long workplaceId,
-                                    @RequestParam(name = "redirect", required = false) String redirect,
-                                    @RequestParam(name = "token") String token) {
+    public ModelAndView addEmployee(@ModelAttribute(Parameters.employee) Employee employee,
+                                    @ModelAttribute(Parameters.workplaceId) Long workplaceId,
+                                    @RequestParam(name = Parameters.redirect, required = false) String redirect,
+                                    @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
@@ -86,8 +83,8 @@ public class ConfigEmployeeController {
                 if (employeeFromDb != null) {
                     employee.setWorkplace(workplace);
 
-                    modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
-                    modelAndView.addObject("employee", employee);
+                    modelAndView.addObject(Parameters.error, String.format("%s уже существует", employee.getName()));
+                    modelAndView.addObject(Parameters.employee, employee);
                 } else {
                     employee.setWorkplace(workplace);
                     employee.setDeleted(false);
@@ -95,17 +92,17 @@ public class ConfigEmployeeController {
 
                     journalManager.save(new Journal(TypeEvent.ADD, TypeObject.EMPLOYEE, employee, user));
 
-                    modelAndView.addObject("message", String.format("%s успешно добавлен", employee.getName()));
-                    modelAndView.addObject("employee", new Employee());
+                    modelAndView.addObject(Parameters.message, String.format("%s успешно добавлен", employee.getName()));
+                    modelAndView.addObject(Parameters.employee, new Employee());
                 }
 
                 List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-                modelAndView.addObject("workplaceList", workplaceList);
+                modelAndView.addObject(Parameters.workplaceList, workplaceList);
 
                 if (redirect == null) {
                     redirect = "";
                 }
-                modelAndView.addObject("redirect", redirect);
+                modelAndView.addObject(Parameters.redirect, redirect);
             }
             return modelAndView;
         } else {
@@ -114,10 +111,10 @@ public class ConfigEmployeeController {
     }
 
     @PostMapping(Pages.updateEmployeePost)
-    public ModelAndView updateEmployee(@ModelAttribute("employee") Employee employee,
-                                       @ModelAttribute("workplace_id") Long workplaceId,
-                                       @ModelAttribute("redirect") String redirect,
-                                       @RequestParam(name = "token") String token) {
+    public ModelAndView updateEmployee(@ModelAttribute(Parameters.employee) Employee employee,
+                                       @ModelAttribute(Parameters.workplaceId) Long workplaceId,
+                                       @ModelAttribute(Parameters.redirect) String redirect,
+                                       @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
@@ -129,8 +126,8 @@ public class ConfigEmployeeController {
                 if (employeeFromDB != null && employeeFromDB.getId() != employee.getId()) {
                     employee.setWorkplace(workplace);
                     //modelAndView.setViewName("/config/employee");
-                    modelAndView.addObject("error", String.format("%s уже существует", employee.getName()));
-                    modelAndView.addObject("employee", employee);
+                    modelAndView.addObject(Parameters.error, String.format("%s уже существует", employee.getName()));
+                    modelAndView.addObject(Parameters.employee, employee);
                 } else {
                     Employee employeeFromDbByID = employeeManager.getEmployeeById(employee.getId(), false);
                     employee.setWorkplace(workplace);
@@ -143,12 +140,12 @@ public class ConfigEmployeeController {
                 }
 
                 List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-                modelAndView.addObject("workplaceList", workplaceList);
+                modelAndView.addObject(Parameters.workplaceList, workplaceList);
 
                 if (redirect == null) {
                     redirect = "";
                 }
-                modelAndView.addObject("redirect", redirect);
+                modelAndView.addObject(Parameters.redirect, redirect);
             }
 
             return modelAndView;
@@ -158,8 +155,8 @@ public class ConfigEmployeeController {
     }
 
     @GetMapping(Pages.deleteEmployeePost)
-    public ModelAndView deleteEmployee(@RequestParam(name = "id") Long id,
-                                       @RequestParam(name = "token") String token) {
+    public ModelAndView deleteEmployee(@RequestParam(name = Parameters.id) Long id,
+                                       @RequestParam(name = Parameters.token) String token) {
         Users user = securityCrypt.getUserByToken(token);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/"+Pages.employee);

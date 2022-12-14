@@ -3,12 +3,11 @@
 
 <h1>Бухгалтерия</h1>
 <%
-    String token = (String) request.getAttribute("token");
-    Role role = (Role) request.getAttribute("role");
+    Role role = (Role) request.getAttribute(Parameters.role);
 
     if (Role.ADMIN.equals(role)) {
 %>
-<a href="<%=Pages.addUpdateAccounting1C%>?redirect=<%=Pages.accounting1c%>&token=<%=token%>">
+<a href="<%=Pages.addUpdateAccounting1C%>?<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.token%>=<%=token%>">
     Добавить оборудование в бухгалтерию
 </a>
 <%
@@ -25,7 +24,7 @@
     </tr>
 
     <%
-        List<Accounting1C> accounting1CList = (List<Accounting1C>) request.getAttribute("accounting1CList");
+        List<Accounting1C> accounting1CList = (List<Accounting1C>) request.getAttribute(Parameters.accounting1CList);
         int count = 1;
         for (Accounting1C accounting1C : accounting1CList) {
     %>
@@ -36,12 +35,12 @@
             count++;
         %>
         <td>
-            <a href="<%=Pages.addUpdateAccounting1C%>?id=<%=accounting1C.getId()%>&token=<%=token%>&redirect=<%=Pages.accounting1c%>">
+            <a href="<%=Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
                 <%=accounting1C.getInventoryNumber()%>
             </a>
         </td>
         <td>
-            <a href="<%=Pages.addUpdateAccounting1C%>?id=<%=accounting1C.getId()%>&token=<%=token%>&redirect=<%=Pages.accounting1c%>">
+            <a href="<%=Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
                 <%=accounting1C.getTitle()%>
             </a>
         </td>
@@ -81,7 +80,7 @@
                     }
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?id=<%=equipment.getId()%>&token=<%=token%>&redirect=<%=Pages.accounting1c%>&typeEquipment=<%=typeEquipment%>">
+                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                     <%=equipment%>
                 </a>
             </p>
@@ -100,7 +99,7 @@
             if (Role.ADMIN.equals(role)) {
         %>
         <td>
-            <a href="<%=Pages.deleteAccounting1CPost%>?id=<%=accounting1C.getId()%>&redirect=<%=Pages.accounting1c%>&token=<%=token%>">
+            <a href="<%=Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.token%>=<%=token%>">
                 Удалить
             </a>
         </td>

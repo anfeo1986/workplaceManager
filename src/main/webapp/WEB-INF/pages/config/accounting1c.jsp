@@ -3,6 +3,7 @@
 <%@ page import="workplaceManager.Pages" %>
 <%@ page import="workplaceManager.db.domain.Employee" %>
 <%@ page import="java.util.List" %>
+<%@ page import="workplaceManager.Parameters" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -10,10 +11,10 @@
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <%
-        Accounting1C accounting1C = (Accounting1C) request.getAttribute("accounting1c");
-        String error = (String) request.getAttribute("error");
-        String message = (String) request.getAttribute("message");
-        String token = (String) request.getAttribute("token");
+        Accounting1C accounting1C = (Accounting1C) request.getAttribute(Parameters.accounting1C);
+        String error = (String) request.getAttribute(Parameters.error);
+        String message = (String) request.getAttribute(Parameters.message);
+        String token = (String) request.getAttribute(Parameters.token);
 
         String buttonTitle = "Добавить";
         String url = "";
@@ -21,13 +22,13 @@
     %>
     <title>Редактирование</title>
     <%
-        url = "/" + Pages.updateAccounting1CPost;
+        url = Pages.updateAccounting1CPost;
         buttonTitle = "Редактировать";
     } else {
     %>
     <title>Добавление</title>
     <%
-            url = "/" + Pages.addAccounting1CPost;
+            url = Pages.addAccounting1CPost;
         }
     %>
 </head>
@@ -82,7 +83,7 @@
             <select name="employee_id" id="employee_id">
                 <option value="-1"/>
                 <%
-                    List<Employee> employeeList = (List<Employee>) request.getAttribute("employeeList");
+                    List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
                     for (Employee employee : employeeList) {
                         if (employee.getId() == employeeId) {
                 %>
@@ -104,17 +105,17 @@
     <div align="center">
         <p>
             <%
-                Role role = (Role) request.getAttribute("role");
+                Role role = (Role) request.getAttribute(Parameters.role);
                 if (Role.ADMIN.equals(role)) {
             %>
             <input type="submit" value="<%=buttonTitle%>">
             <%
                 }
-                String redirect = (String) request.getAttribute("redirect");
+                String redirect = (String) request.getAttribute(Parameters.redirect);
             %>
-            <input type="hidden" name="redirect" value="<%=redirect%>">
-            <input type="hidden" name="token" value="<%=token%>">
-            <a href="<%=redirect%>?token=<%=token%>" class="button">Назад</a>
+            <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
+            <input type="hidden" name="<%=Parameters.token%>" value="<%=token%>">
+            <a href="<%=redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
         </p>
     </div>
 
