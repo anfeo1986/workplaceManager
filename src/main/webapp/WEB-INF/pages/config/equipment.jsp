@@ -11,7 +11,6 @@
 <html>
 <head>
     <script type="text/javascript">
-
         function changeFunc() {
             if (document.getElementById("useRecord").checked) {
                 document.getElementById("<%=Components.accounting1CIdSelect%>").disabled = false;
@@ -41,11 +40,15 @@
 
         String url = "";
         if (equipment != null && equipment.getId() > 0) {
-            out.println("<title>Редактирование</title>");
-            url = "/" + Pages.updateEquipmentPost;
-            buttonTitle = "Редактировать";
-        } else {
-            out.println("<title>Добавление</title>");
+    %>
+    <title>Редактирование</title>
+    <%
+        url = "/" + Pages.updateEquipmentPost;
+        buttonTitle = "Редактировать";
+    } else {
+    %>
+    <title>Добавление</title>
+    <%
             url = "/" + Pages.addEquipmentPost;
         }
     %>
@@ -55,18 +58,26 @@
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && error != "") {
-        out.println("<h3>" + error + "</h3>");
+%>
+<h3><%=error%>
+</h3>
+<%
     }
     String message = (String) request.getAttribute(Parameters.message);
     if (message != null && message != "") {
-        out.println("<h3>" + message + "</h3>");
+%>
+<h3><%=message%>
+</h3>
+<%
     }
 %>
 <form action="<%=url%>" method="post">
     <div class="wrapper_1100">
         <%
             if (equipment != null && equipment.getId() > 0) {
-                out.println("<input type=\"hidden\" name=\"" + Parameters.id + "\" value=\"" + equipment.getId() + "\">");
+        %>
+        <input type="hidden" name="<%=Parameters.id%>" value="<%=equipment.getId()%>">
+        <%
             }
         %>
         <p align="center">
@@ -78,16 +89,18 @@
         <%
             if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                 Computer computer = (Computer) request.getAttribute(Parameters.computer);
-                out.println("<p>");
-                out.println("<label for=\"" + Parameters.ip + "\">IP</label>");
-                out.println(String.format("<input type=\"text\" name=\"" + Parameters.ip + "\" id=\"" + Parameters.ip + "\" value=\"%s\"",
-                        computer.getIp() == null ? "" : computer.getIp()));
+        %>
+        <p>
+            <label for="<%=Parameters.ip%>">IP</label>
+            <input type="text" name="<%=Parameters.ip%>" id="<%=Parameters.ip%>"
+                   value="<%=computer.getIp() == null ? "" : computer.getIp()%>">
 
-                out.println("<label for=\"" + Parameters.netName + "\">Сетевое имя</label>");
-                out.println(String.format("<input type=\"text\" name=\"" + Parameters.netName + "\" id=\"" + Parameters.netName + "\" " + "value=\"%s\">",
-                        computer.getNetName() != null ? computer.getNetName() : ""));
+            <label for="<%=Parameters.netName%>">Сетевое имя</label>
+            <input type="text" name="<%=Parameters.netName%>" id="<%=Parameters.netName%>"
+                   value="<%=computer.getNetName() != null ? computer.getNetName() : ""%>">
 
-                out.println("</p>");
+        </p>
+        <%
             }
         %>
         <p>
@@ -107,9 +120,15 @@
                 <%
                     for (Workplace workplace : workplaceList) {
                         if (workplace.getId() == workplaceId) {
-                            out.println("<option selected value=\"" + workplace.getId() + "\">" + workplace.getTitle() + "</option>");
-                        } else {
-                            out.println("<option value=\"" + workplace.getId() + "\">" + workplace.getTitle() + "</option>");
+                %>
+                <option selected value="<%=workplace.getId()%>"><%=workplace.getTitle()%>
+                </option>
+                <%
+                } else {
+                %>
+                <option value="<%=workplace.getId()%>"><%=workplace.getTitle()%>
+                </option>
+                <%
                         }
                     }
                 %>
@@ -120,33 +139,43 @@
     <%
         if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
             Computer computer = (Computer) request.getAttribute(Parameters.computer);
-            out.println("<div class=\"wrapper_1100\">");
-            out.println("<h1> Операционная система</h1>");
+    %>
+    <div class="wrapper_1100">
+        <h1> Операционная система</h1>
 
-            out.println("<p>");
-            out.println("<label for=\"" + Parameters.OsType + "\">Тип операционной системы</label>");
-            out.println("<select name=\"" + Parameters.OsType + "\">");
-            for (TypeOS typeOS : TypeOS.values()) {
-                if (computer.getOperationSystem() != null && computer.getOperationSystem().getTypeOS() != null &&
-                        computer.getOperationSystem().getTypeOS().equals(typeOS)) {
-                    out.println(String.format("<option selected value=\"%s\">%s</option>", typeOS, typeOS));
+        <p>
+            <label for="<%=Parameters.OsType%>">Тип операционной системы</label>
+            <select name="<%=Parameters.OsType%>">
+                <%
+                    for (TypeOS typeOS : TypeOS.values()) {
+                        if (computer.getOperationSystem() != null && computer.getOperationSystem().getTypeOS() != null &&
+                                computer.getOperationSystem().getTypeOS().equals(typeOS)) {
+                %>
+                <option selected value="<%=typeOS%>"><%=typeOS%>
+                </option>
+                <%
                 } else {
-                    out.println(String.format("<option value=\"%s\">%s</option>", typeOS, typeOS));
-                }
-            }
-            out.println("</select>");
-            out.println("</p>");
+                %>
+                <option value="<%=typeOS%>"><%=typeOS%>
+                </option>
+                <%
+                        }
+                    }
+                %>
+            </select>
+        </p>
 
-            out.println("<p>");
-            out.println("<label for=\"" + Parameters.OsVendor + "\">Название</label>");
-            out.println(String.format("<input type=\"text\" name=\"" + Parameters.OsVendor + "\" id=\"" + Parameters.OsVendor + "\" " + "value=\"%s\">",
-                    computer.getOperationSystem() != null ? computer.getOperationSystem().getVendor() : ""));
+        <p>
+            <label for="<%=Parameters.OsVendor%>">Название</label>
+            <input type="text" name="<%=Parameters.OsVendor%>" id="<%=Parameters.OsVendor%>"
+                   value="<%=computer.getOperationSystem() != null ? computer.getOperationSystem().getVendor() : ""%>">
 
-            out.println("<label for=\"" + Parameters.OsVersion + "\">Версия</label>");
-            out.println(String.format("<input type=\"text\" name=\"" + Parameters.OsVersion + "\" id=\"" + Parameters.OsVersion + "\" " + "value=\"%s\">",
-                    computer.getOperationSystem() != null ? computer.getOperationSystem().getVersion() : ""));
-            out.println("</p>");
-            out.println("</div>");
+            <label for="<%=Parameters.OsVersion%>">Версия</label>
+            <input type="text" name="<%=Parameters.OsVersion%>" id="<%=Parameters.OsVersion%>"
+                   value="<%=computer.getOperationSystem() != null ? computer.getOperationSystem().getVersion() : ""%>">
+        </p>
+    </div>
+    <%
         }
     %>
     <div class="wrapper_1100">
@@ -164,15 +193,25 @@
                     onchange="changeFunc();">
                 <%
                     if (accounting1СId == -1) {
-                        out.println("<option selected value=\"-1\"/>");
-                    } else {
-                        out.println("<option value=\"-1\"/>");
+                %>
+                <option selected value="-1"/>
+                <%
+                } else {
+                %>
+                <option value="-1"/>
+                <%
                     }
                     for (Accounting1C accounting1C : accounting1CList) {
                         if (accounting1C.getId() == accounting1СId && accounting1СId != -1) {
-                            out.println("<option selected value=\"" + accounting1C.getId() + "\">" + accounting1C + "</option>");
-                        } else {
-                            out.println("<option value=\"" + accounting1C.getId() + "\">" + accounting1C + "</option>");
+                %>
+                <option selected value="<%=accounting1C.getId()%>"><%=accounting1C%>
+                </option>
+                <%
+                } else {
+                %>
+                <option value="<%=accounting1C.getId()%>"><%=accounting1C%>
+                </option>
+                <%
                         }
                     }
                 %>
@@ -190,14 +229,18 @@
             <input type="text" name="<%=Components.accounting1CInventoryNumberInputText%>"
                    id="<%=Components.accounting1CInventoryNumberInputText%>" disabled>
             <label for="<%=Components.accounting1CTitleInputText%>">Название</label>
-            <textarea name="<%=Components.accounting1CTitleInputText%>" id="<%=Components.accounting1CTitleInputText%>"
+            <textarea name="<%=Components.accounting1CTitleInputText%>"
+                      id="<%=Components.accounting1CTitleInputText%>"
                       rows="5" disabled></textarea>
             <label for="selectEmployeeId">Материально-ответственное лицо</label>
             <select name="<%=Components.accounting1CEmployeeIdInputText%>" id="selectEmployeeId" disabled>
                 <option value="-1"/>
                 <%
                     for (Employee employee : employeeList) {
-                        out.println("<option value=\"" + employee.getId() + "\">" + employee.getName() + "</option>");
+                %>
+                <option value="<%=employee.getId()%>"><%=employee.getName()%>
+                </option>
+                <%
                     }
                 %>
             </select>
@@ -217,7 +260,10 @@
         <h1>Конфигурация компьютера
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + Components.buttonReadConfigComputer + "\" value=\"Считать конфигурацию компьютера\">");
+            %>
+            <input type="submit" name="<%=Components.buttonReadConfigComputer%>"
+                   value="Считать конфигурацию компьютера">
+            <%
                 }
             %>
         </h1>
@@ -238,7 +284,9 @@
         <h2>Процессор
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddProcessor + "\" value=\"Добавить\">");
+            %>
+            <input type="submit" name="<%=Components.buttonAddProcessor%>" value="Добавить">
+            <%
                 }
             %>
         </h2>
@@ -274,7 +322,9 @@
             <input type="hidden" name="<%=processorIdName%>" value="<%=processor.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + buttonDeleteProcessor + "\" value=\"Удалить\">");
+            %>
+            <input type="submit" name="<%=buttonDeleteProcessor%>" value="Удалить">
+            <%
                 }
             %>
         </p>
@@ -288,7 +338,9 @@
         <h2>Оперативная память
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddRam + "\" value=\"Добавить\">");
+            %>
+            <input type="submit" name="<%=Components.buttonAddRam%>" value="Добавить">
+            <%
                 }
             %>
         </h2>
@@ -315,9 +367,15 @@
                 <%
                     for (TypeRam typeRam : TypeRam.values()) {
                         if (ram.getTypeRam() != null && typeRam.equals(ram.getTypeRam())) {
-                            out.println("<option selected value=\"" + typeRam + "\">" + typeRam + "</option>");
-                        } else {
-                            out.println("<option value=\"" + typeRam + "\">" + typeRam + "</option>");
+                %>
+                <option selected value="<%=typeRam%>"><%=typeRam%>
+                </option>
+                <%
+                } else {
+                %>
+                <option value="<%=typeRam%>"><%=typeRam%>
+                </option>
+                <%
                         }
                     }
                 %>
@@ -338,7 +396,9 @@
             <input type="hidden" name="<%=ramIdName%>" value="<%=ram.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + buttonDeleteRam + "\" value=\"Удалить\">");
+            %>
+            <input type="submit" name="<%=buttonDeleteRam%>" value="Удалить">
+            <%
                 }
             %>
         </p>
@@ -352,7 +412,9 @@
         <h2>Видеокарты
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddVideoCard + "\" value=\"Добавить\">");
+            %>
+            <input type="submit" name="<%=Components.buttonAddVideoCard%>" value="Добавить">
+            <%
                 }
             %>
         </h2>
@@ -373,7 +435,9 @@
             <input type="hidden" name="<%=videoCardIdName%>" value="<%=videoCard.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + buttonDelete + "\" value=\"Удалить\">");
+            %>
+            <input type="submit" name="<%=buttonDelete%>" value="Удалить">
+            <%
                 }
             %>
         </p>
@@ -387,7 +451,9 @@
         <h2>Жёсткие диски
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + Components.buttonAddHardDrive + "\" value=\"Добавить\">");
+            %>
+            <input type="submit" name="<%=Components.buttonAddHardDrive%>" value="Добавить">
+            <%
                 }
             %>
         </h2>
@@ -413,7 +479,9 @@
             <input type="hidden" name="<%=hardDriveIdName%>" value="<%=hardDrive.getId()%>">
             <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + buttonDelete + "\" value=\"Удалить\">");
+            %>
+            <input type="submit" name="<%=buttonDelete%>" value="Удалить">
+            <%
                 }
             %>
         </p>
@@ -432,9 +500,11 @@
 
     <div align="center">
         <p>
-            <%
+                <%
                 if (Role.ADMIN.equals(role)) {
-                    out.println("<input type=\"submit\" name=\"" + Components.buttonSave + "\" value=\"" + buttonTitle + "\">");
+            %>
+            <input type="submit" name="<%=Components.buttonSave%>" value="<%=buttonTitle%>">
+                <%
                 }
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
@@ -446,7 +516,7 @@
             <input type="hidden" name="<%=Parameters.countHardDrive%>" value="<%=countHardDrive%>">
 
             <a href="/<%=redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
-            <%
+                <%
                 if (Role.ADMIN.equals(role) && (equipment != null && equipment.getId() > 0)) {
                     Long id;
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
@@ -455,15 +525,14 @@
                     } else {
                         id = equipment.getId();
                     }
-
-                    out.println(String.format("<td><a href=\"/" + Pages.deleteEquipmentPost +
-                                    "?" + Parameters.id + "=%s" +
-                                    "&" + Parameters.token + "=%s" +
-                                    "&" + Parameters.redirect + "=%s" +
-                                    "&" + Parameters.typeEquipment + "=%s\">Удалить</a> </td>",
-                            id, token, redirect, typeEquipment));
-                }
             %>
+        <td><a href="<%=Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=id%>
+                &<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>
+                &<%=Parameters.typeEquipment%>=<%=typeEquipment%>">Удалить</a>
+        </td>
+        <%
+            }
+        %>
         </p>
     </div>
 </form>

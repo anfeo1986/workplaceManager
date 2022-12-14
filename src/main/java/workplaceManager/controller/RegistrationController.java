@@ -6,10 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import workplaceManager.Parameters;
-import workplaceManager.SecurityCrypt;
-import workplaceManager.TypeEvent;
-import workplaceManager.TypeObject;
+import workplaceManager.*;
 import workplaceManager.db.domain.Journal;
 import workplaceManager.db.domain.Role;
 import workplaceManager.db.domain.Users;
@@ -42,27 +39,33 @@ public class RegistrationController {
         this.journalManager = journalManager;
     }
 
-    @GetMapping("/registration")
+    //@GetMapping("/registration")
+    @GetMapping(Pages.registration)
     public String registration(Model model) {
         model.addAttribute("userForm", new Users());
 
-        return "registration";
+        //return "registration";
+        return Pages.registration;
     }
 
-    @PostMapping("/registration")
+    //@PostMapping("/registration")
+    @PostMapping(Pages.registration)
     public String addUser(@ModelAttribute("userForm") Users userForm, Model model) {
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
             model.addAttribute("passwordError", "Пароли не совпадают");
-            return "registration";
+            //return "registration";
+            return Pages.registration;
         }
         Users userFromDB = userManager.getUserByLogin(userForm.getUsername());
         if (userFromDB != null) {
             model.addAttribute(Parameters.error, "Пользователь " + userForm.getUsername() + " уже существует");
-            return "registration";
+            //return "registration";
+            return Pages.registration;
         }
         if(userForm.getPassword().length() <= 6) {
             model.addAttribute(Parameters.error, "Длина пароля должна быть больше 6 знаков");
-            return "registration";
+            //return "registration";
+            return Pages.registration;
         }
         userForm.setRole(Role.USER);
         userForm.setSalt(securityCrypt.generateKey());

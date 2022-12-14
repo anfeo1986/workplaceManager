@@ -1,7 +1,9 @@
 package workplaceManager;
 
 public class Pages {
+
     public static final String login = "login";
+    public static final String registration = "registration";
 
     public static final String journal = "journal";
 
@@ -40,8 +42,6 @@ public class Pages {
     public static final String addAccounting1CPost = "config/accounting1c/addAccounting1CPost";
     public static final String updateAccounting1CPost = "config/accounting1c/updateAccounting1C";
     public static final String deleteAccounting1CPost = "config/accounting1c/deleteAccounting1C";
-
-
 
 
 }

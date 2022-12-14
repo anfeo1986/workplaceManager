@@ -27,76 +27,84 @@
     }
 
     if (Role.ADMIN.equals(role)) {
-        out.println("<a href=\"/" + Pages.addUpdateEquipment +
-                "?token=" + token +
-                "&redirect=" + redirect +
-                "&typeEquipment=" + typeEquipment +
-                "\">Добавить " + typeEquipmentStr + "</a>");
+%>
+<a href="<%=Pages.addUpdateEquipment%>?token=<%=token%>&redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>">
+    Добавить <%=typeEquipmentStr%>
+</a>
+<%
     }
 %>
-<!--<a href="/config/equipment/addUpdateEquipment?redirect=${page}&typeEquipment=${typeEquipment}">Добавить </a>-->
 
 <table class="table">
     <tr>
-        <%
-            out.println("<th><h1>id</h1></th>");
-            out.println("<th><h1>" + title + "</h1></th>");
-            out.println("<th><h1>Рабочее место</h1></th>");
-            out.println("<th><h1>Бухгалтерия</h1></th>");
-        %>
+        <th><h1>id</h1></th>
+        <th><h1><%=title%></h1></th>
+        <th><h1>Рабочее место</h1></th>
+        <th><h1>Бухгалтерия</h1></th>
     </tr>
 
     <%
         int count = 1;
         for (Equipment equipment : equipmentList) {
-            out.println("<tr>");
-
-            out.println("<td>" + count + "</td>");
+    %>
+    <tr>
+        <td><%=count%>
+        </td>
+        <%
             count++;
-
-            out.println("<td>");
-            out.println("<a href=\"/" + Pages.addUpdateEquipment +
-                    "?id=" + equipment.getId() +
-                    "&token=" + token +
-                    "&redirect=" + redirect +
-                    "&typeEquipment=" + typeEquipment + "\">" + equipment + "</a>");
-            out.println("</td>");
-
+        %>
+        <td>
+            <a href="<%=Pages.addUpdateEquipment%>?id=<%=equipment.getId()%>&token=<%=token%>
+            &redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>">
+                <%=equipment%>
+            </a>
+        </td>
+        <%
             if (equipment.getWorkplace() != null) {
-                out.println("<td>");
-                out.println("<a href=\"/" + Pages.addUpdateWorkplace +
-                        "?id=" + equipment.getWorkplace().getId() +
-                        "&token=" + token +
-                        "&redirect=" + redirect +
-                        "&typeEquipment=" + typeEquipment + "\">" + equipment.getWorkplace().getTitle() + "</a>");
-                out.println("</td>");
-            } else {
-                out.println("<td/>");
+        %>
+        <td>
+            <a href="<%=Pages.addUpdateWorkplace%>?id=<%=equipment.getWorkplace().getId()%>
+        &token=<%=token%>&redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>">
+                <%=equipment.getWorkplace().getTitle()%>
+            </a>
+        </td>
+        <%
+        } else {
+        %>
+        <td/>
+        <%
             }
-
+        %>
+        <%
             if (equipment.getAccounting1C() != null) {
-                out.println("<td>");
-                out.println("<a href=\"/" + Pages.addUpdateAccounting1C +
-                        "?id=" + equipment.getAccounting1C().getId() +
-                        "&token=" + token +
-                        "&redirect=" + redirect +
-                        "&typeEquipment=" + typeEquipment + "\">" + equipment.getAccounting1C() + "</a>");
-                out.println("</td>");
-            } else {
-                out.println("<td/>");
+        %>
+        <td>
+            <a href="<%=Pages.addUpdateAccounting1C%>?id=<%=equipment.getAccounting1C().getId()%>
+        &token=<%=token%>&redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>">
+                <%=equipment.getAccounting1C()%>
+            </a>
+        </td>
+        <%
+        } else {
+        %>
+        <td/>
+        <%
             }
-
+        %>
+        <%
             if (Role.ADMIN.equals(role)) {
-                out.println("<td>");
-                out.println("<a href=\"/" + Pages.deleteEquipmentPost +
-                        "?id=" + equipment.getId() +
-                        "&token=" + token +
-                        "&redirect=" + redirect +
-                        "&typeEquipment=" + typeEquipment + "\">Удалить</a>");
-                out.println("</td>");
+        %>
+        <td>
+            <a href="<%=Pages.deleteEquipmentPost%>?id=<%=equipment.getId()%>&token=<%=token%>
+            &redirect=<%=redirect%>&typeEquipment=<%=typeEquipment%>">
+                Удалить
+            </a>
+        </td>
+        <%
             }
-
-            out.println("</tr>");
+        %>
+    </tr>
+    <%
         }
     %>
 </table>

@@ -39,12 +39,16 @@ public class JournalController {
         Date dateStart = new Date();
         Date dateEnd = new Date();
         try {
-            dateStart = format.parse(request.getParameter(Components.dateStartForFilterJournal));
-        } catch (ParseException e) {
+            if(request.getParameter(Components.dateStartForFilterJournal) != null) {
+                dateStart = format.parse(request.getParameter(Components.dateStartForFilterJournal));
+            }
+        } catch (Exception e) {
         }
         try {
-            dateEnd = format.parse(request.getParameter(Components.dateEndForFilterJournal));
-        } catch (ParseException e) {
+            if(request.getParameter(Components.dateEndForFilterJournal) != null) {
+                dateEnd = format.parse(request.getParameter(Components.dateEndForFilterJournal));
+            }
+        } catch (Exception e) {
         }
 
         TypeObject typeObject = null;

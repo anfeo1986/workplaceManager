@@ -79,6 +79,7 @@
     Date dateStart = (Date) request.getAttribute(Parameters.journalDateStartForFilter);
     String dateStartStr = "";
     if (dateStart == null) {
+        dateStart = new Date();
         dateStartStr = format.format(dateStart) + "T00:00";
     } else {
         dateStartStr = formatWithTime.format(dateStart);
@@ -86,6 +87,7 @@
     Date dateEnd = (Date) request.getAttribute(Parameters.journalDateEndForFilter);
     String dateEndStr = "";
     if (dateEnd == null) {
+        dateEnd = new Date();
         dateEndStr = format.format(dateEnd) + "T23:59";
     } else {
         dateEndStr = formatWithTime.format(dateEnd);

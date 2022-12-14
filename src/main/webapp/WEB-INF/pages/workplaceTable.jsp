@@ -7,16 +7,16 @@
 
 
 <h1>Рабочие места</h1>
-
 <%
     String token = (String) request.getAttribute("token");
     Role role = (Role) request.getAttribute("role");
 
     if (Role.ADMIN.equals(role)) {
-        out.println("<a href=\"/" + Pages.addUpdateWorkplace +
-                "?token=" + token +
-                "&redirect=" + Pages.workplace +
-                "\">Добавить рабочее место</a>");
+%>
+<a href="<%=Pages.addUpdateWorkplace%>?token=<%=token%>&redirect=<%=Pages.workplace%>">
+    Добавить рабочее место
+</a>
+<%
     }
 %>
 
@@ -24,83 +24,97 @@
     <tr>
         <th/>
         <th><h1>Название</h1></th>
-        <%
-            out.println("<th>");
-            out.println("<p><h1><a href=\"/" + Pages.employee +
-                    "?token=" + token + "\">Сотрудники</a></h1></p>");
-            if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEmployee +
-                        "?redirect=" + Pages.workplace +
-                        "&token=" + token + "\">Добавить сотрудника</a></p>");
-            }
-            out.println("</th>");
-
-            out.println("<th>");
-            out.println("<p><h1><a href=\"/" + Pages.computer +
-                    "?token=" + token + "\">Компьютеры</a></h1></p>");
-            if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?redirect=" + Pages.workplace +
-                        "&typeEquipment=" + TypeEquipment.COMPUTER +
-                        "&token=" + token + "\">Добавить компьютер</a></p>");
-            }
-            out.println("</th>");
-
-            out.println("<th>");
-            out.println("<p><h1><a href=\"/" + Pages.monitor +
-                    "?token=" + token + "\">Мониторы</a></h1></p>");
-            if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?redirect=" + Pages.workplace +
-                        "&typeEquipment=" + TypeEquipment.MONITOR +
-                        "&token=" + token + "\">Добавить монитор</a></p>");
-            }
-            out.println("</th>");
-
-            out.println("<th>");
-            out.println("<p><h1><a href=\"/" + Pages.mfd +
-                    "?token=" + token + "\">МФУ</a></h1></p>");
-            if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?redirect=" + Pages.workplace +
-                        "&typeEquipment=" + TypeEquipment.MFD +
-                        "&token=" + token + "\">Добавить МФУ</a></p>");
-            }
-            out.println("</th>");
-
-            out.println("<th>");
-            out.println("<p><h1><a href=\"/" + Pages.printer +
-                    "?token=" + token + "\">Принтеры</a></h1></p>");
-            if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?redirect=" + Pages.workplace +
-                        "&typeEquipment=" + TypeEquipment.PRINTER +
-                        "&token=" + token + "\">Добавить принтер</a></p>");
-            }
-            out.println("</th>");
-
-            out.println("<th>");
-            out.println("<p><h1><a href=\"/" + Pages.scanner +
-                    "?token=" + token + "\">Сканеры</a></h1></p>");
-            if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?redirect=" + Pages.workplace +
-                        "&typeEquipment=" + TypeEquipment.SCANNER +
-                        "&token=" + token + "\">Добавить сканер</a></p>");
-            }
-            out.println("</th>");
-
-            out.println("<th>");
-            out.println("<p><h1><a href=\"/" + Pages.ups +
-                    "?token=" + token + "\">ИБП</a></h1></p>");
-            if (Role.ADMIN.equals(role)) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?redirect=" + Pages.workplace +
-                        "&typeEquipment=" + TypeEquipment.UPS +
-                        "&token=" + token + "\">Добавить ИБП</a></p>");
-            }
-            out.println("</th>");
-        %>
+        <th>
+            <p>
+            <h1><a href="<%=Pages.employee%>?token=<%=token%>">Сотрудники</a></h1>
+            </p>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <p><a href="<%=Pages.addUpdateEmployee%>?redirect=<%=Pages.workplace%>&token=<%=token%>">Добавить
+                сотрудника</a></p>
+            <%
+                }
+            %>
+        </th>
+        <th>
+            <p>
+            <h1><a href="<%=Pages.computer%>?token=<%=token%>">Компьютеры</a></h1></p>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.COMPUTER%>
+            &token=<%=token%>">Добавить компьютер</a></p>
+            <%
+                }
+            %>
+        </th>
+        <th>
+            <p>
+            <h1><a href="<%=Pages.monitor%>?token=<%=token%>">Мониторы</a></h1></p>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MONITOR%>
+            &token=<%=token%>">Добавить монитор</a></p>
+            <%
+                }
+            %>
+        </th>
+        <th>
+            <p>
+            <h1><a href="<%=Pages.mfd%>?token=<%=token%>">МФУ</a></h1></p>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MFD%>&token=<%=token%>">
+                    Добавить МФУ</a></p>
+            <%
+                }
+            %>
+        </th>
+        <th>
+            <p>
+            <h1><a href="<%=Pages.printer%>?token="<%=token%>">Принтеры</a></h1></p>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.PRINTER%>&token=<%=token%>">Добавить
+                    принтер</a></p>
+            <%
+                }
+            %>
+        </th>
+        <th>
+            <p>
+            <h1><a href="<%=Pages.scanner%>?token=<%=token%>">Сканеры</a></h1></p>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.SCANNER%>&token=<%=token%>">
+                    Добавить сканер</a></p>");
+            <%
+                }
+            %>
+        </th>
+        <th>
+            <p>
+            <h1><a href="<%=Pages.ups%>?token=<%=token%>">ИБП</a></h1></p>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.UPS%>&token=<%=token%>">Добавить
+                    ИБП</a></p>
+            <%
+                }
+            %>
+        </th>
     </tr>
 
     <%
@@ -137,103 +151,122 @@
                     }
                 }
             }
-
-            out.println("<tr>");
-
-            out.println("<td>" + count + "</td>");
+    %>
+    <tr>
+        <td><%=count%>
+        </td>
+        <%
             count++;
+        %>
+        <td>
+            <a href="<%=Pages.addUpdateWorkplace%>?id=<%=workplace.getId()%>&redirect=<%=Pages.workplace%>&token=<%=token%>">
+                <%=workplace.getTitle()%>
+            </a></td>
 
-            out.println("<td><a href=\"/" + Pages.addUpdateWorkplace +
-                    "?id=" + workplace.getId() +
-                    "&redirect=" + Pages.workplace +
-                    "&token=" + token +
-                    "\">" + workplace.getTitle() + "</a></td>");
-
-            out.println("<td>");
-            if (!workplace.getEmployeeList().isEmpty()) {
-                for (Employee employee : workplace.getEmployeeList()) {
-                    out.println("<p><a href=\"/" + Pages.addUpdateEmployee +
-                            "?id=" + employee.getId() +
-                            "&token=" + token +
-                            "&redirect=workplace\">" + employee.getName() + "</a></p>");
+        <td>
+            <%
+                if (!workplace.getEmployeeList().isEmpty()) {
+                    for (Employee employee : workplace.getEmployeeList()) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEmployee%>?id=<%=employee.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>">
+                    <%=employee.getName()%>
+                </a></p>
+            <%
+                    }
                 }
-            }
-            out.println("</td>");
+            %>
+        </td>
 
-            //компьютеры
-            out.println("<td>");
-            for (Computer computer : computerList1) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?id=" + computer.getId() +
-                        "&token=" + token +
-                        "&redirect=" + Pages.workplace +
-                        "&typeEquipment=computer\">" + computer + "</a></p>");
-            }
-            out.println("</td>");
+        <td>
+            <%
+                for (Computer computer : computerList1) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.COMPUTER%>">
+                    <%=computer%>
+                </a></p>
+            <%
+                }
+            %>
+        </td>
 
-            //мониторы
-            out.println("<td>");
-            for (Monitor monitor : monitorList) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?id=" + monitor.getId() +
-                        "&token=" + token +
-                        "&redirect=" + Pages.workplace +
-                        "&typeEquipment=monitor\">" + monitor + "</a></p>");
-            }
-            out.println("</td>");
+        <td>
+            <%
+                for (Monitor monitor : monitorList) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?id=<%=monitor.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MONITOR%>">
+                    <%=monitor%>
+                </a></p>
+            <%
+                }
+            %>
+        </td>
 
-            //МФУ
-            out.println("<td>");
-            for (Mfd mfd : mfdList) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?id=" + mfd.getId() +
-                        "&token=" + token +
-                        "&redirect=" + Pages.workplace +
-                        "&typeEquipment=printer\">" + mfd + "</a></p>");
-            }
-            out.println("</td>");
+        <td>
+            <%
+                for (Mfd mfd : mfdList) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?id=<%=mfd.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.MFD%>">
+                    <%=mfd%>
+                </a></p>
+            <%
+                }
+            %>
+        </td>
 
-            //принтеры
-            out.println("<td>");
-            for (Printer printer : printerList) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?id=" + printer.getId() +
-                        "&token=" + token +
-                        "&redirect=" + Pages.workplace +
-                        "&typeEquipment=printer\">" + printer + "</a></p>");
-            }
-            out.println("</td>");
+        <td>
+            <%
+                for (Printer printer : printerList) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?id=<%=printer.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.PRINTER%>">
+                    <%=printer%>
+                </a></p>
+            <%
+                }
+            %>
+        </td>
 
-            //Сканеры
-            out.println("<td>");
-            for (Scanner scanner : scannerList) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?id=" + scanner.getId() +
-                        "&token=" + token +
-                        "&redirect=" + Pages.workplace +
-                        "&typeEquipment=printer\">" + scanner + "</a></p>");
-            }
-            out.println("</td>");
+        <td>
+            <%
+                for (Scanner scanner : scannerList) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?id=<%=scanner.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.SCANNER%>">
+                    <%=scanner%>
+                </a></p>
+            <%
+                }
+            %>
+        </td>
 
-            //ИБП
-            out.println("<td>");
-            for (Ups ups : upsList) {
-                out.println("<p><a href=\"/" + Pages.addUpdateEquipment +
-                        "?id=" + ups.getId() +
-                        "&token=" + token +
-                        "&redirect=" + Pages.workplace +
-                        "&typeEquipment=printer\">" + ups + "</a></p>");
-            }
-            out.println("</td>");
+        <td>
+            <%
+                for (Ups ups : upsList) {
+            %>
+            <p>
+                <a href="<%=Pages.addUpdateEquipment%>?id=<%=ups.getId()%>&token=<%=token%>&redirect=<%=Pages.workplace%>&typeEquipment=<%=TypeEquipment.UPS%>">
+                    <%=ups%>
+                </a></p>"
+            <%
+                }
+            %>
+        </td>
 
+        <%
             if (Role.ADMIN.equals(role)) {
-                out.println("<td><a href=\"/" + Pages.deleteWorkplacePost +
-                        "?id=" + workplace.getId() +
-                        "&redirect=" + Pages.workplace +
-                        "&token=" + token + "\">Удалить</a></td>");
+        %>
+        <td>
+            <a href="<%=Pages.deleteWorkplacePost%>?id=<%=workplace.getId()%>&redirect=<%=Pages.workplace%>&token=<%=token%>">
+                Удалить</a></td>
+        <%
             }
-
-            out.println("</tr>");
+        %>
+    </tr>
+    <%
         }
     %>
 

@@ -18,12 +18,6 @@
 <input type="hidden" name="token" value="${token}">
 <div>
     <table>
-        <%--  <tr valign='top' align='center'>
-              <td>
-                  <%@include file='header.jsp' %>
-              </td>
-          </tr>
-      --%>
         <tr valign='top' align='center'>
             <c:if test="${page == 'computer'}">
                 <td>
