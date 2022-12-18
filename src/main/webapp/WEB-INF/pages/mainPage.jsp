@@ -1,3 +1,4 @@
+<%@ page import="workplaceManager.db.domain.Role" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -5,67 +6,96 @@
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
 
-    <title>Главная страница</title>
+
+    <c:if test="${page == 'computer'}">
+        <title>Компьютеры</title>
+    </c:if>
+    <c:if test="${page == 'employee'}">
+        <title>Сотрудники</title>
+    </c:if>
+    <c:if test="${page == 'workplace'}">
+        <title>Рабочие места</title>
+    </c:if>
+    <c:if test="${page == 'accounting1c'}">
+        <title>Бухгалтерия</title>
+    </c:if>
+    <c:if test="${page == 'monitor'}">
+        <title>Мониторы</title>
+    </c:if>
+    <c:if test="${page == 'printer'}">
+        <title>Принтеры</title>
+    </c:if>
+    <c:if test="${page == 'scanner'}">
+        <title>Сканеры</title>
+    </c:if>
+    <c:if test="${page == 'mfd'}">
+        <title>МФУ</title>
+    </c:if>
+    <c:if test="${page == 'ups'}">
+        <title>ИБП</title>
+    </c:if>
 
 </head>
 <!--<body background='graphics/background.jpg'>-->
 <body>
-<header>
-    <div align="center">
-        <%@include file='header.jsp' %>
-    </div>
-</header>
+<%
+    String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
+    String token = (String) request.getAttribute(Parameters.token);
+    Role role = (Role) request.getAttribute(Parameters.role);
+%>
+
+<section class="sticky">
+    <%@include file='header.jsp' %>
+</section>
 <input type="hidden" name="token" value="<%=token%>">
 <div>
-    <table>
-        <tr valign='top' align='center'>
+
             <c:if test="${page == 'computer'}">
-                <td>
+
                     <%@include file="computerTable.jsp" %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'employee'}">
-                <td>
+
                     <%@include file='employeeTable.jsp' %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'workplace'}">
-                <td>
+
                     <%@include file='workplaceTable.jsp' %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'accounting1c'}">
-                <td>
+
                     <%@include file="accounting1cTable.jsp" %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'monitor'}">
-                <td>
+
                     <%@include file="equipmentTable.jsp" %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'printer'}">
-                <td>
+
                     <%@include file="equipmentTable.jsp" %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'scanner'}">
-                <td>
+
                     <%@include file="equipmentTable.jsp" %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'mfd'}">
-                <td>
+
                     <%@include file="equipmentTable.jsp" %>
-                </td>
+
             </c:if>
             <c:if test="${page == 'ups'}">
-                <td>
+
                     <%@include file="equipmentTable.jsp" %>
-                </td>
+
             </c:if>
-        </tr>
-    </table>
+
 </div>
 
 </body>

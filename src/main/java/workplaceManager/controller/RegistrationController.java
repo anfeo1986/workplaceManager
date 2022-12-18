@@ -58,12 +58,12 @@ public class RegistrationController {
         }
         Users userFromDB = userManager.getUserByLogin(userForm.getUsername());
         if (userFromDB != null) {
-            model.addAttribute(Parameters.error, "Пользователь " + userForm.getUsername() + " уже существует");
+            model.addAttribute(Parameters.passwordError, "Пользователь " + userForm.getUsername() + " уже существует");
             //return "registration";
             return Pages.registration;
         }
         if(userForm.getPassword().length() <= 6) {
-            model.addAttribute(Parameters.error, "Длина пароля должна быть больше 6 знаков");
+            model.addAttribute(Parameters.passwordError, "Длина пароля должна быть больше 6 знаков");
             //return "registration";
             return Pages.registration;
         }
@@ -73,7 +73,7 @@ public class RegistrationController {
         userForm.setDeleted(false);
         userManager.add(userForm);
 
-        journalManager.save(new Journal(TypeEvent.USER_REGISTER, TypeObject.USER, userForm));
+        journalManager.save(new Journal(TypeEvent.USER_REGISTER, TypeObject.USER, userForm, userForm));
 
         return "redirect:/";
     }

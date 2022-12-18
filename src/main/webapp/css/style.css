@@ -1,32 +1,111 @@
 select {
     width: 150px; /* Ширина списка в пикселах */
 }
+
+/*оформление таблицы*/
 table {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    /*font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
-    background: white;
+    background: #e3e0e0;
     max-width: 100%;
     width: 100%;
     border-collapse: collapse;
-    text-align: center;
+    text-align: center;*/
+    max-width: 100%;
+    width: 100%;
+    border-spacing: 0 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    /*font-weight: bold;*/
+}
+caption {
+    padding: 10px;
+    color: white;
+    background: #063782;
+    font-size: 24px;
+    text-align: left;
+    font-weight: bold;
 }
 th {
-    font-weight: normal;
+    /*font-weight: normal;
     color: #039;
     padding: 10px 15px;
-    background: white;
+    background: #e3e0e0;*/
+    padding: 10px 20px;
+    /*background: #3366FF;*/
+    background-image: linear-gradient(#408bce, #adcce9);
+    color: #03080e;
+    border-right: 2px solid;
+    font-size: 16px;
+    font-weight: bold;
 }
+th:first-child {
+    text-align: left;
+    /*border-right: none;*/
+}
+th:last-child {
+    border-right: none;
+}
+th a,
+th a:link,
+th a:hover,
+th a:visited,
+th a:active,
+th:hover,
+th:hover a{
+    color: #03080e;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+/*th:hover p {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}*/
+
 td {
-    color: #080811;
+    /*color: #080811;
     border-top: 1px solid #0b121d;
-    padding: 10px 15px;
-    /*background: white;*/
+    padding: 10px 15px; */
+    vertical-align: middle;
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+    border-top: 2px solid #408bce;
+    border-bottom: 2px solid #408bce;
+    border-right: 2px solid #408bce;
 }
+td:first-child {
+    border-left: 2px solid #408bce;
+    /*border-right: none;*/
+}
+td:nth-child(2){
+    text-align: left;
+}
+tr {
+    background: #e3e0e0;
+}
+
 tr.delete {
     background: gray;
 }
 tr.no_delete {
-    background: white;
+    background: #e3e0e0;
+}
+/*оформление таблицы. Конец*/
+
+a:link {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+a:visited {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+button {
+    background: #408bce;
 }
 
 a.button {
@@ -35,42 +114,15 @@ a.button {
     text-decoration: none;
     padding: .8em 1em calc(.8em + 3px);
     border-radius: 3px;
-    background: rgb(64,199,129);
-    box-shadow: 0 -3px rgb(53,167,110) inset;
+    background: #408bce;
+    box-shadow: 0 -3px #408bce inset;
     transition: 0.2s;
+    height: 21px;
 }
-a.button:hover { background: rgb(53, 167, 110); }
+a.button:hover { background: #408bce; }
 a.button:active {
-    background: rgb(33,147,90);
-    box-shadow: 0 3px rgb(33,147,90) inset;
-}
-
-a.button_select {
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
-    padding: .8em 1em calc(.8em + 3px);
-    border-radius: 3px;
-    background: rgb(28, 72, 201);
-    box-shadow: 0 -3px rgb(33, 53, 158) inset;
-    transition: 0.2s;
-}
-a.button_select:hover { background: rgb(26, 38, 139); }
-a.button_select:active {
-    background: rgb(26, 38, 139);
-    box-shadow: 0 3px rgb(26, 38, 139) inset;
-}
-
-#form[data-state="seamen"] .hide-if-seamen {
-    display: none;
-}
-
-#form[data-state="crewing"] .hide-if-crewing {
-    display: none;
-}
-
-#form[data-state="shipowner"] .hide-if-shipowner {
-    display: none;
+    background: #408bce;
+    box-shadow: 0 3px #408bce inset;
 }
 
 textarea {
@@ -100,6 +152,112 @@ textarea {
     border-style: solid;
     border-color: initial;
 }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #cbdbef;
+}
+
+/*оформление меню*/
+.navbar_left {
+    overflow: hidden;
+    /*background-color: #333;*/
+    background-image: linear-gradient(#0e1315, #408bce);
+    align-content: center;
+
+}
+
+.navbar_left a {
+    float: left;
+    display: inline-block;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+
+}
+
+.navbar_right {
+    overflow: hidden;
+    /*background-color: #333;*/
+    background-image: linear-gradient(#0e1315, #408bce);
+    float: right;
+}
+
+.navbar_right a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar_right span {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar_left a:hover, .dropdown:hover .dropbtn {
+    background-color: #000033;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+/*оформление меню. Конец*/
+
+/*непрокручиваемый блок*/
+.sticky {
+    position: sticky;
+    top: 0;
+}
+/*непрокручиваемый блок. Конец*/
+
 
 
 

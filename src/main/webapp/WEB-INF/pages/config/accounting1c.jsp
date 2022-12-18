@@ -15,25 +15,30 @@
         String error = (String) request.getAttribute(Parameters.error);
         String message = (String) request.getAttribute(Parameters.message);
         String token = (String) request.getAttribute(Parameters.token);
+        String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
 
         String buttonTitle = "Добавить";
-        String url = "";
+        String url = baseUrl;
         if (accounting1C != null && accounting1C.getId() > 0) {
     %>
     <title>Редактирование</title>
     <%
-        url = Pages.updateAccounting1CPost;
+        url += Pages.updateAccounting1CPost;
         buttonTitle = "Редактировать";
     } else {
     %>
     <title>Добавление</title>
     <%
-            url = Pages.addAccounting1CPost;
+            url += Pages.addAccounting1CPost;
         }
     %>
 </head>
 
 <body>
+<section class="sticky">
+    <%@include file='/WEB-INF/pages/header.jsp' %>
+</section>
+
 <%
     if (error != null && error != "") {
 %>
@@ -79,8 +84,8 @@
             <%
                 Long employeeId = (accounting1C != null && accounting1C.getEmployee() != null) ? accounting1C.getEmployee().getId() : -1;
             %>
-            <label for="employee_id">Материально-ответственное лицо</label>
-            <select name="employee_id" id="employee_id">
+            <label for="<%=Parameters.employeeId%>">Материально-ответственное лицо</label>
+            <select name="<%=Parameters.employeeId%>" id="<%=Parameters.employeeId%>">
                 <option value="-1"/>
                 <%
                     List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
@@ -115,7 +120,7 @@
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
             <input type="hidden" name="<%=Parameters.token%>" value="<%=token%>">
-            <a href="<%=redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
+            <a href="<%=baseUrl + redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
         </p>
     </div>
 

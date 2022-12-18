@@ -1,9 +1,10 @@
 package workplaceManager;
 
 public class Parameters {
-    public static final String baseUrl="baseUrl";
+    public static final String baseUrl = "baseUrl";
     public static final String userForm = "userForm";
     public static final String passwordError = "passwordError";
+    public static final String userName = "userName";
 
     public static final String page = "page";
     public static final String id = "id";
@@ -31,6 +32,7 @@ public class Parameters {
     public static final String OsType = "type_operationsystem";
     public static final String OsVendor = "vendor_operationsystem";
     public static final String OsVersion = "version_operationsystem";
+    public static final String OSArchitecture = "OSArchitecture";
 
     public static final String accounting1C = "accounting1C";
     public static final String accounting1CUseRecord = "useRecord";

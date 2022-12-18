@@ -36,6 +36,7 @@ public class JournalController {
         ModelAndView modelAndView = new ModelAndView(Pages.journal);
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat formatWithoutTime = new SimpleDateFormat("yyyy-MM-dd");
         Date dateStart = new Date();
         Date dateEnd = new Date();
         try {
@@ -83,7 +84,7 @@ public class JournalController {
 
         List<Journal> journalList = journalManager.getJournalList(typeObject, idObject, typeEvent,
                 typeParameter, userForFilter, stateObject, dateStart, dateEnd);
-        SortedMap<String, Long> objectIdList = journalManager.getObjectIdListForTypeObject(typeObject);
+        SortedMap<String, Long> objectIdList = journalManager.getObjectIdListForTypeObject(typeObject, stateObject);
         List<Users> usersList = journalManager.getUserIdForFilter(true);
 
         modelAndView.addObject(Parameters.journalList, journalList == null ? new ArrayList<>() : journalList);

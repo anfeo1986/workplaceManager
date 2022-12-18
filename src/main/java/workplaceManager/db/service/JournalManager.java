@@ -3,6 +3,7 @@ package workplaceManager.db.service;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import workplaceManager.StateObject;
@@ -253,7 +254,7 @@ public class JournalManager extends EntityManager<Journal> {
     }
 
     @Transactional
-    public SortedMap<String, Long> getObjectIdListForTypeObject(TypeObject typeObject) {
+    public SortedMap<String, Long> getObjectIdListForTypeObject(TypeObject typeObject, StateObject stateObject) {
         Session session = sessionFactory.getCurrentSession();
 
         String queryStr = "from Journal as journal ";
@@ -261,19 +262,117 @@ public class JournalManager extends EntityManager<Journal> {
             queryStr += "where journal.typeObject='" + typeObject.name() + "'";
         }
         List<Journal> journalList = session.createQuery(queryStr).list();
-        List<Journal> journalListNew = setObjectFromJournalList(journalList, null);
+        //List<Journal> journalListNew = setObjectFromJournalList(journalList, null);
 
-        SortedMap<String, Long> objectIdList = new TreeMap<>();
-        for (Journal journal : journalListNew) {
-            if (journal.getObject() == null) {
+        SortedMap<String, Long> objectIdSortedMap = new TreeMap<>();
+        SortedSet<Long> objectIdList = new TreeSet<>();
+        //for (Journal journal : journalListNew) {
+        for (Journal journal : journalList) {
+            if (journal.getIdObject() == null || journal.getIdObject() <= 0) {
                 continue;
             }
-            if (!objectIdList.containsKey(journal.getObject().toString())) {
-                objectIdList.put(journal.getObject().toString(), journal.getIdObject());
+            if(!objectIdList.contains(journal.getIdObject())) {
+                Journal journalNew = setObjectByJournal(journal, stateObject);
+                if(journalNew == null) {
+                    continue;
+                }
+                objectIdList.add(journalNew.getIdObject());
+
+                if (journal.getObject() != null && !objectIdSortedMap.containsKey(journal.getObject().toString())) {
+                    objectIdSortedMap.put(journal.getObject().toString(), journal.getIdObject());
+                }
             }
         }
 
-        return objectIdList;
+        return objectIdSortedMap;
+    }
+
+    private Journal setObjectByJournal(Journal journal, StateObject stateObject) {
+        TypeObject typeObjectFromJournal = TypeObject.valueOf(journal.getTypeObject());
+        if (TypeObject.COMPUTER.equals(typeObjectFromJournal)) {
+            Computer computer = equipmentManager.getComputerById(journal.getIdObject(), true);
+            journal.setObject(computer);
+            if (stateObject != null) {
+                if ((StateObject.DELETED.equals(stateObject) && computer.getDeleted()) ||
+                        (StateObject.NO_DELETED.equals(stateObject) && !computer.getDeleted())) {
+                    //journalListNew.add(journal);
+                    return journal;
+                }
+            } else {
+                //journalListNew.add(journal);
+                return journal;
+            }
+        } else if (TypeObject.MFD.equals(typeObjectFromJournal) ||
+                TypeObject.MONITOR.equals(typeObjectFromJournal) ||
+                TypeObject.PRINTER.equals(typeObjectFromJournal) ||
+                TypeObject.SCANNER.equals(typeObjectFromJournal) ||
+                TypeObject.UPS.equals(typeObjectFromJournal)) {
+            Equipment equipment = equipmentManager.getEquipmentById(journal.getIdObject(), true);
+            journal.setObject(equipment);
+            if (stateObject != null) {
+                if ((StateObject.DELETED.equals(stateObject) && equipment.getDeleted()) ||
+                        (StateObject.NO_DELETED.equals(stateObject) && !equipment.getDeleted())) {
+                    //journalListNew.add(journal);
+                    return journal;
+                }
+            } else {
+                //journalListNew.add(journal);
+                return journal;
+            }
+        } else if (TypeObject.ACCOUNTING1C.equals(typeObjectFromJournal)) {
+            Accounting1C accounting1C = accounting1CManager.getAccounting1CById(journal.getIdObject(), true);
+            journal.setObject(accounting1C);
+            if (stateObject != null) {
+                if ((StateObject.DELETED.equals(stateObject) && accounting1C.getDeleted()) ||
+                        (StateObject.NO_DELETED.equals(stateObject) && !accounting1C.getDeleted())) {
+                    //journalListNew.add(journal);
+                    return journal;
+                }
+            } else {
+                //journalListNew.add(journal);
+                return journal;
+            }
+        } else if (TypeObject.USER.equals(typeObjectFromJournal)) {
+            Users user = userManager.getUserById(journal.getIdObject(), true);
+            journal.setObject(user);
+            if (user != null && stateObject != null) {
+                if ((StateObject.DELETED.equals(stateObject) && user.getDeleted()) ||
+                        (StateObject.NO_DELETED.equals(stateObject) && !user.getDeleted())) {
+                    //journalListNew.add(journal);
+                    return journal;
+                }
+            } else {
+                //journalListNew.add(journal);
+                return journal;
+            }
+        } else if (TypeObject.EMPLOYEE.equals(typeObjectFromJournal)) {
+            Employee employee = employeeManager.getEmployeeById(journal.getIdObject(), true);
+            journal.setObject(employee);
+            if (stateObject != null) {
+                if ((StateObject.DELETED.equals(stateObject) && employee.getDeleted()) ||
+                        (StateObject.NO_DELETED.equals(stateObject) && !employee.getDeleted())) {
+                    //journalListNew.add(journal);
+                    return journal;
+                }
+            } else {
+                //journalListNew.add(journal);
+                return journal;
+            }
+        } else if (TypeObject.WORKPLACE.equals(typeObjectFromJournal)) {
+            Workplace workplace = workplaceManager.getWorkplaceById(journal.getIdObject(), true);
+            journal.setObject(workplace);
+            if (stateObject != null) {
+                if ((StateObject.DELETED.equals(stateObject) && workplace.getDeleted()) ||
+                        (StateObject.NO_DELETED.equals(stateObject) && !workplace.getDeleted())) {
+                    //journalListNew.add(journal);
+                    return journal;
+                }
+            } else {
+                //journalListNew.add(journal);
+                return journal;
+            }
+        }
+        return null;
     }
 
     @Transactional
@@ -340,9 +439,29 @@ public class JournalManager extends EntityManager<Journal> {
 
     private List<Journal> setObjectFromJournalList(List<Journal> journalList, StateObject stateObject) {
         List<Journal> journalListNew = new ArrayList<>();
+        SortedMap<Long, Object> objectList = new TreeMap<>();
+        SortedMap<Long, Users> userSortedMap = new TreeMap<>();
         for (Journal journal : journalList) {
-            journal.setUser(userManager.getUserById(journal.getIdUser(), true));
-            TypeObject typeObjectFromJournal = TypeObject.valueOf(journal.getTypeObject());
+            if(journal.getIdUser() != null && !userSortedMap.containsKey(journal.getIdUser())) {
+                Users user = userManager.getUserById(journal.getIdUser(), true);
+                if(user != null) {
+                    userSortedMap.put(user.getId(), user);
+                    journal.setUser(user);
+                }
+            }
+            if(!objectList.containsKey(journal.getIdObject())) {
+                Journal journalNew = setObjectByJournal(journal, stateObject);
+                if(journalNew != null && journalNew.getObject() != null) {
+                    objectList.put(journalNew.getIdObject(), journalNew.getObject());
+                    journalListNew.add(journalNew);
+                }
+            } else {
+                journal.setObject(objectList.get(journal.getIdObject()));
+                journalListNew.add(journal);
+            }
+
+
+            /*TypeObject typeObjectFromJournal = TypeObject.valueOf(journal.getTypeObject());
             if (TypeObject.COMPUTER.equals(typeObjectFromJournal)) {
                 Computer computer = equipmentManager.getComputerById(journal.getIdObject(), true);
                 journal.setObject(computer);
@@ -413,7 +532,7 @@ public class JournalManager extends EntityManager<Journal> {
                 } else {
                     journalListNew.add(journal);
                 }
-            }
+            }*/
         }
         return journalListNew;
     }

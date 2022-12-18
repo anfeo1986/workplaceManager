@@ -26,7 +26,7 @@ public class Employee implements Serializable {
     private String post;
 
     @Column
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "workplace")

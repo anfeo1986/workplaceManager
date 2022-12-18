@@ -72,7 +72,7 @@ public class MainController {
 
     @GetMapping("/")
     public ModelAndView getMain(@RequestParam(name = Parameters.token, required = false) String token) {
-        return securityCrypt.verifyUser(token, Pages.workplace);
+        return securityCrypt.verifyUser(token, Pages.mainPage);
     }
 
     @GetMapping(Pages.mainPage)

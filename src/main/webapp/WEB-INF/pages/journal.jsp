@@ -104,14 +104,14 @@
                                              type="datetime-local"
                                              name="<%=Components.dateStartForFilterJournal%>"
                                              value="<%=dateStartStr%>"
-                                             onchange="changeTypeObject()">
+                                             onchange="document.getElementById('filterForm').submit()">
             </p>
             <p>
                 <b>Конечная дата:</b><input id="<%=Components.dateEndForFilterJournal%>"
                                             type="datetime-local"
                                             name="<%=Components.dateEndForFilterJournal%>"
                                             value="<%=dateEndStr%>"
-                                            onchange="changeTypeObject()">
+                                            onchange="document.getElementById('filterForm').submit()">
             </p>
         </div>
 
@@ -344,11 +344,11 @@
 <div>
     <table>
         <tr>
-            <th><h1>Дата</h1></th>
-            <th><h1>Событие</h1></th>
-            <th><h1>Состояние</h1></th>
-            <th><h1>Объект</h1></th>
-            <th><h1>Пользователь</h1></th>
+            <th>Дата</th>
+            <th>Событие</th>
+            <th>Состояние</th>
+            <th>Объект</th>
+            <th>Пользователь</th>
         </tr>
         <%
             for (Journal journal : journalList) {
@@ -429,8 +429,8 @@
             %>
             <td>
                 <p>
-                    Было:  <%=journal.getOldValue()%><br>
-                    Стало: <%=journal.getNewValue()%>
+                    <b>Было:</b>  <%=journal.getOldValue()%><br>
+                    <b>Стало:</b> <%=journal.getNewValue()%>
                 </p>
             </td>
             <%

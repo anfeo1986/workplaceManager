@@ -25,10 +25,16 @@ public class OperationSystem {
     @Column
     private String version;
 
+    @Column
+    private String OSArchitecture;
+
     @Override
     @Transient
     public String toString() {
-        return String.format("%s (%s)", vendor, version);
+        if(vendor.isEmpty() && version.isEmpty() && OSArchitecture.isEmpty()) {
+            return "";
+        }
+        return String.format("%s (%s, %s)", vendor, version, OSArchitecture);
     }
 
     @Transient
@@ -43,7 +49,8 @@ public class OperationSystem {
         if (operationSystem1.getId() == operationSystem2.getId() &&
                 operationSystem1.getTypeOS() == operationSystem2.getTypeOS() &&
                 StringUtils.equals(operationSystem1.getVendor(), operationSystem2.getVendor()) &&
-                StringUtils.equals(operationSystem1.getVersion(), operationSystem2.getVersion())) {
+                StringUtils.equals(operationSystem1.getVersion(), operationSystem2.getVersion()) &&
+                StringUtils.equals(operationSystem1.getOSArchitecture(), operationSystem2.getOSArchitecture())) {
             return true;
         }
         return false;

@@ -17,23 +17,26 @@
         String token = (String) request.getAttribute(Parameters.token);
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
 
-        String url = "";
+        String url = baseUrl;
         if (employee != null && employee.getId() > 0) {
     %>
     <title>Редактирование сотрудника</title>
     <%
-        url = baseUrl + Pages.updateEmployeePost;
+        url += Pages.updateEmployeePost;
         buttonTitle = "Редактировать";
     } else {
     %>
     <title>Добавление сотрудника</title>
     <%
-            url = baseUrl + Pages.addEmployeePost;
+            url += Pages.addEmployeePost;
         }
     %>
 </head>
 
 <body>
+<section class="sticky">
+    <%@include file='/WEB-INF/pages/header.jsp' %>
+</section>
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && error != "") {
@@ -117,7 +120,7 @@
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
             <input type="hidden" name="<%=Parameters.token%>" value="<%=token%>">
-            <a href="<%=baseUrl+redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
+            <a href="<%=baseUrl + redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
         </p>
     </div>
 </form>

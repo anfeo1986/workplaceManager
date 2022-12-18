@@ -37,24 +37,28 @@
         String manufacturer = (equipment != null && equipment.getManufacturer() != null) ? equipment.getManufacturer() : "";
         String model = (equipment != null && equipment.getModel() != null) ? equipment.getModel() : "";
         String redirect = (String) request.getAttribute(Parameters.redirect);
+        String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
 
-        String url = "";
+        String url = baseUrl;
         if (equipment != null && equipment.getId() > 0) {
     %>
     <title>Редактирование</title>
     <%
-        url = Pages.updateEquipmentPost;
+        url += Pages.updateEquipmentPost;
         buttonTitle = "Редактировать";
     } else {
     %>
     <title>Добавление</title>
     <%
-            url = Pages.addEquipmentPost;
+            url += Pages.addEquipmentPost;
         }
     %>
 </head>
 
 <body>
+<section class="sticky">
+    <%@include file='/WEB-INF/pages/header.jsp' %>
+</section>
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && error != "") {
@@ -168,11 +172,18 @@
         <p>
             <label for="<%=Parameters.OsVendor%>">Название</label>
             <input type="text" name="<%=Parameters.OsVendor%>" id="<%=Parameters.OsVendor%>"
-                   value="<%=computer.getOperationSystem() != null ? computer.getOperationSystem().getVendor() : ""%>">
+                   value="<%=(computer.getOperationSystem() != null && computer.getOperationSystem().getVendor() != null)
+                   ? computer.getOperationSystem().getVendor() : ""%>">
 
             <label for="<%=Parameters.OsVersion%>">Версия</label>
             <input type="text" name="<%=Parameters.OsVersion%>" id="<%=Parameters.OsVersion%>"
-                   value="<%=computer.getOperationSystem() != null ? computer.getOperationSystem().getVersion() : ""%>">
+                   value="<%=(computer.getOperationSystem() != null && computer.getOperationSystem().getVersion() != null)
+                   ? computer.getOperationSystem().getVersion() : ""%>">
+
+            <label for="<%=Parameters.OSArchitecture%>">Архитектура</label>
+            <input type="text" name="<%=Parameters.OSArchitecture%>" id="<%=Parameters.OSArchitecture%>"
+                   value="<%=(computer.getOperationSystem() != null && computer.getOperationSystem().getOSArchitecture() != null)
+                   ? computer.getOperationSystem().getOSArchitecture() : ""%>">
         </p>
     </div>
     <%
@@ -526,9 +537,9 @@
                         id = equipment.getId();
                     }
             %>
-        <td><a href="<%=Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=id%>
-                &<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>
-                &<%=Parameters.typeEquipment%>=<%=typeEquipment%>">Удалить</a>
+        <td>
+            <a href="<%=baseUrl + Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=id%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+                Удалить</a>
         </td>
         <%
             }

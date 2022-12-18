@@ -32,7 +32,7 @@ public class Users {
     private String salt;
 
     @Column
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @Override
     public String toString() {

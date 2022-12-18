@@ -5,10 +5,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import workplaceManager.db.domain.Accounting1C;
 import workplaceManager.db.domain.Employee;
 import workplaceManager.db.domain.Workplace;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository
 public class EmployeeManager extends EntityManager<Employee> {
@@ -16,9 +20,29 @@ public class EmployeeManager extends EntityManager<Employee> {
     @Transactional
     public List<Employee> getEmployeeList() {
         Session session = sessionFactory.getCurrentSession();
-        List<Employee> employeeList = session.createQuery("from Employee as employee " +
+        List<Employee> employeeListFromDb = session.createQuery("from Employee as employee " +
                 "where employee.deleted=false order by employee.name asc").list();
+
+        List<Employee> employeeList = getSortedListEmployee(employeeListFromDb);
         employeeList.stream().forEach(employee -> initializeEmployee(employee));
+
+        return employeeList;
+    }
+
+    private List<Employee> getSortedListEmployee(List<Employee> employeeListNoSort) {
+        SortedMap<String, Employee> sortedMap = new TreeMap<String, Employee>();
+        List<Employee> employeeListOther = new ArrayList<>();
+        employeeListNoSort.stream().forEach(employee -> {
+            if (employee.getName() != null && !employee.getName().isEmpty() && !sortedMap.containsKey(employee.getName())) {
+                sortedMap.put(employee.getName(), employee);
+            } else {
+                employeeListOther.add(employee);
+            }
+        });
+
+        List<Employee> employeeList = new ArrayList<>();
+        sortedMap.values().forEach(employee -> employeeList.add(employee));
+        employeeListOther.forEach(employee -> employeeList.add(employee));
 
         return employeeList;
     }

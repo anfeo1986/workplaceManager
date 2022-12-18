@@ -1,28 +1,28 @@
+<%@ page import="workplaceManager.db.domain.Employee" %>
+<%@ page import="workplaceManager.db.domain.Accounting1C" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<h1>Сотрудники</h1>
+<div align="center"><h1>Сотрудники</h1></div>
 <%
-    Role role = (Role) request.getAttribute(Parameters.role);
     List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
-    String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
 
-    if (Role.ADMIN.equals(role)) {
-%>
-<a href="<%=Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.employee%>&<%=Parameters.token%>=<%=token%>">
-    Добавить сотрудника
-</a>
-<%
-    }
 %>
 
 <table>
     <tr>
-        <th><h1>id</h1></th>
-        <th><h1>ФИО</h1></th>
-        <th><h1>Должность</h1></th>
-        <th><h1><a href="<%=baseUrl+Pages.workplace%>?<%=Parameters.token%>=<%=token%>">Рабочее место</a></h1></th>
-        <th><h1><a href="<%=baseUrl+Pages.accounting1c%>?<%=Parameters.token%>=<%=token%>">Бухгалтерия</a></h1></th>
+        <th>id</th>
+        <th>ФИО</th>
+        <th>Должность</th>
+        <th><a href="<%=baseUrl+Pages.workplace%>?<%=Parameters.token%>=<%=token%>">Рабочее место</a></th>
+        <th><a href="<%=baseUrl+Pages.accounting1c%>?<%=Parameters.token%>=<%=token%>">Бухгалтерия</a></th>
+        <%
+            if(Role.ADMIN.equals(role)) {
+        %>
+        <th/>
+        <%
+            }
+        %>
     </tr>
     <%
         for (Employee employee : employeeList) {
@@ -31,15 +31,18 @@
         <td><%=employee.getId()%>
         </td>
         <td>
-            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>"><%=employee.getName()%>
+            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+                <%=employee.getName()%>
             </a></td>
         <td><%=employee.getPost()%>
         </td>
         <%
             if (employee.getWorkplace() != null) {
         %>
-        <td><a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>"><%=employee.getWorkplace().getTitle()%>
-        </a></td>
+        <td>
+            <a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+                <%=employee.getWorkplace().getTitle()%>
+            </a></td>
         <%
         } else {
         %>

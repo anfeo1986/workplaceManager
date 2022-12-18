@@ -19,6 +19,7 @@ public class WMI {
     private static final String getVendorOperationSystem = "OS get Caption";
     private static final String getVersionOperationSystem = "OS get Version";
     private static final String getNetNameOperationSystem = "OS get CSName";
+    private static final String getOSArchitecture = "OS get OSArchitecture";
 
     private static final String getModelProcessor = "CPU get Name";
     private static final String getNumberOfCoresProcessor = "CPU get NumberOfCores";
@@ -44,6 +45,7 @@ public class WMI {
 
         operationSystem.setVendor(getParameter(ip, getVendorOperationSystem).get(0));
         operationSystem.setVersion(getParameter(ip, getVersionOperationSystem).get(0));
+        operationSystem.setOSArchitecture(getParameter(ip, getOSArchitecture).get(0));
         //operationSystem.setNetName(getParameter(ip, getNetNameOperationSystem).get(0));
         operationSystem.setTypeOS(TypeOS.windows);
 

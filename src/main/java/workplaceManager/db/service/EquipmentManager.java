@@ -28,24 +28,20 @@ public class EquipmentManager extends EntityManager<Equipment> {
     public List<Computer> getComputerList() {
         List<Equipment> equipmentAllList = getEquipmentList();
 
-        List<Computer> computerList = new ArrayList<>();
         SortedMap<String, Computer> sortedMap = new TreeMap<String, Computer>();
         List<Computer> computerListOther = new ArrayList<>();
         equipmentAllList.stream().forEach(equipment -> {
             if (equipment instanceof Computer) {
                 Computer computer = (Computer) equipment;
-                System.out.println("computer.getIp()=" + computer.getIp());
                 if (computer.getIp() != null && !computer.getIp().isEmpty() && !sortedMap.containsKey(computer.getIp())) {
                     sortedMap.put(computer.getIp(), computer);
-                    System.out.println("sortedMap.size()=" + sortedMap.size());
                 } else {
                     computerListOther.add(computer);
-                    System.out.println("computerList.size()=" + computerList.size());
                 }
-                //computerList.add((Computer) equipment);
             }
         });
 
+        List<Computer> computerList = new ArrayList<>();
         sortedMap.values().forEach(computer -> computerList.add(computer));
         computerListOther.forEach(computer -> computerList.add(computer));
 
@@ -54,73 +50,77 @@ public class EquipmentManager extends EntityManager<Equipment> {
         return computerList;
     }
 
-    @Transactional
-    public List<Monitor> getMonitorList() {
-        List<Equipment> equipmentAllList = getEquipmentList();
-
-        List<Monitor> equipmentList = new ArrayList<>();
-        equipmentAllList.stream().forEach(equipment -> {
-            if (equipment instanceof Monitor) {
-                equipmentList.add((Monitor) equipment);
+    private List<Equipment> getSortedListEquipment(List<Equipment> equipmentListNoSort) {
+        SortedMap<String, Equipment> sortedMap = new TreeMap<String, Equipment>();
+        List<Equipment> equipmentListOther = new ArrayList<>();
+        equipmentListNoSort.stream().forEach(equipment -> {
+            if (equipment.toString() != null && !equipment.toString().isEmpty() && !sortedMap.containsKey(equipment.toString())) {
+                sortedMap.put(equipment.toString(), equipment);
+            } else {
+                equipmentListOther.add(equipment);
             }
         });
 
+        List<Equipment> equipmentList = new ArrayList<>();
+        sortedMap.values().forEach(equipment -> equipmentList.add(equipment));
+        equipmentListOther.forEach(equipment -> equipmentList.add(equipment));
+
+        return equipmentList;
+    }
+
+
+    @Transactional
+    public List<Monitor> getMonitorList() {
+        List<Monitor> equipmentList = new ArrayList<>();
+        getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
+            if(equipment instanceof Monitor) {
+                equipmentList.add((Monitor) equipment);
+            }
+        });
         return equipmentList;
     }
 
     @Transactional
     public List<Printer> getPrinterList() {
-        List<Equipment> equipmentAllList = getEquipmentList();
-
         List<Printer> equipmentList = new ArrayList<>();
-        equipmentAllList.stream().forEach(equipment -> {
-            if (equipment instanceof Printer) {
+        getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
+            if(equipment instanceof Printer) {
                 equipmentList.add((Printer) equipment);
             }
         });
-
         return equipmentList;
     }
 
     @Transactional
     public List<Scanner> getScannerList() {
-        List<Equipment> equipmentAllList = getEquipmentList();
-
         List<Scanner> equipmentList = new ArrayList<>();
-        equipmentAllList.stream().forEach(equipment -> {
-            if (equipment instanceof Scanner) {
+        getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
+            if(equipment instanceof Scanner) {
                 equipmentList.add((Scanner) equipment);
             }
         });
-
         return equipmentList;
     }
 
     @Transactional
     public List<Mfd> getMfdList() {
-        List<Equipment> equipmentAllList = getEquipmentList();
-
         List<Mfd> equipmentList = new ArrayList<>();
-        equipmentAllList.stream().forEach(equipment -> {
-            if (equipment instanceof Mfd) {
+        getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
+            if(equipment instanceof Mfd) {
                 equipmentList.add((Mfd) equipment);
             }
         });
-
         return equipmentList;
     }
 
     @Transactional
     public List<Ups> getUpsList() {
-        List<Equipment> equipmentAllList = getEquipmentList();
-
         List<Ups> equipmentList = new ArrayList<>();
-        equipmentAllList.stream().forEach(equipment -> {
-            if (equipment instanceof Ups) {
+        getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
+            if(equipment instanceof Ups) {
                 equipmentList.add((Ups) equipment);
             }
         });
-
         return equipmentList;
     }
 
@@ -142,10 +142,10 @@ public class EquipmentManager extends EntityManager<Equipment> {
     public Computer getComputerById(Long id, boolean isReadAll) {
         Session session = sessionFactory.getCurrentSession();
         String queryStr = "from Equipment as equipment where ";
-        if(!isReadAll) {
+        if (!isReadAll) {
             queryStr += "equipment.deleted=false and ";
         }
-        queryStr+="equipment.id=" + id;
+        queryStr += "equipment.id=" + id;
         Query query = session.createQuery(queryStr);
         Computer computer = (Computer) query.uniqueResult();
         initializeComputer(computer);
@@ -156,11 +156,11 @@ public class EquipmentManager extends EntityManager<Equipment> {
     @Transactional
     public Equipment getEquipmentByUid(String uid, boolean isReadAll) {
         Session session = sessionFactory.getCurrentSession();
-        String queryStr="from Equipment as equipment where ";
-        if(!isReadAll) {
-            queryStr+="equipment.deleted=false and ";
+        String queryStr = "from Equipment as equipment where ";
+        if (!isReadAll) {
+            queryStr += "equipment.deleted=false and ";
         }
-        queryStr+="equipment.uid is not null and equipment.uid!='' and equipment.uid='" + uid + "'";
+        queryStr += "equipment.uid is not null and equipment.uid!='' and equipment.uid='" + uid + "'";
         Query query = session.createQuery(queryStr);
         Equipment equipment = (Equipment) query.uniqueResult();
 
@@ -170,11 +170,11 @@ public class EquipmentManager extends EntityManager<Equipment> {
     @Transactional
     public Computer getComputerByIp(String ip, boolean isReadAll) {
         Session session = sessionFactory.getCurrentSession();
-        String queryStr="from Equipment as equipment where ";
-        if(!isReadAll) {
-            queryStr+="equipment.deleted=false and ";
+        String queryStr = "from Equipment as equipment where ";
+        if (!isReadAll) {
+            queryStr += "equipment.deleted=false and ";
         }
-        queryStr+="equipment.ip is not null and equipment.ip!='' and equipment.ip='" + ip + "'";
+        queryStr += "equipment.ip is not null and equipment.ip!='' and equipment.ip='" + ip + "'";
         Query query = session.createQuery(queryStr);
         Computer computer = (Computer) query.uniqueResult();
 

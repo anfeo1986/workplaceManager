@@ -52,6 +52,7 @@ public class SecurityCrypt {
             modelAndView.addObject(Parameters.token, tokenNew);
             modelAndView.addObject(Parameters.role, user.getRole());
             modelAndView.addObject(Parameters.baseUrl, environment.getRequiredProperty("base.url"));
+            modelAndView.addObject(Parameters.userName, user.getUsername());
             return modelAndView;
         }
 

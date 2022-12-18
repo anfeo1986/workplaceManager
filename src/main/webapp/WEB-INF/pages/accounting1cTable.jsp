@@ -1,26 +1,23 @@
+<%@ page import="workplaceManager.db.domain.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<h1>Бухгалтерия</h1>
-<%
-    Role role = (Role) request.getAttribute(Parameters.role);
-
-    if (Role.ADMIN.equals(role)) {
-%>
-<a href="<%=Pages.addUpdateAccounting1C%>?<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.token%>=<%=token%>">
-    Добавить оборудование в бухгалтерию
-</a>
-<%
-    }
-%>
+<div align="center"><h1>Бухгалтерия</h1></div>
 
 <table>
     <tr>
-        <th><h1>ID</h1></th>
-        <th><h1>Инвентарный номер</h1></th>
-        <th><h1>Название</h1></th>
-        <th><h1>Материально-отвественное лицо</h1></th>
-        <th><h1>Оборудование</h1></th>
+        <th>ID</th>
+        <th>Инвентарный номер</th>
+        <th>Название</th>
+        <th>Материально-отвественное лицо</th>
+        <th>Оборудование</th>
+        <%
+            if(Role.ADMIN.equals(role)) {
+        %>
+        <th/>
+        <%
+            }
+        %>
     </tr>
 
     <%
@@ -35,12 +32,12 @@
             count++;
         %>
         <td>
-            <a href="<%=Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
+            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
                 <%=accounting1C.getInventoryNumber()%>
             </a>
         </td>
         <td>
-            <a href="<%=Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
+            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
                 <%=accounting1C.getTitle()%>
             </a>
         </td>
@@ -80,7 +77,7 @@
                     }
             %>
             <p>
-                <a href="<%=Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                     <%=equipment%>
                 </a>
             </p>
@@ -99,7 +96,7 @@
             if (Role.ADMIN.equals(role)) {
         %>
         <td>
-            <a href="<%=Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.token%>=<%=token%>">
+            <a href="<%=baseUrl + Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.token%>=<%=token%>">
                 Удалить
             </a>
         </td>

@@ -6,8 +6,12 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import workplaceManager.db.domain.Accounting1C;
+import workplaceManager.db.domain.Equipment;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository
 public class Accounting1CManager extends EntityManager<Accounting1C> {
@@ -15,9 +19,29 @@ public class Accounting1CManager extends EntityManager<Accounting1C> {
     @Transactional
     public List<Accounting1C> getAccounting1cList() {
         Session session = sessionFactory.getCurrentSession();
-        List<Accounting1C> accounting1CList = session.createQuery("from Accounting1C as ac " +
+        List<Accounting1C> accounting1CListFromDb = session.createQuery("from Accounting1C as ac " +
                 "where ac.deleted=false order by ac.title").list();
+
+        List<Accounting1C> accounting1CList = getSortedListAccounting1C(accounting1CListFromDb);
         accounting1CList.stream().forEach(accounting1C -> initializeAccounting1c(accounting1C));
+
+        return accounting1CList;
+    }
+
+    private List<Accounting1C> getSortedListAccounting1C(List<Accounting1C> accounting1CListNoSort) {
+        SortedMap<String, Accounting1C> sortedMap = new TreeMap<String, Accounting1C>();
+        List<Accounting1C> accounting1CListOther = new ArrayList<>();
+        accounting1CListNoSort.stream().forEach(accounting1C -> {
+            if (accounting1C.getInventoryNumber() != null && !accounting1C.getInventoryNumber().isEmpty() && !sortedMap.containsKey(accounting1C.getInventoryNumber())) {
+                sortedMap.put(accounting1C.getInventoryNumber(), accounting1C);
+            } else {
+                accounting1CListOther.add(accounting1C);
+            }
+        });
+
+        List<Accounting1C> accounting1CList = new ArrayList<>();
+        sortedMap.values().forEach(accounting1C -> accounting1CList.add(accounting1C));
+        accounting1CListOther.forEach(accounting1C -> accounting1CList.add(accounting1C));
 
         return accounting1CList;
     }

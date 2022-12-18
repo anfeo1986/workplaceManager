@@ -138,7 +138,7 @@ public class ConfigEquipmentController {
                 computer.setDeleted(false);
                 if (computer.getId() <= 0) {
                     String error = dataVerification(request, equipment);
-                    if(error != null && !StringUtils.equals(error,"")) {
+                    if (error != null && !StringUtils.equals(error, "")) {
                         modelAndView.addObject(Parameters.computer, computer);
                         modelAndView.addObject(Parameters.error, error);
                         modelAndView.addObject(Parameters.equipment, equipment);
@@ -189,6 +189,9 @@ public class ConfigEquipmentController {
                 //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
 
+                if(computer == null) {
+                    computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                }
                 setParameterComputer(computer, request, equipment, false);
 
                 if (TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
@@ -371,7 +374,7 @@ public class ConfigEquipmentController {
                 } else {
                     error += setAccounting1CByEquipment(equipment, request, true, user);
                 }
-
+                String message = "";
                 if (!"".equals(error)) {
                     modelAndView.addObject(Parameters.error, error);
                     modelAndView.addObject(Parameters.equipment, equipment);
@@ -390,6 +393,7 @@ public class ConfigEquipmentController {
                         if (computer.getId() <= 0) {
                             equipmentManager.save(computer);
                             journalManager.save(new Journal(TypeEvent.ADD, TypeObject.COMPUTER, computer, user));
+                            message = String.format("%s успешно добавлен", computer);
                         }
                         modelAndView.addObject(Parameters.computer, new Computer());
                     }
@@ -398,34 +402,39 @@ public class ConfigEquipmentController {
                         monitor.setDeleted(false);
                         equipmentManager.save(monitor);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.MONITOR, monitor, user));
+                        message = String.format("%s успешно добавлен", monitor);
                     }
                     if (TypeEquipment.PRINTER.equals(typeEquipment)) {
                         Printer printer = (Printer) equipment.getChildFromEquipment(TypeEquipment.PRINTER);
                         printer.setDeleted(false);
                         equipmentManager.save(printer);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.PRINTER, printer, user));
+                        message = String.format("%s успешно добавлен", printer);
                     }
                     if (TypeEquipment.SCANNER.equals(typeEquipment)) {
                         Scanner scanner = (Scanner) equipment.getChildFromEquipment(TypeEquipment.SCANNER);
                         scanner.setDeleted(false);
                         equipmentManager.save(scanner);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.SCANNER, scanner, user));
+                        message = String.format("%s успешно добавлен", scanner);
                     }
                     if (TypeEquipment.MFD.equals(typeEquipment)) {
                         Mfd mfd = (Mfd) equipment.getChildFromEquipment(TypeEquipment.MFD);
                         mfd.setDeleted(false);
                         equipmentManager.save(mfd);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.MFD, mfd, user));
+                        message = String.format("%s успешно добавлен", mfd);
                     }
                     if (TypeEquipment.UPS.equals(typeEquipment)) {
                         Ups ups = (Ups) equipment.getChildFromEquipment(TypeEquipment.UPS);
                         ups.setDeleted(false);
                         equipmentManager.save(ups);
                         journalManager.save(new Journal(TypeEvent.ADD, TypeObject.UPS, ups, user));
+                        message = String.format("%s успешно добавлен", ups);
                     }
 
                     if (StringUtils.equals(error, "")) {
-                        modelAndView.addObject(Parameters.message, "Успешно");
+                        modelAndView.addObject(Parameters.message, message);
                         modelAndView.addObject(Parameters.equipment, new Equipment());
                     } else {
                         modelAndView.addObject(Parameters.equipment, equipment);
@@ -731,6 +740,7 @@ public class ConfigEquipmentController {
         operationSystem.setTypeOS(TypeOS.valueOf(request.getParameter(Parameters.OsType)));
         operationSystem.setVendor(request.getParameter(Parameters.OsVendor));
         operationSystem.setVersion(request.getParameter(Parameters.OsVersion));
+        operationSystem.setOSArchitecture(request.getParameter(Parameters.OSArchitecture));
 
         computer.setOperationSystem(operationSystem);
     }

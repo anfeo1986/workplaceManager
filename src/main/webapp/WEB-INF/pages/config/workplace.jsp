@@ -14,25 +14,28 @@
         String redirect = (String) request.getAttribute(Parameters.redirect);
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
         String token = (String) request.getAttribute(Parameters.token);
-        String url = "";
+        String url = baseUrl;
         String buttonTitle = "";
         if (workplace != null && workplace.getId() > 0) {
     %>
     <title>Редактирование рабочего места</title>
     <%
-        url = baseUrl + Pages.updateWorkplacePost;
+        url += Pages.updateWorkplacePost;
         buttonTitle = "Редактировать";
     } else {
     %>
     <title>Добавление рабочего места</title>
     <%
-            url = baseUrl + Pages.addWorkplacePost;
+            url += Pages.addWorkplacePost;
             buttonTitle = "Добавить";
         }
     %>
 </head>
 
 <body>
+<section class="sticky">
+    <%@include file='/WEB-INF/pages/header.jsp' %>
+</section>
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && !error.isEmpty()) {
@@ -76,7 +79,7 @@
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
             <input type="hidden" name="<%=Parameters.token%>" value="<%=token%>">
-            <a href="<%=baseUrl+redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
+            <a href="<%=baseUrl + redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
         </p>
     </div>
 </form>

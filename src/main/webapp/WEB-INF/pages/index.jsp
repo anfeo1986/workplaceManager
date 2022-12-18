@@ -1,5 +1,4 @@
 <%@ page import="workplaceManager.Pages" %>
-<%@ page import="workplaceManager.Parameters" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -13,25 +12,15 @@
 </head>
 
 <body>
-<%
-    String error = (String) request.getAttribute(Parameters.passwordError);
-%>
 
 <div id="login-form">
-    <h1>РЕГИСТРАЦИЯ</h1>
+    <h1>АВТОРИЗАЦИЯ</h1>
     <fieldset>
-        <form action="<%=Pages.registration%>" method="post" modelAttribute="userForm">
+        <form action="<%=Pages.login%>" method="get" modelAttribute="userForm">
             <input type="text" name="username" id="username" required value="Логин" onBlur="if(this.value=='')this.value='Логин'" onFocus="if(this.value=='Логин')this.value='' ">
             <input type="password" name="password" id="password" required value="Пароль" onBlur="if(this.value=='')this.value='Пароль'" onFocus="if(this.value=='Пароль')this.value='' ">
-            <input type="password" name="passwordConfirm" id="passwordConfirm" required value="Пароль" onBlur="if(this.value=='')this.value='Пароль'" onFocus="if(this.value=='Пароль')this.value='' ">
-            <%
-                if(error != null && !error.isEmpty()) {
-            %>
-            <h3><%=error%></h3>
-            <%
-                }
-            %>
-            <input type="submit" value="Регистрация">
+            <input type="submit" value="ВОЙТИ">
+            <p align="center"><a href="<%=Pages.registration%>">Зарегистрироваться</a></p>
         </form>
     </fieldset>
 </div>
