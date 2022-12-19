@@ -13,7 +13,7 @@
         <th>Название</th>
         <th>
             <p>
-            <a href="<%=baseUrl + Pages.employee%>?<%=Parameters.token%>=<%=token%>">Сотрудники</a>
+                <a href="<%=baseUrl + Pages.employee%>?<%=Parameters.token%>=<%=token%>">Сотрудники</a>
             </p>
             <%
                 if (Role.ADMIN.equals(role)) {
@@ -104,7 +104,7 @@
             %>
         </th>
         <%
-            if(Role.ADMIN.equals(role)) {
+            if (Role.ADMIN.equals(role)) {
         %>
         <th/>
         <%

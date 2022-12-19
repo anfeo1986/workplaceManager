@@ -35,19 +35,23 @@ public class JournalController {
     public ModelAndView getFormJournal(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView(Pages.journal);
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         SimpleDateFormat formatWithoutTime = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateStart = new Date();
-        Date dateEnd = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateStart = null;
         try {
             if(request.getParameter(Components.dateStartForFilterJournal) != null) {
                 dateStart = format.parse(request.getParameter(Components.dateStartForFilterJournal));
+            } else {
+                dateStart = format.parse(formatWithoutTime.format(new Date()) + " 00:00");
             }
         } catch (Exception e) {
         }
+        Date dateEnd = null;
         try {
             if(request.getParameter(Components.dateEndForFilterJournal) != null) {
                 dateEnd = format.parse(request.getParameter(Components.dateEndForFilterJournal));
+            } else {
+                dateEnd = format.parse(formatWithoutTime.format(new Date()) + " 23:59");
             }
         } catch (Exception e) {
         }
