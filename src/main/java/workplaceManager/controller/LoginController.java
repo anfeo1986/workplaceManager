@@ -57,6 +57,8 @@ public class LoginController {
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             journalManager.save(new Journal(TypeEvent.USER_LOGIN, TypeObject.USER, userFromDB, userFromDB));
+        } else {
+            modelAndView.addObject(Parameters.error, "Ошибка авторизации");
         }
 
         return modelAndView;

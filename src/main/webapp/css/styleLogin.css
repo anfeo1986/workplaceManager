@@ -46,6 +46,21 @@ body {
 	font-size: 14px;
 }
 
+#login-form h2 {
+	/*background-color: #292829;*/
+	background-image: linear-gradient(#0e1315, #408bce);
+	border-radius: 5px 5px 0px 0px;
+	-moz-border-radius: 5px 5px 0px 0px;
+	-webkit-border-radius: 5px 5px 0px 0px;
+	color: red;
+	padding: 20px;
+	text-align: center;
+	text-transform: uppercase;
+	/*font-family: 'Open Sans', sans-serif;*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
 #login-form a {
 	color: #fff;
 	/*font-family: 'Open Sans', sans-serif;*/

@@ -373,7 +373,7 @@
             <input type="text" name="<%=ramModelName%>" id="<%=ramModelName%>"
                    value="<%=ram.getModel() != null ? ram.getModel() : ""%>">
 
-            <label for="<%=ramTypeRamName%>">Тип оперативной памяти</label>
+            <label for="<%=ramTypeRamName%>">Тип</label>
             <select name="<%=ramTypeRamName%>" id="<%=ramTypeRamName%>">
                 <%
                     for (TypeRam typeRam : TypeRam.values()) {
@@ -526,7 +526,7 @@
             <input type="hidden" name="<%=Parameters.countVideoCard%>" value="<%=countVideoCard%>">
             <input type="hidden" name="<%=Parameters.countHardDrive%>" value="<%=countHardDrive%>">
 
-            <a href="/<%=redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
+            <a href="<%=baseUrl + redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
                 <%
                 if (Role.ADMIN.equals(role) && (equipment != null && equipment.getId() > 0)) {
                     Long id;

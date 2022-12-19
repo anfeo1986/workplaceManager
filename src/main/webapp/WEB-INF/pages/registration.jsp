@@ -8,7 +8,7 @@
     <title>Авторизация</title>
     <!--<link rel="icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">-->
-    <link rel="stylesheet" href="/css/styleLogin.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleLogin.css" type="text/css" />
     <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>-->
 </head>
 
@@ -27,7 +27,7 @@
             <%
                 if(error != null && !error.isEmpty()) {
             %>
-            <h3><%=error%></h3>
+            <h2><%=error%></h2>
             <%
                 }
             %>
