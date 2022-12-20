@@ -75,7 +75,7 @@
         <p>
             <label for="title">Название</label>
             <%
-                String title = (accounting1C != null && accounting1C.getTitle() != null) ? accounting1C.getTitle() : "";
+                String title = (accounting1C != null && accounting1C.getTitleReplace() != null) ? accounting1C.getTitleReplace() : "";
             %>
             <input type="text" name="title" id="title" value="<%=title%>">
         </p>

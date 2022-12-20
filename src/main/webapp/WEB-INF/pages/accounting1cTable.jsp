@@ -38,7 +38,7 @@
         </td>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
-                <%=accounting1C.getTitle()%>
+                <%=accounting1C.getTitleReplace()%>
             </a>
         </td>
         <%
