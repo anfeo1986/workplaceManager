@@ -1,4 +1,5 @@
 <%@ page import="workplaceManager.db.domain.*" %>
+<%@ page import="workplaceManager.ReplaceString" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -12,7 +13,7 @@
         <th>Материально-отвественное лицо</th>
         <th>Оборудование</th>
         <%
-            if(Role.ADMIN.equals(role)) {
+            if (Role.ADMIN.equals(role)) {
         %>
         <th/>
         <%
@@ -38,7 +39,7 @@
         </td>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
-                <%=accounting1C.getTitleReplace()%>
+                <%=ReplaceString.replace(accounting1C.getTitle())%>
             </a>
         </td>
         <%
@@ -60,6 +61,9 @@
             <%
                 for (Equipment equipment : accounting1C.getEquipmentList()) {
                     String typeEquipment = "";
+                    if (equipment instanceof Computer) {
+                        typeEquipment = TypeEquipment.COMPUTER;
+                    }
                     if (equipment instanceof Monitor) {
                         typeEquipment = TypeEquipment.MONITOR;
                     }
@@ -79,7 +83,11 @@
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                     <%=equipment%>
-                </a>
+                </a><br>
+                <b>Рабочее
+                    место: </b> <%=equipment.getWorkplace() != null ? ReplaceString.replace(equipment.getWorkplace().toString()) : ""%>
+                <br>
+
             </p>
             <%
                 }
@@ -92,6 +100,7 @@
         <%
             }
         %>
+
         <%
             if (Role.ADMIN.equals(role)) {
         %>

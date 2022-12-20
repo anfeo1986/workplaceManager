@@ -155,7 +155,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=workplace.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.token%>=<%=token%>">
-                <%=workplace.getTitle()%>
+                <%=ReplaceString.replace(workplace.getTitle())%>
             </a></td>
 
         <td>

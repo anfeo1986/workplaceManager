@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Data
 @DiscriminatorValue(TypeEquipment.COMPUTER)
-public class Computer extends Equipment<Computer>{
+public class Computer extends Equipment<Computer> {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "motherboard")
@@ -46,7 +46,12 @@ public class Computer extends Equipment<Computer>{
 
     @Override
     public String toString() {
-        String str = String.format("%s (%s)", ip, getUid());
+        String str = String.format("%s (%s", ip, getUid());
+        if ((getManufacturer() != null && !getManufacturer().isEmpty()) ||
+                (getModel() != null && !getModel().isEmpty())) {
+            str += String.format(", %s %s",getManufacturer(), getModel());
+        }
+        str += ") ";
         if (getDeleted()) {
             str += " (удалено. id=" + getId() + ")";
         }

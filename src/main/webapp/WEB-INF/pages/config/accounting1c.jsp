@@ -1,9 +1,8 @@
 <%@ page import="workplaceManager.db.domain.Accounting1C" %>
 <%@ page import="workplaceManager.db.domain.Role" %>
-<%@ page import="workplaceManager.Pages" %>
 <%@ page import="workplaceManager.db.domain.Employee" %>
 <%@ page import="java.util.List" %>
-<%@ page import="workplaceManager.Parameters" %>
+<%@ page import="workplaceManager.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -19,26 +18,26 @@
 
         String buttonTitle = "Добавить";
         String url = baseUrl;
+        String titlePage = "";
         if (accounting1C != null && accounting1C.getId() > 0) {
-    %>
-    <title>Редактирование</title>
-    <%
-        url += Pages.updateAccounting1CPost;
-        buttonTitle = "Редактировать";
-    } else {
-    %>
-    <title>Добавление</title>
-    <%
+            titlePage = "Добавление записи в бухгалтерии";
+            url += Pages.updateAccounting1CPost;
+            buttonTitle = "Редактировать";
+        } else {
+            titlePage = "Редактирование записи в бухгалтерии";
             url += Pages.addAccounting1CPost;
         }
     %>
+    <title><%=titlePage%>
+    </title>
 </head>
 
 <body>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
-
+<h1 align="center"><%=titlePage%>
+</h1>
 <%
     if (error != null && error != "") {
 %>
@@ -75,9 +74,10 @@
         <p>
             <label for="title">Название</label>
             <%
-                String title = (accounting1C != null && accounting1C.getTitleReplace() != null) ? accounting1C.getTitleReplace() : "";
+                String title = (accounting1C != null && accounting1C.getTitle() != null) ?
+                        workplaceManager.ReplaceString.replace(accounting1C.getTitle()) : "";
             %>
-            <input type="text" name="title" id="title" value="<%=title%>">
+            <input type="text" name="title" id="title" size="50" value="<%=title%>">
         </p>
 
         <p>

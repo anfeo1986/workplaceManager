@@ -61,7 +61,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=equipment.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                <%=equipment.getWorkplace().getTitle()%>
+                <%=ReplaceString.replace(equipment.getWorkplace().getTitle())%>
             </a>
         </td>
         <%

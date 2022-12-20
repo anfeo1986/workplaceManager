@@ -1,10 +1,9 @@
 <%@ page import="workplaceManager.db.domain.Employee" %>
-<%@ page import="workplaceManager.Pages" %>
 <%@ page import="workplaceManager.db.domain.Workplace" %>
 <%@ page import="java.util.List" %>
 <%@ page import="workplaceManager.db.domain.Role" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="workplaceManager.Parameters" %>
+<%@ page import="workplaceManager.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -18,25 +17,24 @@
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
 
         String url = baseUrl;
+        String title = "";
         if (employee != null && employee.getId() > 0) {
-    %>
-    <title>Редактирование сотрудника</title>
-    <%
+            title = "Редактирование материально-отвественного лица";
         url += Pages.updateEmployeePost;
         buttonTitle = "Редактировать";
     } else {
-    %>
-    <title>Добавление сотрудника</title>
-    <%
+            title = "Добавление материально-отвественного лица";
             url += Pages.addEmployeePost;
         }
     %>
+    <title><%=title%></title>
 </head>
 
 <body>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
+<h1 align="center"><%=title%></h1>
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && error != "") {
@@ -68,7 +66,7 @@
                 String employeeName = (employee != null && employee.getName() != null) ? employee.getName() : "";
             %>
 
-            <input type="text" name="name" id="name" value="<%=employeeName%>">
+            <input type="text" name="name" id="name" size="56|" value="<%=employeeName%>">
         </p>
 
         <p>
@@ -76,7 +74,7 @@
             <%
                 String employeePost = (employee != null && employee.getPost() != null) ? employee.getPost() : "";
             %>
-            <input type="text" name="post" id="post" value="<%=employeePost%>">
+            <input type="text" name="post" id="post" size="50" value="<%=employeePost%>">
         </p>
 
         <p>
@@ -92,12 +90,14 @@
                     for (Workplace workplace : workplaceList) {
                         if (workplace.getId() == workplaceId) {
                 %>
-                <option selected value="<%=workplace.getId()%>"><%=workplace.getTitle()%>
+                <option selected value="<%=workplace.getId()%>">
+                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
                 </option>
                 <%
                 } else {
                 %>
-                <option value="<%=workplace.getId()%>"><%=workplace.getTitle()%>
+                <option value="<%=workplace.getId()%>">
+                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
                 </option>
                 <%
                         }

@@ -1,7 +1,6 @@
 select {
-    width: 150px; /* Ширина списка в пикселах */
+    min-width: 150px;
 }
-
 /*оформление таблицы*/
 table {
     /*font-family: Arial, Helvetica, sans-serif;

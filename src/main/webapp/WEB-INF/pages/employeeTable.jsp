@@ -41,7 +41,7 @@
         %>
         <td>
             <a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
-                <%=employee.getWorkplace().getTitle()%>
+                <%=ReplaceString.replace(employee.getWorkplace().getTitle())%>
             </a></td>
         <%
         } else {

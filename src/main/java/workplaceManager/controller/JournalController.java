@@ -36,13 +36,13 @@ public class JournalController {
         ModelAndView modelAndView = new ModelAndView(Pages.journal);
 
         SimpleDateFormat formatWithoutTime = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date dateStart = null;
         try {
             if(request.getParameter(Components.dateStartForFilterJournal) != null) {
                 dateStart = format.parse(request.getParameter(Components.dateStartForFilterJournal));
             } else {
-                dateStart = format.parse(formatWithoutTime.format(new Date()) + " 00:00");
+                dateStart = format.parse(formatWithoutTime.format(new Date()) + "T00:00");
             }
         } catch (Exception e) {
         }
@@ -51,7 +51,7 @@ public class JournalController {
             if(request.getParameter(Components.dateEndForFilterJournal) != null) {
                 dateEnd = format.parse(request.getParameter(Components.dateEndForFilterJournal));
             } else {
-                dateEnd = format.parse(formatWithoutTime.format(new Date()) + " 23:59");
+                dateEnd = format.parse(formatWithoutTime.format(new Date()) + "T23:59");
             }
         } catch (Exception e) {
         }

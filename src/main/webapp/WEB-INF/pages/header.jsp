@@ -96,7 +96,7 @@
             } else if (MainController.TypePage.accounting1c.equals(typePage)) {
             %>
             <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
-                Добавить сотрудника
+                Добавить запись в бухгалтерии
             </a>
             <%
                 }

@@ -1,9 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="workplaceManager.db.domain.Role" %>
 <%@ page import="workplaceManager.db.domain.Workplace" %>
-<%@ page import="workplaceManager.Parameters" %>
 <%@ page import="org.hibernate.jdbc.Work" %>
-<%@ page import="workplaceManager.Pages" %>
+<%@ page import="workplaceManager.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -16,26 +15,27 @@
         String token = (String) request.getAttribute(Parameters.token);
         String url = baseUrl;
         String buttonTitle = "";
+        String title = "";
         if (workplace != null && workplace.getId() > 0) {
-    %>
-    <title>Редактирование рабочего места</title>
-    <%
-        url += Pages.updateWorkplacePost;
-        buttonTitle = "Редактировать";
-    } else {
-    %>
-    <title>Добавление рабочего места</title>
-    <%
+            title = "Редактирование рабочего места";
+            url += Pages.updateWorkplacePost;
+            buttonTitle = "Редактировать";
+        } else {
+            title = "Добавление рабочего места";
             url += Pages.addWorkplacePost;
             buttonTitle = "Добавить";
         }
     %>
+    <title><%=title%>
+    </title>
 </head>
 
 <body>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
+<h1 align="center"><%=title%>
+</h1>
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && !error.isEmpty()) {
@@ -64,7 +64,8 @@
     <div class="wrapper_500" align="center">
         <p>
             <label for="title">Название</label>
-            <input type="text" name="title" id="title" value="<%=workplace!=null ? workplace.getTitle() : ""%>">
+            <input type="text" autofocus name="title" id="title" size="50"
+                   value="<%=workplace!=null ? workplaceManager.ReplaceString.replace(workplace.getTitle()) : ""%>">
         </p>
     </div>
     <div align="center">

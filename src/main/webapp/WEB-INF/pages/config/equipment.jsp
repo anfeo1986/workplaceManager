@@ -1,12 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="workplaceManager.db.domain.*" %>
-<%@ page import="workplaceManager.Pages" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.springframework.util.CollectionUtils" %>
-<%@ page import="workplaceManager.Components" %>
-<%@ page import="workplaceManager.Parameters" %>
 <%@ page import="workplaceManager.db.domain.components.*" %>
+<%@ page import="workplaceManager.*" %>
 
 <html>
 <head>
@@ -40,25 +38,40 @@
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
 
         String url = baseUrl;
+        String title = "";
         if (equipment != null && equipment.getId() > 0) {
-    %>
-    <title>Редактирование</title>
-    <%
-        url += Pages.updateEquipmentPost;
-        buttonTitle = "Редактировать";
-    } else {
-    %>
-    <title>Добавление</title>
-    <%
+            title = "Редактирование ";
+            url += Pages.updateEquipmentPost;
+            buttonTitle = "Редактировать";
+        } else {
+            title = "Добавление ";
             url += Pages.addEquipmentPost;
         }
+        if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
+            title += "компьютера";
+        } else if (TypeEquipment.MONITOR.equals(typeEquipment)) {
+            title += "монитора";
+        } else if (TypeEquipment.PRINTER.equals(typeEquipment)) {
+            title += "принтера";
+        } else if (TypeEquipment.SCANNER.equals(typeEquipment)) {
+            title += "сканера";
+        } else if (TypeEquipment.MFD.equals(typeEquipment)) {
+            title += "МФУ";
+        } else if (TypeEquipment.UPS.equals(typeEquipment)) {
+            title += "ИБП";
+        }
     %>
+    <title><%=title%>
+    </title>
+
 </head>
 
 <body>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
+<h1 align="center"><%=title%>
+</h1>
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && error != "") {
@@ -125,12 +138,14 @@
                     for (Workplace workplace : workplaceList) {
                         if (workplace.getId() == workplaceId) {
                 %>
-                <option selected value="<%=workplace.getId()%>"><%=workplace.getTitle()%>
+                <option selected value="<%=workplace.getId()%>">
+                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
                 </option>
                 <%
                 } else {
                 %>
-                <option value="<%=workplace.getId()%>"><%=workplace.getTitle()%>
+                <option value="<%=workplace.getId()%>">
+                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
                 </option>
                 <%
                         }
@@ -400,7 +415,7 @@
             <input type="text" name="<%=ramFrequencyName%>" id="<%=ramFrequencyName%>" size="6"
                    value="<%=ram.getFrequency() != null ? ram.getFrequency() : ""%>">
 
-            <label for="<%=ramDeviceLocatorName%>">Частота</label>
+            <label for="<%=ramDeviceLocatorName%>">Разъём</label>
             <input type="text" name="<%=ramDeviceLocatorName%>" id="<%=ramDeviceLocatorName%>" size="12"
                    value="<%=ram.getDeviceLocator() != null ? ram.getDeviceLocator() : ""%>">
 
