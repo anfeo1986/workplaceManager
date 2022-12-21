@@ -41,13 +41,21 @@ public class Equipment<T> implements Serializable {
     @JoinColumn(name = "workplace")
     private Workplace workplace;
 
-    @Override
-    public String toString() {
-        String str = String.format("%s (%s %s)", uid, manufacturer, model);
+    public String toStringHtml() {
+        return String.format("<b>%s</b> (%s %s)%s", uid, manufacturer, model, addDeleted());
+    }
+
+    private String addDeleted() {
+        String str = "";
         if (deleted) {
             str += " (удалено. id=" + id + ")";
         }
         return str;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s %s)%s", uid, manufacturer, model, addDeleted());
     }
 
     public T getChildFromEquipment(String typeEquipment) {

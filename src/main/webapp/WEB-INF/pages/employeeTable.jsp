@@ -41,7 +41,7 @@
         %>
         <td>
             <a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
-                <%=ReplaceString.replace(employee.getWorkplace().getTitle())%>
+                <%=employee.getWorkplace().getTitleHtml()%>
             </a></td>
         <%
         } else {
@@ -57,7 +57,7 @@
             %>
             <p>
                 <a href="<%=baseUrl+Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
-                    <%=accounting1C%>
+                    <%=accounting1C.toStringHtml()%>
                 </a>
             </p>
             <%

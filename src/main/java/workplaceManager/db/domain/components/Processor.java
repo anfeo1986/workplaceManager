@@ -43,6 +43,11 @@ public class Processor implements Serializable {
     }
 
     @Transient
+    public String toStringHtml() {
+        return String.format("%s (<b>Кол-во ядер:</b> %s, <b>Частота:</b> %s, <b>Сокет:</b> %s)", model, numberOfCores, frequency, socket);
+    }
+
+    @Transient
     public static boolean isEmpty(Processor processor) {
         if (processor == null) {
             return true;

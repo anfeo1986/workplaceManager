@@ -441,48 +441,42 @@
             <%
                 }
             %>
-            <td><%=journal.getObject() != null ? journal.getObject().toString() : journal.getObjectStr()%>
-            </td>
-            <td>
-                <%
-                    if (journal.getObject() != null && Computer.class.equals(journal.getObject().getClass())) {
-                        Computer object = (Computer) journal.getObject();
-                        if (object.getAccounting1C() != null) {
-                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
-                        }
-                    }
-                    if (journal.getObject() != null && Monitor.class.equals(journal.getObject().getClass())) {
-                        Monitor object = (Monitor) journal.getObject();
-                        if (object.getAccounting1C() != null) {
-                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
-                        }
-                    }
-                    if (journal.getObject() != null && Printer.class.equals(journal.getObject().getClass())) {
-                        Printer object = (Printer) journal.getObject();
-                        if (object.getAccounting1C() != null) {
-                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
-                        }
-                    }
-                    if (journal.getObject() != null && Scanner.class.equals(journal.getObject().getClass())) {
-                        Scanner object = (Scanner) journal.getObject();
-                        if (object.getAccounting1C() != null) {
-                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
-                        }
-                    }
-                    if (journal.getObject() != null && Mfd.class.equals(journal.getObject().getClass())) {
-                        Mfd object = (Mfd) journal.getObject();
-                        if (object.getAccounting1C() != null) {
-                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
-                        }
-                    }
-                    if (journal.getObject() != null && Ups.class.equals(journal.getObject().getClass())) {
-                        Ups object = (Ups) journal.getObject();
-                        if (object.getAccounting1C() != null) {
-                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
-                        }
-                    }
-                %>
-            </td>
+            <%
+                String objectStr = "";
+                String accounting1CStr = "";
+                if (journal.getObject() != null && Computer.class.equals(journal.getObject().getClass())) {
+                    Computer object = (Computer) journal.getObject();
+                    accounting1CStr = object != null && object.getAccounting1C() != null ? object.getAccounting1C().toStringHtml() : "";
+                    objectStr = object != null ? object.toStringHtmlSelectUid() : journal.getObjectStr();
+                }
+                if (journal.getObject() != null && Monitor.class.equals(journal.getObject().getClass())) {
+                    Monitor object = (Monitor) journal.getObject();
+                    accounting1CStr = object != null && object.getAccounting1C() != null ? object.getAccounting1C().toStringHtml() : "";
+                    objectStr = object != null ? object.toStringHtml() : journal.getObjectStr();
+                }
+                if (journal.getObject() != null && Printer.class.equals(journal.getObject().getClass())) {
+                    Printer object = (Printer) journal.getObject();
+                    accounting1CStr = object != null && object.getAccounting1C() != null ? object.getAccounting1C().toStringHtml() : "";
+                    objectStr = object != null ? object.toStringHtml() : journal.getObjectStr();
+                }
+                if (journal.getObject() != null && Scanner.class.equals(journal.getObject().getClass())) {
+                    Scanner object = (Scanner) journal.getObject();
+                    accounting1CStr = object != null && object.getAccounting1C() != null ? object.getAccounting1C().toStringHtml() : "";
+                    objectStr = object != null ? object.toStringHtml() : journal.getObjectStr();
+                }
+                if (journal.getObject() != null && Mfd.class.equals(journal.getObject().getClass())) {
+                    Mfd object = (Mfd) journal.getObject();
+                    accounting1CStr = object != null && object.getAccounting1C() != null ? object.getAccounting1C().toStringHtml() : "";
+                    objectStr = object != null ? object.toStringHtml() : journal.getObjectStr();
+                }
+                if (journal.getObject() != null && Ups.class.equals(journal.getObject().getClass())) {
+                    Ups object = (Ups) journal.getObject();
+                    accounting1CStr = object != null && object.getAccounting1C() != null ? object.getAccounting1C().toStringHtml() : "";
+                    objectStr = object != null ? object.toStringHtml() : journal.getObjectStr();
+                }
+            %>
+            <td><%=objectStr%></td>
+            <td><%=accounting1CStr%></td>
             <td><%=journal.getUser() != null ? journal.getUser().toString() :
                     journal.getUserStr() != null ? journal.getUserStr() : ""%>
             </td>

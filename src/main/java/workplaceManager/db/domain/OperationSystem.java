@@ -38,6 +38,14 @@ public class OperationSystem {
     }
 
     @Transient
+    public String toStringHtml() {
+        if(vendor.isEmpty() && version.isEmpty() && OSArchitecture.isEmpty()) {
+            return "";
+        }
+        return String.format("<b>%s</b> (%s, %s)", vendor, version, OSArchitecture);
+    }
+
+    @Transient
     public static boolean equalsOS(OperationSystem operationSystem1, OperationSystem operationSystem2) {
         if (operationSystem1 == null && operationSystem2 == null) {
             return true;

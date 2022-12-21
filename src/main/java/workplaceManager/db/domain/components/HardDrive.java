@@ -35,6 +35,11 @@ public class HardDrive {
     }
 
     @Transient
+    public String toStringHtml() {
+        return String.format("%s (<b>%s Gb</b>)", model, size);
+    }
+
+    @Transient
     public static boolean isEmpty(HardDrive hardDrive) {
         if (hardDrive == null) {
             return true;

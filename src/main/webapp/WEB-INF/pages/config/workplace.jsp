@@ -65,7 +65,7 @@
         <p>
             <label for="title">Название</label>
             <input type="text" autofocus name="title" id="title" size="50"
-                   value="<%=workplace!=null ? workplaceManager.ReplaceString.replace(workplace.getTitle()) : ""%>">
+                   value="<%=workplace!=null ? workplace.getTitleHtml() : ""%>">
         </p>
     </div>
     <div align="center">

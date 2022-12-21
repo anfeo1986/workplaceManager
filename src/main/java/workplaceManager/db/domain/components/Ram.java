@@ -45,6 +45,11 @@ public class Ram implements Serializable {
     }
 
     @Transient
+    public String toStringHtml() {
+        return String.format("%s (Тип: <b>%s</b>, Объем: <b>%sGb</b>, Частота: <b>%s</b>, %s)", model, typeRam, amount, frequency, deviceLocator);
+    }
+
+    @Transient
     public static boolean isEmpty(Ram ram) {
         if (ram == null) {
             return true;

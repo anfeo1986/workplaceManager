@@ -68,14 +68,13 @@
                 String inventoryNumber = (accounting1C != null && accounting1C.getInventoryNumber() != null)
                         ? accounting1C.getInventoryNumber() : "";
             %>
-            <input type="text" name="inventoryNumber" id="inventoryNumber" value="<%=inventoryNumber%>">
+            <input type="text" name="inventoryNumber" id="inventoryNumber" autofocus value="<%=inventoryNumber%>">
         </p>
 
         <p>
             <label for="title">Название</label>
             <%
-                String title = (accounting1C != null && accounting1C.getTitle() != null) ?
-                        workplaceManager.ReplaceString.replace(accounting1C.getTitle()) : "";
+                String title = (accounting1C != null && accounting1C.getTitle() != null) ? accounting1C.getTitleHtml() : "";
             %>
             <input type="text" name="title" id="title" size="50" value="<%=title%>">
         </p>

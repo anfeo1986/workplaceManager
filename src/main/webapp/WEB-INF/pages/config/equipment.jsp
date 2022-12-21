@@ -101,7 +101,7 @@
         <h1>Основная информация</h1></p>
         <p>
             <label for="uid">UID</label>
-            <input type="text" name="uid" id="uid" value="<%=uid%>">
+            <input type="text" name="uid" id="uid" autofocus value="<%=uid%>">
         </p>
         <%
             if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
@@ -139,13 +139,12 @@
                         if (workplace.getId() == workplaceId) {
                 %>
                 <option selected value="<%=workplace.getId()%>">
-                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
+                    <%=workplace.getTitleHtml()%>
                 </option>
                 <%
                 } else {
                 %>
-                <option value="<%=workplace.getId()%>">
-                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
+                <option value="<%=workplace.getId()%>"><%=workplace.getTitleHtml()%>
                 </option>
                 <%
                         }

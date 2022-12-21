@@ -1,6 +1,7 @@
 package workplaceManager.db.domain;
 
 import lombok.Data;
+import workplaceManager.ReplaceString;
 import workplaceManager.db.domain.components.*;
 
 import javax.persistence.*;
@@ -45,13 +46,41 @@ public class Computer extends Equipment<Computer> {
     private List<HardDrive> hardDriveList = new ArrayList<>();
 
     @Override
+    @Transient
     public String toString() {
-        String str = String.format("%s (%s", ip, getUid());
+        /*String str = String.format("%s (%s", ip, getUid());
         if ((getManufacturer() != null && !getManufacturer().isEmpty()) ||
                 (getModel() != null && !getModel().isEmpty())) {
             str += String.format(", %s %s",getManufacturer(), getModel());
         }
         str += ") ";
+        if (getDeleted()) {
+            str += " (удалено. id=" + getId() + ")";
+        }
+        return str;*/
+        return String.format("%s (%s%s) %s", ip, getUid(), addManufacturerAndModel(), addDeleted());
+    }
+
+    @Transient
+    public String toStringHtmlSelectIp() {
+        return String.format("<b>%s</b> (%s%s) %s", ip, getUid(), addManufacturerAndModel(), addDeleted());
+    }
+
+    @Transient
+    public String toStringHtmlSelectUid() {
+        return String.format("%s (<b>%s</b>%s) %s", ip, getUid(), addManufacturerAndModel(), addDeleted());
+    }
+
+    private String addManufacturerAndModel() {
+        String str = "";
+        if ((getManufacturer() != null && !getManufacturer().isEmpty()) ||
+                (getModel() != null && !getModel().isEmpty())) {
+            str += String.format(", %s %s", ReplaceString.replace(getManufacturer()), ReplaceString.replace(getModel()));
+        }
+        return str;
+    }
+    private String addDeleted() {
+        String str = "";
         if (getDeleted()) {
             str += " (удалено. id=" + getId() + ")";
         }

@@ -155,7 +155,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=workplace.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.token%>=<%=token%>">
-                <%=ReplaceString.replace(workplace.getTitle())%>
+                <%=workplace.getTitleHtml()%>
             </a></td>
 
         <td>
@@ -179,7 +179,7 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>">
-                    <%=computer%>
+                    <%=computer.toStringHtmlSelectUid()%>
                 </a></p>
             <%
                 }
@@ -192,7 +192,7 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=monitor.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>">
-                    <%=monitor%>
+                    <%=monitor.toStringHtml()%>
                 </a></p>
             <%
                 }
@@ -205,7 +205,7 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=mfd.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>">
-                    <%=mfd%>
+                    <%=mfd.toStringHtml()%>
                 </a></p>
             <%
                 }
@@ -218,7 +218,7 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=printer.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>">
-                    <%=printer%>
+                    <%=printer.toStringHtml()%>
                 </a></p>
             <%
                 }
@@ -231,7 +231,7 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=scanner.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>">
-                    <%=scanner%>
+                    <%=scanner.toStringHtml()%>
                 </a></p>
             <%
                 }
@@ -244,7 +244,7 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=ups.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>">
-                    <%=ups%>
+                    <%=ups.toStringHtml()%>
                 </a></p>
             <%
                 }

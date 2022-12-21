@@ -27,6 +27,7 @@ public class MotherBoard {
     private Computer computer;
 
     @Override
+    @Transient
     public String toString() {
         return String.format("%s %s", manufacturer, model);
     }

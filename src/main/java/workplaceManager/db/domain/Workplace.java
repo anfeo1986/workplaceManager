@@ -3,6 +3,7 @@ package workplaceManager.db.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import workplaceManager.ReplaceString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,6 +39,20 @@ public class Workplace implements Serializable {
             str += " (удалено. id=" + id + ")";
         }
         return str;
+    }
+
+    @Transient
+    public String toStringHtml() {
+        String str = ReplaceString.replace(title);
+        if (deleted) {
+            str += " (удалено. id=" + id + ")";
+        }
+        return str;
+    }
+
+    @Transient
+    public String getTitleHtml() {
+        return ReplaceString.replace(title);
     }
 
     @Transient

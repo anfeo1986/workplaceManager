@@ -49,10 +49,10 @@
             count++;
         %>
         <td><a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-            <%=computer%>
+            <%=computer.toStringHtmlSelectIp()%>
         </a>
         </td>
-        <td><%=computer.getOperationSystem() != null ? computer.getOperationSystem() : ""%>
+        <td><%=computer.getOperationSystem() != null ? computer.getOperationSystem().toStringHtml() : ""%>
         </td>
         <%
             if (!CollectionUtils.isEmpty(computer.getProcessorList())) {
@@ -61,7 +61,7 @@
             <%
                 for (Processor processor : computer.getProcessorList()) {
             %>
-            <p><%=processor%>
+            <p><%=processor.toStringHtml()%>
             </p>
             <%
                 }
@@ -83,7 +83,7 @@
             <%
                 for (Ram ram : computer.getRamList()) {
             %>
-            <p><%=ram%>
+            <p><%=ram.toStringHtml()%>
             </p>
             <%
                 }
@@ -103,7 +103,7 @@
             <%
                 for (HardDrive hardDrive : computer.getHardDriveList()) {
             %>
-            <p><%=hardDrive%>
+            <p><%=hardDrive.toStringHtml()%>
             </p>
             <%
                 }
@@ -141,7 +141,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                <%=ReplaceString.replace(computer.getWorkplace().getTitle())%>
+                <%=computer.getWorkplace().getTitleHtml()%>
             </a>
         </td>
         <%
@@ -156,7 +156,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=computer.getAccounting1C().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                <%=computer.getAccounting1C()%>
+                <%=computer.getAccounting1C().toStringHtml()%>
             </a>
         </td>
         <%

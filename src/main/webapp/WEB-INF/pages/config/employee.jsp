@@ -66,7 +66,7 @@
                 String employeeName = (employee != null && employee.getName() != null) ? employee.getName() : "";
             %>
 
-            <input type="text" name="name" id="name" size="56|" value="<%=employeeName%>">
+            <input type="text" name="name" id="name" autofocus size="56" value="<%=employeeName%>">
         </p>
 
         <p>
@@ -90,14 +90,13 @@
                     for (Workplace workplace : workplaceList) {
                         if (workplace.getId() == workplaceId) {
                 %>
-                <option selected value="<%=workplace.getId()%>">
-                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
+                <option selected value="<%=workplace.getId()%>"><%=workplace.getTitleHtml()%>
                 </option>
                 <%
                 } else {
                 %>
                 <option value="<%=workplace.getId()%>">
-                    <%=workplaceManager.ReplaceString.replace(workplace.getTitle())%>
+                    <%=workplace.getTitleHtml()%>
                 </option>
                 <%
                         }

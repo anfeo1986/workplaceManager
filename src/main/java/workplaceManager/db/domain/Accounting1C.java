@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import workplaceManager.ReplaceString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -45,9 +46,24 @@ public class Accounting1C implements Serializable {
         this.employee = employee;
     }
 
+    @Transient
+    public String getTitleHtml() {
+        return ReplaceString.replace(title);
+    }
+
     @Override
+    @Transient
     public String toString() {
         String str = String.format("%s (%s, %s)", inventoryNumber, title, employee == null ? "" : employee.getName());
+        if (deleted) {
+            str += " (списано. id=" + id + ")";
+        }
+        return str;
+    }
+
+    @Transient
+    public String toStringHtml() {
+        String str = String.format("<b>%s</b> (%s, <b>%s</b>)", inventoryNumber, ReplaceString.replace(title), employee == null ? "" : employee.getName());
         if (deleted) {
             str += " (списано. id=" + id + ")";
         }

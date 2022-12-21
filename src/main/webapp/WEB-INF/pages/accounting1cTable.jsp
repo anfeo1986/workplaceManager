@@ -39,7 +39,7 @@
         </td>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
-                <%=ReplaceString.replace(accounting1C.getTitle())%>
+                <%=accounting1C.getTitleHtml()%>
             </a>
         </td>
         <%
@@ -82,10 +82,11 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                    <%=equipment%>
+                    <%=equipment.toStringHtml()%>
                 </a><br>
-                <b>Рабочее
-                    место: </b> <%=equipment.getWorkplace() != null ? ReplaceString.replace(equipment.getWorkplace().toString()) : ""%>
+                Рабочее место:
+                <b><%=equipment.getWorkplace() != null ? equipment.getWorkplace().toStringHtml() : ""%>
+                </b>
                 <br>
 
             </p>

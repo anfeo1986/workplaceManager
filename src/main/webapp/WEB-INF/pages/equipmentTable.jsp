@@ -53,7 +53,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                <%=equipment%>
+                <%=equipment.toStringHtml()%>
             </a>
         </td>
         <%
@@ -61,7 +61,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=equipment.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                <%=ReplaceString.replace(equipment.getWorkplace().getTitle())%>
+                <%=equipment.getWorkplace().getTitleHtml()%>
             </a>
         </td>
         <%
@@ -76,7 +76,7 @@
         %>
         <td>
             <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=equipment.getAccounting1C().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                <%=equipment.getAccounting1C()%>
+                <%=equipment.getAccounting1C().toStringHtml()%>
             </a>
         </td>
         <%

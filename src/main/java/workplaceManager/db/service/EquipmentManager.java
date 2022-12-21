@@ -24,6 +24,34 @@ public class EquipmentManager extends EntityManager<Equipment> {
         return equipmentList;
     }
 
+    public String replaceIp(String ip) {
+        if (ip == null || ip.isEmpty()) {
+            return "";
+        }
+        String ipNew = "";
+
+        int lastIndex = ip.lastIndexOf('.');
+        if (lastIndex < 0) {
+            return ip;
+        }
+        ipNew = ip.substring(0, lastIndex + 1);
+        if (lastIndex == ip.length()) {
+            return ipNew;
+        }
+        String end = ip.substring(lastIndex + 1);
+        if (end.length() == 0) {
+            ipNew += "000";
+        } else if (end.length() == 1) {
+            ipNew += "00" + end;
+        } else if (end.length() == 2) {
+            ipNew += "0" + end;
+        } else {
+            ipNew += end;
+        }
+
+        return ipNew;
+    }
+
     @Transactional
     public List<Computer> getComputerList() {
         List<Equipment> equipmentAllList = getEquipmentList();
@@ -33,8 +61,9 @@ public class EquipmentManager extends EntityManager<Equipment> {
         equipmentAllList.stream().forEach(equipment -> {
             if (equipment instanceof Computer) {
                 Computer computer = (Computer) equipment;
-                if (computer.getIp() != null && !computer.getIp().isEmpty() && !sortedMap.containsKey(computer.getIp())) {
-                    sortedMap.put(computer.getIp(), computer);
+                String ip = replaceIp(computer.getIp());
+                if (ip != null && !ip.isEmpty() && !sortedMap.containsKey(ip)) {
+                    sortedMap.put(ip, computer);
                 } else {
                     computerListOther.add(computer);
                 }
@@ -73,7 +102,7 @@ public class EquipmentManager extends EntityManager<Equipment> {
     public List<Monitor> getMonitorList() {
         List<Monitor> equipmentList = new ArrayList<>();
         getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
-            if(equipment instanceof Monitor) {
+            if (equipment instanceof Monitor) {
                 equipmentList.add((Monitor) equipment);
             }
         });
@@ -84,7 +113,7 @@ public class EquipmentManager extends EntityManager<Equipment> {
     public List<Printer> getPrinterList() {
         List<Printer> equipmentList = new ArrayList<>();
         getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
-            if(equipment instanceof Printer) {
+            if (equipment instanceof Printer) {
                 equipmentList.add((Printer) equipment);
             }
         });
@@ -95,7 +124,7 @@ public class EquipmentManager extends EntityManager<Equipment> {
     public List<Scanner> getScannerList() {
         List<Scanner> equipmentList = new ArrayList<>();
         getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
-            if(equipment instanceof Scanner) {
+            if (equipment instanceof Scanner) {
                 equipmentList.add((Scanner) equipment);
             }
         });
@@ -106,7 +135,7 @@ public class EquipmentManager extends EntityManager<Equipment> {
     public List<Mfd> getMfdList() {
         List<Mfd> equipmentList = new ArrayList<>();
         getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
-            if(equipment instanceof Mfd) {
+            if (equipment instanceof Mfd) {
                 equipmentList.add((Mfd) equipment);
             }
         });
@@ -117,7 +146,7 @@ public class EquipmentManager extends EntityManager<Equipment> {
     public List<Ups> getUpsList() {
         List<Ups> equipmentList = new ArrayList<>();
         getSortedListEquipment(getEquipmentList()).stream().forEach(equipment -> {
-            if(equipment instanceof Ups) {
+            if (equipment instanceof Ups) {
                 equipmentList.add((Ups) equipment);
             }
         });
