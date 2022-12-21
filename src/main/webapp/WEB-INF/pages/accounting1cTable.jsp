@@ -5,6 +5,8 @@
 
 <div align="center"><h1>Бухгалтерия</h1></div>
 
+<%@include file='/WEB-INF/pages/filter/accounting1CFilter.jsp' %>
+
 <table>
     <tr>
         <th>ID</th>
