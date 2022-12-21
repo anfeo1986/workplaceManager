@@ -20,12 +20,14 @@ public class Accounting1CManager extends EntityManager<Accounting1C> {
     public List<Accounting1C> getAccounting1cList() {
         Session session = sessionFactory.getCurrentSession();
         List<Accounting1C> accounting1CListFromDb = session.createQuery("from Accounting1C as ac " +
-                "where ac.deleted=false order by ac.title").list();
+                "where ac.deleted=false order by ac.inventoryNumber").list();
 
-        List<Accounting1C> accounting1CList = getSortedListAccounting1C(accounting1CListFromDb);
-        accounting1CList.stream().forEach(accounting1C -> initializeAccounting1c(accounting1C));
+        //List<Accounting1C> accounting1CList = getSortedListAccounting1C(accounting1CListFromDb);
+        //accounting1CList.stream().forEach(accounting1C -> initializeAccounting1c(accounting1C));
+        accounting1CListFromDb.stream().forEach(accounting1C -> initializeAccounting1c(accounting1C));
 
-        return accounting1CList;
+        //return accounting1CList;
+        return accounting1CListFromDb;
     }
 
     private List<Accounting1C> getSortedListAccounting1C(List<Accounting1C> accounting1CListNoSort) {

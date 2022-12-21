@@ -850,10 +850,10 @@ public class ConfigEquipmentController {
                 equipment.setAccounting1C(accounting1C);
             }
         } else if (Parameters.accounting1CAddNewRecord.equals(accounting1CRadio)) {
-            Accounting1C accounting1CFromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1CInventoryNumber);
-            if (accounting1CFromDB != null) {
-                return String.format("%s уже существует", accounting1CInventoryNumber);
-            }
+            //Accounting1C accounting1CFromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1CInventoryNumber);
+            //if (accounting1CFromDB != null) {
+            //    return String.format("%s уже существует", accounting1CInventoryNumber);
+            //}
             Accounting1C accounting1C = new Accounting1C(accounting1CInventoryNumber, accounting1CTitle,
                     employeeManager.getEmployeeById(employeeId, false));
             if (isNeedSave) {

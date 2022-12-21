@@ -223,6 +223,42 @@
                 </select>
                 <!--Параметр.Конец-->
 
+                <!--Состояние-->
+                <label for="<%=Components.stateObjectForFilterJournal%>"><b>Состояние</b></label>
+                <select name="<%=Components.stateObjectForFilterJournal%>"
+                        id="<%=Components.stateObjectForFilterJournal%>"
+                        onchange="document.getElementById('filterForm').submit()">
+                    <%
+                        if (stateObjectForFilter == null) {
+                    %>
+                    <option selected value="">Все</option>
+                    <%
+                    } else {
+                    %>
+                    <option value="">Все</option>
+                    <%
+                        }
+                    %>
+                    <%
+                        for (StateObject stateObject : stateObjectList) {
+                            if (stateObjectForFilter != null && stateObjectForFilter.equals(stateObject)) {
+                    %>
+                    <option selected value="<%=stateObject.name()%>"><%=stateObject.toString()%>
+                    </option>
+                    <%
+                    } else {
+                    %>
+                    <option value="<%=stateObject.name()%>"><%=stateObject.toString()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                    <%
+                        }
+                    %>
+                </select>
+                <!--Состояние.Конец-->
+
             </p>
             <p align="center">
                 <!--Объект-->
@@ -260,42 +296,6 @@
                     %>
                 </select>
                 <!--Объект.Конец-->
-
-                <!--Состояние-->
-                <label for="<%=Components.stateObjectForFilterJournal%>"><b>Состояние</b></label>
-                <select name="<%=Components.stateObjectForFilterJournal%>"
-                        id="<%=Components.stateObjectForFilterJournal%>"
-                        onchange="document.getElementById('filterForm').submit()">
-                    <%
-                        if (stateObjectForFilter == null) {
-                    %>
-                    <option selected value="">Все</option>
-                    <%
-                    } else {
-                    %>
-                    <option value="">Все</option>
-                    <%
-                        }
-                    %>
-                    <%
-                        for (StateObject stateObject : stateObjectList) {
-                            if (stateObjectForFilter != null && stateObjectForFilter.equals(stateObject)) {
-                    %>
-                    <option selected value="<%=stateObject.name()%>"><%=stateObject.toString()%>
-                    </option>
-                    <%
-                    } else {
-                    %>
-                    <option value="<%=stateObject.name()%>"><%=stateObject.toString()%>
-                    </option>
-                    <%
-                        }
-                    %>
-                    <%
-                        }
-                    %>
-                </select>
-                <!--Пользователь.Конец-->
             </p>
         </div>
 
@@ -448,37 +448,37 @@
                     if (journal.getObject() != null && Computer.class.equals(journal.getObject().getClass())) {
                         Computer object = (Computer) journal.getObject();
                         if (object.getAccounting1C() != null) {
-                            out.println(object.getAccounting1C().toString());
+                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
                         }
                     }
                     if (journal.getObject() != null && Monitor.class.equals(journal.getObject().getClass())) {
                         Monitor object = (Monitor) journal.getObject();
                         if (object.getAccounting1C() != null) {
-                            out.println(object.getAccounting1C().toString());
+                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
                         }
                     }
                     if (journal.getObject() != null && Printer.class.equals(journal.getObject().getClass())) {
                         Printer object = (Printer) journal.getObject();
                         if (object.getAccounting1C() != null) {
-                            out.println(object.getAccounting1C().toString());
+                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
                         }
                     }
                     if (journal.getObject() != null && Scanner.class.equals(journal.getObject().getClass())) {
                         Scanner object = (Scanner) journal.getObject();
                         if (object.getAccounting1C() != null) {
-                            out.println(object.getAccounting1C().toString());
+                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
                         }
                     }
                     if (journal.getObject() != null && Mfd.class.equals(journal.getObject().getClass())) {
                         Mfd object = (Mfd) journal.getObject();
                         if (object.getAccounting1C() != null) {
-                            out.println(object.getAccounting1C().toString());
+                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
                         }
                     }
                     if (journal.getObject() != null && Ups.class.equals(journal.getObject().getClass())) {
                         Ups object = (Ups) journal.getObject();
                         if (object.getAccounting1C() != null) {
-                            out.println(object.getAccounting1C().toString());
+                            out.println(ReplaceString.replace(object.getAccounting1C().toString()));
                         }
                     }
                 %>

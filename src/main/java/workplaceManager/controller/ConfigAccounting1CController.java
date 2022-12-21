@@ -73,12 +73,12 @@ public class ConfigAccounting1CController {
                 Employee employee = employeeManager.getEmployeeById(employeeId, false);
                 accounting1C.setEmployee(employee);
 
-                Accounting1C accounting1C1FromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1C.getInventoryNumber());
-                if (accounting1C1FromDB != null) {
-                    modelAndView.addObject(Parameters.error, String.format("%s (%s) уже существует",
-                            accounting1C1FromDB.getInventoryNumber(), accounting1C1FromDB.getTitle()));
-                    modelAndView.addObject(Parameters.accounting1C, accounting1C);
-                } else {
+                //Accounting1C accounting1C1FromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1C.getInventoryNumber());
+                //if (accounting1C1FromDB != null) {
+                //    modelAndView.addObject(Parameters.error, String.format("%s (%s) уже существует",
+                //            accounting1C1FromDB.getInventoryNumber(), accounting1C1FromDB.getTitle()));
+                //    modelAndView.addObject(Parameters.accounting1C, accounting1C);
+                //} else {
                     accounting1C.setDeleted(false);
                     accounting1CManager.save(accounting1C);
 
@@ -86,7 +86,7 @@ public class ConfigAccounting1CController {
 
                     modelAndView.addObject(Parameters.message, String.format("%s успешно добавлен", accounting1C));
                     modelAndView.addObject(Parameters.accounting1C, new Accounting1C());
-                }
+                //}
             }
 
             return getModelAndView(redirect, modelAndView);
