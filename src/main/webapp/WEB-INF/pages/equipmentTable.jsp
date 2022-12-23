@@ -31,6 +31,7 @@
         <th>id</th>
         <th><%=title%></th>
         <th>Рабочее место</th>
+        <th>Комментарий</th>
         <th>Бухгалтерия</th>
         <%
             if(Role.ADMIN.equals(role)) {
@@ -71,6 +72,9 @@
         <%
             }
         %>
+        <td>
+            <%=equipment.getCommentHtml()%>
+        </td>
         <%
             if (equipment.getAccounting1C() != null) {
         %>

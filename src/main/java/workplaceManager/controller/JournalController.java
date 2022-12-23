@@ -147,6 +147,7 @@ public class JournalController {
             parameterList.add(TypeParameter.RAM);
             parameterList.add(TypeParameter.HARDDRIVE);
             parameterList.add(TypeParameter.VIDEOCARD);
+            parameterList.add(TypeParameter.COMMENT);
         } else if (TypeObject.MONITOR.equals(typeObject) ||
                 TypeObject.PRINTER.equals(typeObject) ||
                 TypeObject.SCANNER.equals(typeObject) ||
@@ -157,6 +158,7 @@ public class JournalController {
             parameterList.add(TypeParameter.MODEL);
             parameterList.add(TypeParameter.WORKPLACE);
             parameterList.add(TypeParameter.ACCOUNTING1C);
+            parameterList.add(TypeParameter.COMMENT);
         } else if (TypeObject.USER.equals(typeObject)) {
 
         } else if (TypeObject.ACCOUNTING1C.equals(typeObject)) {

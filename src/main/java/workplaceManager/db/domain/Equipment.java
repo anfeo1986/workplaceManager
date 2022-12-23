@@ -3,6 +3,7 @@ package workplaceManager.db.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import workplaceManager.ReplaceString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +34,9 @@ public class Equipment<T> implements Serializable {
     @Column
     private Boolean deleted = false;
 
+    @Column
+    private String comment = "";
+
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "accounting1С")
     private Accounting1C accounting1C;
@@ -40,6 +44,14 @@ public class Equipment<T> implements Serializable {
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "workplace")
     private Workplace workplace;
+
+    @Transient
+    public String getCommentHtml() {
+        if(comment == null) {
+            return "";
+        }
+        return ReplaceString.replace(comment);
+    }
 
     public String toStringHtml() {
         return String.format("<b>%s</b> (%s %s)%s", uid, manufacturer, model, addDeleted());

@@ -4,6 +4,7 @@ public enum TypeParameter {
     UID("UID"),
     MANUFACTURER("Производитель"),
     MODEL("Модель"),
+    COMMENT("Комментарий"),
     WORKPLACE("Рабочее место"),
     ACCOUNTING1C("Бухгалтерия"),
     IP ("IP"),

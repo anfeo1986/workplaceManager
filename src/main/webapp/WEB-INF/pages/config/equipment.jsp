@@ -102,6 +102,10 @@
         <p>
             <label for="uid">UID</label>
             <input type="text" name="uid" id="uid" autofocus value="<%=uid%>">
+            <label for="manufacturer">Производитель</label>
+            <input type="text" name="manufacturer" id="manufacturer" value="<%=manufacturer%>">
+            <label for="model">Модель</label>
+            <input type="text" name="model" id="model" value="<%=model%>">
         </p>
         <%
             if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
@@ -120,12 +124,6 @@
         <%
             }
         %>
-        <p>
-            <label for="manufacturer">Производитель</label>
-            <input type="text" name="manufacturer" id="manufacturer" value="<%=manufacturer%>">
-            <label for="model">Модель</label>
-            <input type="text" name="model" id="model" value="<%=model%>">
-        </p>
         <p>
             <%
                 List<Workplace> workplaceList = (List<Workplace>) request.getAttribute(Parameters.workplaceList);
@@ -151,6 +149,11 @@
                     }
                 %>
             </select>
+        </p>
+        <p class="align_p">
+            <label for="<%=Parameters.comment%>">Комментарий</label>
+            <textarea name="<%=Parameters.comment%>" id="<%=Parameters.comment%>"
+                      rows="5" cols="100"><%=(equipment != null && equipment.getComment() != null) ? equipment.getCommentHtml() : ""%></textarea>
         </p>
     </div>
 

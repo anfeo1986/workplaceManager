@@ -13,6 +13,7 @@ import workplaceManager.TypeParameter;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.domain.components.*;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 @Repository
@@ -137,6 +138,10 @@ public class JournalManager extends EntityManager<Journal> {
                     equipmentOld.getWorkplace() != null ? equipmentOld.getWorkplace().toString() : "",
                     equipmentNew.getWorkplace() != null ? equipmentNew.getWorkplace().toString() : "",
                     typeEquipment, user);
+        }
+        if(!StringUtils.equals(equipmentNew.getComment(), equipmentOld.getComment())) {
+            saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.COMMENT,
+                    equipmentOld.getComment(), equipmentNew.getCommentHtml(), typeEquipment, user);
         }
         if (!Accounting1C.equalsAccounting1C(equipmentOld.getAccounting1C(), equipmentNew.getAccounting1C())) {
             saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.ACCOUNTING1C,
@@ -459,80 +464,6 @@ public class JournalManager extends EntityManager<Journal> {
                 journal.setObject(objectList.get(journal.getIdObject()));
                 journalListNew.add(journal);
             }
-
-
-            /*TypeObject typeObjectFromJournal = TypeObject.valueOf(journal.getTypeObject());
-            if (TypeObject.COMPUTER.equals(typeObjectFromJournal)) {
-                Computer computer = equipmentManager.getComputerById(journal.getIdObject(), true);
-                journal.setObject(computer);
-                if (stateObject != null) {
-                    if ((StateObject.DELETED.equals(stateObject) && computer.getDeleted()) ||
-                            (StateObject.NO_DELETED.equals(stateObject) && !computer.getDeleted())) {
-                        journalListNew.add(journal);
-                    }
-                } else {
-                    journalListNew.add(journal);
-                }
-            } else if (TypeObject.MFD.equals(typeObjectFromJournal) ||
-                    TypeObject.MONITOR.equals(typeObjectFromJournal) ||
-                    TypeObject.PRINTER.equals(typeObjectFromJournal) ||
-                    TypeObject.SCANNER.equals(typeObjectFromJournal) ||
-                    TypeObject.UPS.equals(typeObjectFromJournal)) {
-                Equipment equipment = equipmentManager.getEquipmentById(journal.getIdObject(), true);
-                journal.setObject(equipment);
-                if (stateObject != null) {
-                    if ((StateObject.DELETED.equals(stateObject) && equipment.getDeleted()) ||
-                            (StateObject.NO_DELETED.equals(stateObject) && !equipment.getDeleted())) {
-                        journalListNew.add(journal);
-                    }
-                } else {
-                    journalListNew.add(journal);
-                }
-            } else if (TypeObject.ACCOUNTING1C.equals(typeObjectFromJournal)) {
-                Accounting1C accounting1C = accounting1CManager.getAccounting1CById(journal.getIdObject(), true);
-                journal.setObject(accounting1C);
-                if (stateObject != null) {
-                    if ((StateObject.DELETED.equals(stateObject) && accounting1C.getDeleted()) ||
-                            (StateObject.NO_DELETED.equals(stateObject) && !accounting1C.getDeleted())) {
-                        journalListNew.add(journal);
-                    }
-                } else {
-                    journalListNew.add(journal);
-                }
-            } else if (TypeObject.USER.equals(typeObjectFromJournal)) {
-                Users user = userManager.getUserById(journal.getIdObject(), true);
-                journal.setObject(user);
-                if (stateObject != null) {
-                    if ((StateObject.DELETED.equals(stateObject) && user.getDeleted()) ||
-                            (StateObject.NO_DELETED.equals(stateObject) && !user.getDeleted())) {
-                        journalListNew.add(journal);
-                    }
-                } else {
-                    journalListNew.add(journal);
-                }
-            } else if (TypeObject.EMPLOYEE.equals(typeObjectFromJournal)) {
-                Employee employee = employeeManager.getEmployeeById(journal.getIdObject(), true);
-                journal.setObject(employee);
-                if (stateObject != null) {
-                    if ((StateObject.DELETED.equals(stateObject) && employee.getDeleted()) ||
-                            (StateObject.NO_DELETED.equals(stateObject) && !employee.getDeleted())) {
-                        journalListNew.add(journal);
-                    }
-                } else {
-                    journalListNew.add(journal);
-                }
-            } else if (TypeObject.WORKPLACE.equals(typeObjectFromJournal)) {
-                Workplace workplace = workplaceManager.getWorkplaceById(journal.getIdObject(), true);
-                journal.setObject(workplace);
-                if (stateObject != null) {
-                    if ((StateObject.DELETED.equals(stateObject) && workplace.getDeleted()) ||
-                            (StateObject.NO_DELETED.equals(stateObject) && !workplace.getDeleted())) {
-                        journalListNew.add(journal);
-                    }
-                } else {
-                    journalListNew.add(journal);
-                }
-            }*/
         }
         return journalListNew;
     }

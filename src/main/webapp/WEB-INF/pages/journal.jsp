@@ -222,7 +222,8 @@
                     %>
                 </select>
                 <!--Параметр.Конец-->
-
+            </p>
+            <p align="center">
                 <!--Состояние-->
                 <label for="<%=Components.stateObjectForFilterJournal%>"><b>Состояние</b></label>
                 <select name="<%=Components.stateObjectForFilterJournal%>"
@@ -258,7 +259,6 @@
                     %>
                 </select>
                 <!--Состояние.Конец-->
-
             </p>
             <p align="center">
                 <!--Объект-->
@@ -414,7 +414,7 @@
             </td>
             <td>
                 <h3><%=journal.getEvent()%>.</h3>
-                <b>Тип объекта: </b><%=TypeObject.valueOf(journal.getTypeObject())%>
+                <b>Тип объекта: </b><%=TypeObject.valueOf(journal.getTypeObject())%><br>
                 <%
                     if (journal.getParameter() != null && !journal.getParameter().isEmpty()) {
                 %>
@@ -430,8 +430,8 @@
             %>
             <td>
                 <p>
-                    <b>Было:</b> <%=journal.getOldValue()%><br>
-                    <b>Стало:</b> <%=journal.getNewValue()%>
+                    <b>Было:</b> <%=ReplaceString.replace(journal.getOldValue())%><br>
+                    <b>Стало:</b> <%=ReplaceString.replace(journal.getNewValue())%>
                 </p>
             </td>
             <%

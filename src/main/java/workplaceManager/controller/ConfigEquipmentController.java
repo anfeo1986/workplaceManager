@@ -470,6 +470,7 @@ public class ConfigEquipmentController {
         computer.setWorkplace(equipment.getWorkplace());
         computer.setAccounting1C(equipment.getAccounting1C());
         computer.setNetName(request.getParameter(Parameters.netName));
+        computer.setComment(request.getParameter(Parameters.comment));
 
         addMotherboardToComputer(request, computer);
         addOperationSystemToComputer(request, computer);

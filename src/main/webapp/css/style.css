@@ -88,6 +88,10 @@ tr {
     background: #e3e0e0;
 }
 
+tbody tr:hover {
+    background: #9095ac;
+}
+
 tr.delete {
     background: gray;
 }

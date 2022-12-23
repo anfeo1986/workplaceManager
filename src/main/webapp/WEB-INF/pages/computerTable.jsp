@@ -21,17 +21,19 @@
 <table>
     <tr>
         <th>id</th>
-        <th><%=title%></th>
+        <th><%=title%>
+        </th>
+        <th>Рабочее место</th>
         <th>ОС</th>
         <th>Процессор</th>
         <th>Материнская плата</th>
         <th>Оперативная память</th>
         <th>Жесткие диски</th>
         <th>Видеокарта</th>
-        <th>Рабочее место</th>
+        <th>Комментарий</th>
         <th>Бухгалтерия</th>
         <%
-            if(Role.ADMIN.equals(role)) {
+            if (Role.ADMIN.equals(role)) {
         %>
         <th/>
         <%
@@ -48,10 +50,26 @@
         <%
             count++;
         %>
-        <td><a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-            <%=computer.toStringHtmlSelectIp()%>
-        </a>
+        <td>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+                <%=computer.toStringHtmlSelectIp()%>
+            </a>
         </td>
+        <%
+            if (computer.getWorkplace() != null) {
+        %>
+        <td>
+            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+                <%=computer.getWorkplace().getTitleHtml()%>
+            </a>
+        </td>
+        <%
+        } else {
+        %>
+        <td/>
+        <%
+            }
+        %>
         <td><%=computer.getOperationSystem() != null ? computer.getOperationSystem().toStringHtml() : ""%>
         </td>
         <%
@@ -136,21 +154,9 @@
         <%
             }
         %>
-        <%
-            if (computer.getWorkplace() != null) {
-        %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                <%=computer.getWorkplace().getTitleHtml()%>
-            </a>
+            <%=computer.getCommentHtml()%>
         </td>
-        <%
-        } else {
-        %>
-        <td/>
-        <%
-            }
-        %>
         <%
             if (computer.getAccounting1C() != null) {
         %>

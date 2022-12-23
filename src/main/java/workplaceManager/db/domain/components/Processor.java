@@ -44,7 +44,7 @@ public class Processor implements Serializable {
 
     @Transient
     public String toStringHtml() {
-        return String.format("%s (<b>Кол-во ядер:</b> %s, <b>Частота:</b> %s, <b>Сокет:</b> %s)", model, numberOfCores, frequency, socket);
+        return String.format("%s (Кол-во ядер: <b>%s</b>, Частота: <b>%sMGz</b>, Сокет: <b>%s</b>)", model, numberOfCores, frequency, socket);
     }
 
     @Transient
