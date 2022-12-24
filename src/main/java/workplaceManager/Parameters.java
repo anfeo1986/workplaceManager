@@ -42,6 +42,9 @@ public class Parameters {
     public static final String accounting1CList = "accounting1CList";
     public static final String inventoryNumber = "inventoryNumber";
     public static final String title = "title";
+    public static final String accountingSorting = "accountingSorting";
+    public static final String accounting1CFindText = "accounting1CFindText";
+    public static final String accounting1CFilter = "accounting1CFilter";
 
     public static final String workplaceList = "workplaceList";
 

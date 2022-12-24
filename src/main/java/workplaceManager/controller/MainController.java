@@ -10,6 +10,8 @@ import workplaceManager.Parameters;
 import workplaceManager.SecurityCrypt;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.*;
+import workplaceManager.sorting.FilterAccounting1C;
+import workplaceManager.sorting.SortingAccounting1C;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -121,15 +123,29 @@ public class MainController {
     }
 
     @GetMapping(Pages.accounting1c)
-    public ModelAndView getAccounting1C(/*@RequestParam(name = Parameters.token) String token,*/
-                                        HttpServletRequest request) {
+    public ModelAndView getAccounting1C(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList();
+            SortingAccounting1C sortingAccounting1C = SortingAccounting1C.INVENTORY_NUMBER;
+            String sortingStr = request.getParameter(Parameters.accountingSorting);
+            if(sortingStr != null) {
+                sortingAccounting1C = SortingAccounting1C.valueOf(sortingStr);
+            }
+
+            String findText = request.getParameter(Parameters.accounting1CFindText);
+
+            FilterAccounting1C filter = FilterAccounting1C.ALL;
+            String filterStr = request.getParameter(Parameters.accounting1CFilter);
+            if(filterStr != null) {
+                filter = FilterAccounting1C.valueOf(filterStr);
+            }
+
+            List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList(sortingAccounting1C, findText, filter);
 
             modelAndView.addObject(Parameters.accounting1CList, accounting1CList);
             modelAndView.addObject(Parameters.page, TypePage.accounting1c.toString());
+            modelAndView.addObject(Parameters.accountingSorting, sortingAccounting1C);
         }
         return modelAndView;
     }

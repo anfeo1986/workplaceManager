@@ -11,6 +11,8 @@ import workplaceManager.TypeObject;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.domain.components.*;
 import workplaceManager.db.service.*;
+import workplaceManager.sorting.FilterAccounting1C;
+import workplaceManager.sorting.SortingAccounting1C;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -870,7 +872,7 @@ public class ConfigEquipmentController {
         List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
         modelAndView.addObject(Parameters.workplaceList, workplaceList);
 
-        List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList();
+        List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList(SortingAccounting1C.INVENTORY_NUMBER, "", FilterAccounting1C.ALL);
         modelAndView.addObject(Parameters.accounting1CList, accounting1CList);
 
         List<Employee> employeeList = employeeManager.getEmployeeList();
