@@ -47,8 +47,9 @@ public class ConfigAccounting1CController {
     @GetMapping(Pages.addUpdateAccounting1C)
     public ModelAndView getForm(@RequestParam(name = Parameters.id, required = false) Long id,
                                 @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                @RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigAccounting1C);
+                                //@RequestParam(name = Parameters.token) String token,
+                                HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigAccounting1C);
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Accounting1C accounting1C = new Accounting1C();
             if (id != null && id > 0) {
@@ -64,10 +65,11 @@ public class ConfigAccounting1CController {
     public ModelAndView addAccounting1C(@ModelAttribute(Parameters.accounting1C) Accounting1C accounting1C,
                                         @RequestParam(name = Parameters.redirect, required = false) String redirect,
                                         @RequestParam(name = Parameters.employeeId, required = false) Long employeeId,
-                                        @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                        //@RequestParam(name = Parameters.token) String token,
+                                        HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigAccounting1C);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigAccounting1C);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Employee employee = employeeManager.getEmployeeById(employeeId, false);
@@ -98,11 +100,11 @@ public class ConfigAccounting1CController {
     @PostMapping(Pages.updateAccounting1CPost)
     public ModelAndView updateAccounting(@RequestParam(name = Parameters.redirect, required = false) String redirect,
                                          @RequestParam(name = Parameters.employeeId, required = false) Long employeeId,
-                                         @RequestParam(name = Parameters.token) String token,
+                                         //@RequestParam(name = Parameters.token) String token,
                                          HttpServletRequest request) {
-        Users user = securityCrypt.getUserByToken(token);
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigAccounting1C);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigAccounting1C);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Accounting1C accounting1C = null;
@@ -155,10 +157,11 @@ public class ConfigAccounting1CController {
 
     @GetMapping(Pages.deleteAccounting1CPost)
     public ModelAndView deleteAccounting1C(@RequestParam(name = Parameters.id) Long id,
-                                           @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                           //@RequestParam(name = Parameters.token) String token,
+                                           HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + Pages.accounting1c);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + Pages.accounting1c);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Accounting1C accounting1C = accounting1CManager.getAccounting1CById(id, false);

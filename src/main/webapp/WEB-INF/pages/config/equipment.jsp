@@ -28,8 +28,8 @@
     <%
         Equipment equipment = (Equipment) request.getAttribute(Parameters.equipment);
         String buttonTitle = "Добавить";
-        String token = (String) request.getAttribute(Parameters.token);
-        Role role = (Role) request.getAttribute(Parameters.role);
+        //String token = (String) request.getAttribute(Parameters.token);
+        Role role = (Role) request.getSession().getAttribute(Parameters.role);
         String typeEquipment = (String) request.getAttribute(Parameters.typeEquipment);
         String uid = (equipment != null && equipment.getUid() != null) ? equipment.getUid() : "";
         String manufacturer = (equipment != null && equipment.getManufacturer() != null) ? equipment.getManufacturer() : "";
@@ -153,7 +153,8 @@
         <p class="align_p">
             <label for="<%=Parameters.comment%>">Комментарий</label>
             <textarea name="<%=Parameters.comment%>" id="<%=Parameters.comment%>"
-                      rows="5" cols="100"><%=(equipment != null && equipment.getComment() != null) ? equipment.getCommentHtml() : ""%></textarea>
+                      rows="5"
+                      cols="100"><%=(equipment != null && equipment.getComment() != null) ? equipment.getCommentHtml() : ""%></textarea>
         </p>
     </div>
 
@@ -536,14 +537,14 @@
                 }
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
-            <input type="hidden" name="<%=Parameters.token%>" value="<%=token%>">
             <input type="hidden" name="<%=Parameters.typeEquipment%>" value="<%=typeEquipment%>">
             <input type="hidden" name="<%=Parameters.countProcessor%>" value="<%=countProcessor%>">
             <input type="hidden" name="<%=Parameters.countRam%>" value="<%=countRam%>">
             <input type="hidden" name="<%=Parameters.countVideoCard%>" value="<%=countVideoCard%>">
             <input type="hidden" name="<%=Parameters.countHardDrive%>" value="<%=countHardDrive%>">
 
-            <a href="<%=baseUrl + redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
+            <!--<a href="" class="button">Назад</a>-->
+            <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
                 <%
                 if (Role.ADMIN.equals(role) && (equipment != null && equipment.getId() > 0)) {
                     Long id;
@@ -555,7 +556,7 @@
                     }
             %>
         <td>
-            <a href="<%=baseUrl + Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=id%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=id%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                 Удалить</a>
         </td>
         <%

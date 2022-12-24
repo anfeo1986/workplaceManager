@@ -10,6 +10,7 @@ public class Parameters {
     public static final String id = "id";
     public static final String typeEquipment = "typeEquipment";
     public static final String token = "token";
+    public static final String login = "login";
     public static final String redirect = "redirect";
     public static final String equipment = "equipment";
     public static final String equipmentList = "equipmentList";

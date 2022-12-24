@@ -1,7 +1,6 @@
 package workplaceManager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +12,8 @@ import workplaceManager.db.domain.Workplace;
 import workplaceManager.db.service.EmployeeManager;
 import workplaceManager.db.service.JournalManager;
 import workplaceManager.db.service.WorkplaceManager;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 //@RequestMapping("/config/workplace")
@@ -50,8 +51,9 @@ public class ConfigWorkplaceController {
     @GetMapping(Pages.addUpdateWorkplace)
     public ModelAndView addWorkplace(@RequestParam(name = Parameters.id, required = false) Long workplaceId,
                                      @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                     @RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigWorkplace);
+                                     //@RequestParam(name = Parameters.token) String token,
+                                     HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigWorkplace);
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Workplace workplace = new Workplace();
             if (workplaceId != null && workplaceId > 0) {
@@ -70,10 +72,11 @@ public class ConfigWorkplaceController {
     @PostMapping(Pages.addWorkplacePost)
     public ModelAndView addWorkplace(@ModelAttribute(Parameters.workplace) Workplace workplace,
                                      @ModelAttribute(Parameters.redirect) String redirect,
-                                     @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                     //@RequestParam(name = Parameters.token) String token,
+                                     HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigWorkplace);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigWorkplace);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Workplace workplaceFromDb = workplaceManager.getWorkplaceByTitle(workplace.getTitle());
@@ -105,10 +108,11 @@ public class ConfigWorkplaceController {
     @PostMapping(Pages.updateWorkplacePost)
     public ModelAndView updateWorkplace(@ModelAttribute(Parameters.workplace) Workplace workplace,
                                         @ModelAttribute(Parameters.redirect) String redirect,
-                                        @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                        //@RequestParam(name = Parameters.token) String token,
+                                        HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigWorkplace);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigWorkplace);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Workplace workplaceFromDb = workplaceManager.getWorkplaceByTitle(workplace.getTitle());
@@ -140,10 +144,11 @@ public class ConfigWorkplaceController {
 
     @GetMapping(Pages.deleteWorkplacePost)
     public ModelAndView deleteWorkplace(@RequestParam(name = Parameters.id) Long id,
-                                        @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                        //@RequestParam(name = Parameters.token) String token,
+                                        HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + Pages.workplace);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + Pages.workplace);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Workplace workplace = workplaceManager.getWorkplaceById(id, false);

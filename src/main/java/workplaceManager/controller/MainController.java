@@ -11,6 +11,7 @@ import workplaceManager.SecurityCrypt;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -70,20 +71,33 @@ public class MainController {
         this.userManager = userManager;
     }
 
+    @GetMapping(Pages.logout)
+    public ModelAndView logout(HttpServletRequest request) {
+        request.getSession().removeAttribute(Parameters.token);
+        request.getSession().removeAttribute(Parameters.role);
+        request.getSession().removeAttribute(Parameters.login);
+
+        return new ModelAndView(Pages.login);
+    }
+
     @GetMapping("/")
-    public ModelAndView getMain(@RequestParam(name = Parameters.token, required = false) String token) {
-        return securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getMain(//@RequestParam(name = Parameters.token, required = false) String token,
+                                HttpServletRequest request) {
+        //return securityCrypt.verifyUser(request, token, Pages.mainPage);
+        return getWorkplace(request);
     }
 
     @GetMapping(Pages.mainPage)
-    public ModelAndView getMainPageForm(@RequestParam(name = Parameters.token) String token) {
-        return getWorkplace(token);
+    public ModelAndView getMainPageForm(/*@RequestParam(name = Parameters.token) String token,*/
+                                        HttpServletRequest request) {
+        return getWorkplace(request);
     }
 
     @GetMapping(Pages.workplace)
     @Transactional
-    public ModelAndView getWorkplace(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getWorkplace(/*@RequestParam(name = Parameters.token) String token,*/
+                                     HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
         modelAndView.addObject(Parameters.workplaceList, workplaceList);
@@ -94,8 +108,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.employee)
-    public ModelAndView getEmployee(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getEmployee(/*@RequestParam(name = Parameters.token) String token,*/
+                                    HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Employee> employeeList = employeeManager.getEmployeeList();
 
@@ -106,8 +121,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.accounting1c)
-    public ModelAndView getAccounting1C(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getAccounting1C(/*@RequestParam(name = Parameters.token) String token,*/
+                                        HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList();
@@ -119,8 +135,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.computer)
-    public ModelAndView getComputerForm(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getComputerForm(/*@RequestParam(name = Parameters.token) String token,*/
+                                        HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Computer> equipmentList = equipmentManager.getComputerList();
@@ -134,8 +151,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.monitor)
-    public ModelAndView getMonitors(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getMonitors(/*@RequestParam(name = Parameters.token) String token,*/
+                                    HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Monitor> equipmentList = equipmentManager.getMonitorList();
@@ -149,8 +167,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.printer)
-    public ModelAndView getPrinters(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getPrinters(/*@RequestParam(name = Parameters.token) String token,*/
+                                    HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Printer> equipmentList = equipmentManager.getPrinterList();
@@ -164,8 +183,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.scanner)
-    public ModelAndView getScanners(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getScanners(/*@RequestParam(name = Parameters.token) String token,*/
+                                    HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Scanner> equipmentList = equipmentManager.getScannerList();
@@ -179,8 +199,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.mfd)
-    public ModelAndView getMfd(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getMfd(/*@RequestParam(name = Parameters.token) String token,*/
+                               HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Mfd> equipmentList = equipmentManager.getMfdList();
@@ -194,8 +215,9 @@ public class MainController {
     }
 
     @GetMapping(Pages.ups)
-    public ModelAndView getUps(@RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.mainPage);
+    public ModelAndView getUps(/*@RequestParam(name = Parameters.token) String token,*/
+                               HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             List<Ups> equipmentList = equipmentManager.getUpsList();

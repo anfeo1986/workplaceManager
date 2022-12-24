@@ -5,6 +5,7 @@ public class Pages {
     //public static final String login = "login";
     public static final String login = "index";
     public static final String registration = "registration";
+    public static final String logout = "logout";
 
     public static final String journal = "journal";
 

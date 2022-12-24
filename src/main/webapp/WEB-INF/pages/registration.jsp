@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Авторизация</title>
+    <title>Регистрация</title>
     <!--<link rel="icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">-->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleLogin.css" type="text/css" />
@@ -27,7 +27,7 @@
             <%
                 if(error != null && !error.isEmpty()) {
             %>
-            <h2><%=error%></h2>
+            <p><%=error%></p>
             <%
                 }
             %>

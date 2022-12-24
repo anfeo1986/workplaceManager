@@ -40,61 +40,60 @@
 <body>
 <%
     String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
-    String token = (String) request.getAttribute(Parameters.token);
-    Role role = (Role) request.getAttribute(Parameters.role);
+    //String token = (String) request.getAttribute(Parameters.token);
+
 %>
 
 <section class="sticky">
     <%@include file='header.jsp' %>
 </section>
-<input type="hidden" name="token" value="<%=token%>">
+
 <div>
+    <c:if test="${page == 'computer'}">
 
-            <c:if test="${page == 'computer'}">
+        <%@include file="computerTable.jsp" %>
 
-                    <%@include file="computerTable.jsp" %>
+    </c:if>
+    <c:if test="${page == 'employee'}">
 
-            </c:if>
-            <c:if test="${page == 'employee'}">
+        <%@include file='employeeTable.jsp' %>
 
-                    <%@include file='employeeTable.jsp' %>
+    </c:if>
+    <c:if test="${page == 'workplace'}">
 
-            </c:if>
-            <c:if test="${page == 'workplace'}">
+        <%@include file='workplaceTable.jsp' %>
 
-                    <%@include file='workplaceTable.jsp' %>
+    </c:if>
+    <c:if test="${page == 'accounting1c'}">
 
-            </c:if>
-            <c:if test="${page == 'accounting1c'}">
+        <%@include file="accounting1cTable.jsp" %>
 
-                    <%@include file="accounting1cTable.jsp" %>
+    </c:if>
+    <c:if test="${page == 'monitor'}">
 
-            </c:if>
-            <c:if test="${page == 'monitor'}">
+        <%@include file="equipmentTable.jsp" %>
 
-                    <%@include file="equipmentTable.jsp" %>
+    </c:if>
+    <c:if test="${page == 'printer'}">
 
-            </c:if>
-            <c:if test="${page == 'printer'}">
+        <%@include file="equipmentTable.jsp" %>
 
-                    <%@include file="equipmentTable.jsp" %>
+    </c:if>
+    <c:if test="${page == 'scanner'}">
 
-            </c:if>
-            <c:if test="${page == 'scanner'}">
+        <%@include file="equipmentTable.jsp" %>
 
-                    <%@include file="equipmentTable.jsp" %>
+    </c:if>
+    <c:if test="${page == 'mfd'}">
 
-            </c:if>
-            <c:if test="${page == 'mfd'}">
+        <%@include file="equipmentTable.jsp" %>
 
-                    <%@include file="equipmentTable.jsp" %>
+    </c:if>
+    <c:if test="${page == 'ups'}">
 
-            </c:if>
-            <c:if test="${page == 'ups'}">
+        <%@include file="equipmentTable.jsp" %>
 
-                    <%@include file="equipmentTable.jsp" %>
-
-            </c:if>
+    </c:if>
 
 </div>
 

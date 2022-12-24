@@ -13,8 +13,9 @@
         Accounting1C accounting1C = (Accounting1C) request.getAttribute(Parameters.accounting1C);
         String error = (String) request.getAttribute(Parameters.error);
         String message = (String) request.getAttribute(Parameters.message);
-        String token = (String) request.getAttribute(Parameters.token);
+        //String token = (String) request.getAttribute(Parameters.token);
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
+        Role role = (Role) request.getSession().getAttribute(Parameters.role);
 
         String buttonTitle = "Добавить";
         String url = baseUrl;
@@ -109,7 +110,6 @@
     <div align="center">
         <p>
             <%
-                Role role = (Role) request.getAttribute(Parameters.role);
                 if (Role.ADMIN.equals(role)) {
             %>
             <input type="submit" value="<%=buttonTitle%>">
@@ -118,8 +118,7 @@
                 String redirect = (String) request.getAttribute(Parameters.redirect);
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
-            <input type="hidden" name="<%=Parameters.token%>" value="<%=token%>">
-            <a href="<%=baseUrl + redirect%>?<%=Parameters.token%>=<%=token%>" class="button">Назад</a>
+            <a href="<%=baseUrl + redirect%>" class="button">Назад</a>
         </p>
     </div>
 

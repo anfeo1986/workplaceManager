@@ -10,6 +10,7 @@ import workplaceManager.db.service.EmployeeManager;
 import workplaceManager.db.service.JournalManager;
 import workplaceManager.db.service.WorkplaceManager;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -46,8 +47,9 @@ public class ConfigEmployeeController {
     @GetMapping(Pages.addUpdateEmployee)
     public ModelAndView addUpdateEmployee(@RequestParam(name = Parameters.id, required = false) Long employeeId,
                                           @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                          @RequestParam(name = Parameters.token) String token) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
+                                          //@RequestParam(name = Parameters.token) String token,
+                                          HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEmployee);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Employee employee = new Employee();
@@ -71,10 +73,11 @@ public class ConfigEmployeeController {
     public ModelAndView addEmployee(@ModelAttribute(Parameters.employee) Employee employee,
                                     @ModelAttribute(Parameters.workplaceId) Long workplaceId,
                                     @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                    @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                    //@RequestParam(name = Parameters.token) String token,
+                                    HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEmployee);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Workplace workplace = workplaceManager.getWorkplaceById(workplaceId, false);
@@ -114,10 +117,11 @@ public class ConfigEmployeeController {
     public ModelAndView updateEmployee(@ModelAttribute(Parameters.employee) Employee employee,
                                        @ModelAttribute(Parameters.workplaceId) Long workplaceId,
                                        @ModelAttribute(Parameters.redirect) String redirect,
-                                       @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                       //@RequestParam(name = Parameters.token) String token,
+                                       HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEmployee);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEmployee);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Workplace workplace = workplaceManager.getWorkplaceById(workplaceId, false);
@@ -156,10 +160,11 @@ public class ConfigEmployeeController {
 
     @GetMapping(Pages.deleteEmployeePost)
     public ModelAndView deleteEmployee(@RequestParam(name = Parameters.id) Long id,
-                                       @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                       //@RequestParam(name = Parameters.token) String token,
+                                       HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/"+Pages.employee);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/"+Pages.employee);
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Employee employee = employeeManager.getEmployeeById(id, false);
                 employeeManager.delete(employee);

@@ -15,7 +15,6 @@ import workplaceManager.db.service.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ConfigEquipmentController {
@@ -100,9 +99,10 @@ public class ConfigEquipmentController {
     @GetMapping(Pages.addUpdateEquipment)
     public ModelAndView getFormAddUpdateEquipment(@RequestParam(name = Parameters.id, required = false) Long id,
                                                   @RequestParam(name = Parameters.typeEquipment) String typeEquipment,
-                                                  @RequestParam(name = Parameters.token) String token,
-                                                  @RequestParam(name = Parameters.redirect, required = false) String redirect) {
-        ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
+                                                  //@RequestParam(name = Parameters.token) String token,
+                                                  @RequestParam(name = Parameters.redirect, required = false) String redirect,
+                                                  HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
             Equipment equipment = new Equipment();
@@ -121,11 +121,11 @@ public class ConfigEquipmentController {
     }
 
     private ModelAndView readConfigComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                            @RequestParam(name = Parameters.token) String token,
+                                            //@RequestParam(name = Parameters.token) String token,
                                             HttpServletRequest request) {
-        Users user = securityCrypt.getUserByToken(token);
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 setWorkplaceByEquipment(equipment, request);
@@ -174,12 +174,12 @@ public class ConfigEquipmentController {
     }
 
     private ModelAndView addComponentComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                              @RequestParam(name = Parameters.token) String token,
+                                              //@RequestParam(name = Parameters.token) String token,
                                               HttpServletRequest request,
                                               TypeComponentsComputer typeComponentsComputer) {
-        Users user = securityCrypt.getUserByToken(token);
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 setWorkplaceByEquipment(equipment, request);
@@ -219,12 +219,12 @@ public class ConfigEquipmentController {
     }
 
     private ModelAndView deleteComponentsComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                                  @RequestParam(name = Parameters.token) String token,
+                                                  //@RequestParam(name = Parameters.token) String token,
                                                   HttpServletRequest request,
                                                   TypeComponentsComputer typeComponentsComputer) {
-        Users user = securityCrypt.getUserByToken(token);
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
 
@@ -286,49 +286,49 @@ public class ConfigEquipmentController {
     }
 
     private ModelAndView searchPage(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                    @RequestParam(name = Parameters.token) String token,
+                                    //@RequestParam(name = Parameters.token) String token,
                                     HttpServletRequest request) {
         if (request.getParameter(Components.buttonReadConfigComputer) != null) {
-            return readConfigComputer(equipment, token, request);
+            return readConfigComputer(equipment, request);
         }
         if (request.getParameter(Components.buttonAddProcessor) != null) {
-            return addComponentComputer(equipment, token, request, TypeComponentsComputer.processor);
+            return addComponentComputer(equipment, request, TypeComponentsComputer.processor);
         }
         int countProcessor = Integer.parseInt(request.getParameter(Parameters.countProcessor));
         for (int i = 1; i <= countProcessor; i++) {
             String buttonDeleteProcessor = Components.buttonDeleteProcessor + i;
             if (request.getParameter(buttonDeleteProcessor) != null) {
-                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.processor);
+                return deleteComponentsComputer(equipment, request, TypeComponentsComputer.processor);
             }
         }
         if (request.getParameter(Components.buttonAddRam) != null) {
-            return addComponentComputer(equipment, token, request, TypeComponentsComputer.ram);
+            return addComponentComputer(equipment, request, TypeComponentsComputer.ram);
         }
         int countRam = Integer.parseInt(request.getParameter(Parameters.countRam));
         for (int i = 1; i <= countRam; i++) {
             String buttonDeleteRam = Components.buttonDeleteRam + i;
             if (request.getParameter(buttonDeleteRam) != null) {
-                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.ram);
+                return deleteComponentsComputer(equipment, request, TypeComponentsComputer.ram);
             }
         }
         if (request.getParameter(Components.buttonAddVideoCard) != null) {
-            return addComponentComputer(equipment, token, request, TypeComponentsComputer.videoCard);
+            return addComponentComputer(equipment, request, TypeComponentsComputer.videoCard);
         }
         int countVideCard = Integer.parseInt(request.getParameter(Parameters.countVideoCard));
         for (int i = 1; i <= countVideCard; i++) {
             String buttonDeleteVideoCard = Components.buttonDeleteVideoCard + i;
             if (request.getParameter(buttonDeleteVideoCard) != null) {
-                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.videoCard);
+                return deleteComponentsComputer(equipment, request, TypeComponentsComputer.videoCard);
             }
         }
         if (request.getParameter(Components.buttonAddHardDrive) != null) {
-            return addComponentComputer(equipment, token, request, TypeComponentsComputer.hardDrive);
+            return addComponentComputer(equipment, request, TypeComponentsComputer.hardDrive);
         }
         int countHardDrive = Integer.parseInt(request.getParameter(Parameters.countHardDrive));
         for (int i = 1; i <= countHardDrive; i++) {
             String buttonDeleteHardDrive = Components.buttonDeleteHardDrive + i;
             if (request.getParameter(buttonDeleteHardDrive) != null) {
-                return deleteComponentsComputer(equipment, token, request, TypeComponentsComputer.hardDrive);
+                return deleteComponentsComputer(equipment, request, TypeComponentsComputer.hardDrive);
             }
         }
         return null;
@@ -353,16 +353,16 @@ public class ConfigEquipmentController {
 
     @PostMapping(Pages.addEquipmentPost)
     public ModelAndView addEquipment(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                     @RequestParam(name = Parameters.token) String token,
+                                     //@RequestParam(name = Parameters.token) String token,
                                      HttpServletRequest request) {
         equipment.setDeleted(false);
-        ModelAndView modelAndViewSearch = searchPage(equipment, token, request);
+        ModelAndView modelAndViewSearch = searchPage(equipment, request);
         if (modelAndViewSearch != null) {
             return modelAndViewSearch;
         }
-        Users user = securityCrypt.getUserByToken(token);
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 setWorkplaceByEquipment(equipment, request);
@@ -886,16 +886,16 @@ public class ConfigEquipmentController {
 
     @PostMapping(Pages.updateEquipmentPost)
     public ModelAndView updateEquipment(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                        @RequestParam(name = Parameters.token) String token,
+                                        //@RequestParam(name = Parameters.token) String token,
                                         HttpServletRequest request) {
         equipment.setDeleted(false);
-        ModelAndView modelAndViewSearch = searchPage(equipment, token, request);
+        ModelAndView modelAndViewSearch = searchPage(equipment, request);
         if (modelAndViewSearch != null) {
             return modelAndViewSearch;
         }
-        Users user = securityCrypt.getUserByToken(token);
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, Pages.formConfigEquipment);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
 
             String typeEquipment = request.getParameter(Parameters.typeEquipment);
             String redirect = request.getParameter(Parameters.redirect);
@@ -951,10 +951,11 @@ public class ConfigEquipmentController {
     public ModelAndView deleteEquipment(@RequestParam(name = Parameters.id) Long id,
                                         @RequestParam(value = Parameters.typeEquipment) String typeEquipment,
                                         @RequestParam(name = Parameters.redirect) String redirect,
-                                        @RequestParam(name = Parameters.token) String token) {
-        Users user = securityCrypt.getUserByToken(token);
+                                        //@RequestParam(name = Parameters.token) String token,
+                                        HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(token, "redirect:/" + redirect);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + redirect);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Equipment equipment = equipmentManager.getEquipmentById(id, false);

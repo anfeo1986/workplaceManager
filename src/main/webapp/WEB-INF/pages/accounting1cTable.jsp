@@ -3,6 +3,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%
+    Role roleInAccounting1C = (Role) request.getSession().getAttribute(Parameters.role);
+%>
+
 <div align="center"><h1>Бухгалтерия</h1></div>
 
 <%@include file='/WEB-INF/pages/filter/accounting1CFilter.jsp' %>
@@ -15,7 +19,7 @@
         <th>Материально-отвественное лицо</th>
         <th>Оборудование</th>
         <%
-            if (Role.ADMIN.equals(role)) {
+            if (Role.ADMIN.equals(roleInAccounting1C)) {
         %>
         <th/>
         <%
@@ -35,12 +39,12 @@
             count++;
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
+            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
                 <%=accounting1C.getInventoryNumber()%>
             </a>
         </td>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
+            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
                 <%=accounting1C.getTitleHtml()%>
             </a>
         </td>
@@ -83,7 +87,7 @@
                     }
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                     <%=equipment.toStringHtml()%>
                 </a><br>
                 Рабочее место:
@@ -105,10 +109,10 @@
         %>
 
         <%
-            if (Role.ADMIN.equals(role)) {
+            if (Role.ADMIN.equals(roleInAccounting1C)) {
         %>
         <td>
-            <a href="<%=baseUrl + Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.token%>=<%=token%>">
+            <a href="<%=baseUrl + Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
                 Удалить
             </a>
         </td>

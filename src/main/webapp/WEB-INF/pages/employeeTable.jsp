@@ -6,6 +6,7 @@
 <div align="center"><h1>Сотрудники</h1></div>
 <%
     List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
+    Role roleInEmployee = (Role) request.getSession().getAttribute(Parameters.role);
 
 %>
 
@@ -14,10 +15,10 @@
         <th>id</th>
         <th>ФИО</th>
         <th>Должность</th>
-        <th><a href="<%=baseUrl+Pages.workplace%>?<%=Parameters.token%>=<%=token%>">Рабочее место</a></th>
-        <th><a href="<%=baseUrl+Pages.accounting1c%>?<%=Parameters.token%>=<%=token%>">Бухгалтерия</a></th>
+        <th><a href="<%=baseUrl+Pages.workplace%>">Рабочее место</a></th>
+        <th><a href="<%=baseUrl+Pages.accounting1c%>">Бухгалтерия</a></th>
         <%
-            if(Role.ADMIN.equals(role)) {
+            if(Role.ADMIN.equals(roleInEmployee)) {
         %>
         <th/>
         <%
@@ -31,7 +32,7 @@
         <td><%=employee.getId()%>
         </td>
         <td>
-            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
                 <%=employee.getName()%>
             </a></td>
         <td><%=employee.getPost()%>
@@ -40,7 +41,7 @@
             if (employee.getWorkplace() != null) {
         %>
         <td>
-            <a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+            <a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
                 <%=employee.getWorkplace().getTitleHtml()%>
             </a></td>
         <%
@@ -56,7 +57,7 @@
                 for (Accounting1C accounting1C : employee.getAccounting1СList()) {
             %>
             <p>
-                <a href="<%=baseUrl+Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.token%>=<%=token%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+                <a href="<%=baseUrl+Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
                     <%=accounting1C.toStringHtml()%>
                 </a>
             </p>
@@ -72,10 +73,10 @@
             }
         %>
         <%
-            if (Role.ADMIN.equals(role)) {
+            if (Role.ADMIN.equals(roleInEmployee)) {
         %>
         <td>
-            <a href="<%=baseUrl+Pages.deleteEmployeePost%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.token%>=<%=token%>">
+            <a href="<%=baseUrl+Pages.deleteEmployeePost%>?<%=Parameters.id%>=<%=employee.getId()%>">
                 Удалить
             </a>
         </td>

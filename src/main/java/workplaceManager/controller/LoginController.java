@@ -1,5 +1,6 @@
 package workplaceManager.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,8 @@ import workplaceManager.db.domain.Users;
 import workplaceManager.db.service.JournalManager;
 import workplaceManager.db.service.UserManager;
 import workplaceManager.db.service.WorkplaceManager;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class LoginController {
@@ -44,22 +47,47 @@ public class LoginController {
     }
 
     @GetMapping(Pages.login)
-    public ModelAndView getLogin(@ModelAttribute(Parameters.userForm) Users userForm) {
-        Users userFromDB = userManager.getUserByLogin(userForm.getUsername());
+    public ModelAndView getLogin(@ModelAttribute(Parameters.userForm) Users userForm,
+                                 HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView(Pages.login);
 
-        Users user = new Users();
-        user.setUsername(userForm.getUsername());
-        user.setSalt(userFromDB == null ? "" : userFromDB.getSalt());
-        user.setPassword(securityCrypt.encode(userForm.getPassword(), user.getSalt()));
-        String token = securityCrypt.getToken(user);
+        try {
+            Users userFromDB = userManager.getUserByLogin(userForm.getUsername());
+            if (userFromDB == null) {
+                modelAndView.addObject(Parameters.error, "Пользователь не найден");
+                return modelAndView;
+            }
+            String passwordCrypt = securityCrypt.encode(userForm.getPassword(), userFromDB.getSalt());
+            if (!StringUtils.equals(passwordCrypt, userFromDB.getPassword())) {
+                modelAndView.addObject(Parameters.error, "Неверный пароль");
+                return modelAndView;
+            }
 
-        ModelAndView modelAndView =securityCrypt.verifyUser(token, "redirect:/" + Pages.mainPage);
+            securityCrypt.setNewSaltForUser(userFromDB, request);
+            String token = securityCrypt.getToken(userFromDB);
+            request.getSession().setAttribute(Parameters.token, token);
+            request.getSession().setAttribute(Parameters.login, userFromDB.getUsername());
+            request.getSession().setAttribute(Parameters.role, userFromDB.getRole());
 
-        if (!modelAndView.getViewName().equals(Pages.login)) {
+            modelAndView.setViewName("redirect:/" + Pages.mainPage);
             journalManager.save(new Journal(TypeEvent.USER_LOGIN, TypeObject.USER, userFromDB, userFromDB));
-        } else {
+        } catch (Exception exception) {
             modelAndView.addObject(Parameters.error, "Ошибка авторизации");
         }
+        //Users user = new Users();
+        //user.setUsername(userForm.getUsername());
+        //user.setSalt(userFromDB == null ? "" : userFromDB.getSalt());
+        //user.setPassword(securityCrypt.encode(userForm.getPassword(), user.getSalt()));
+        //String token = securityCrypt.getToken(user);
+
+        //ModelAndView modelAndView =securityCrypt.verifyUser(request, token, "redirect:/" + Pages.mainPage);
+
+        //if (!modelAndView.getViewName().equals(Pages.login)) {
+        //    request.getSession().setAttribute(Parameters.tokenSession, token);
+        //    journalManager.save(new Journal(TypeEvent.USER_LOGIN, TypeObject.USER, userFromDB, userFromDB));
+        //} else {
+        //    modelAndView.addObject(Parameters.error, "Ошибка авторизации");
+        //}
 
         return modelAndView;
     }

@@ -29,8 +29,8 @@
                 String error = (String) request.getAttribute(Parameters.error);
                 if (error != null && !error.isEmpty()) {
             %>
-            <h2><%=error%>
-            </h2>
+            <p><%=error%>
+            </p>
             <%
                 }
             %>

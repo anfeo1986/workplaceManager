@@ -1,5 +1,6 @@
 package workplaceManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,10 @@ import workplaceManager.db.service.UserManager;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -34,39 +35,70 @@ public class SecurityCrypt {
         this.environment = environment;
     }
 
-    public ModelAndView verifyUser(String token, String page) {
+    public ModelAndView verifyUser(HttpServletRequest request, String page) {
+        String token = (String) request.getSession().getAttribute(Parameters.token);
+        String login = (String) request.getSession().getAttribute(Parameters.login);
+
         ModelAndView modelAndView = new ModelAndView(Pages.login);
 
-        //System.out.println("page=" + page);
-        Users user = getUserByToken(token);
-        if (user != null) {
-            String passNoCrypt = decode(user.getPassword(), user.getSalt());
-            user.setSalt(generateKey());
-            user.setPassword(encode(passNoCrypt, user.getSalt()));
-            user.setDeleted(false);
-            userManager.save(user);
+        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(token)) {
+            return modelAndView;
+        }
 
-            String tokenNew = getToken(user);
+        //Users user = getUserByToken(token);
+        Users user = userManager.getUserByLogin(login);
+        if (user != null) {
+            Role role = (Role) request.getSession().getAttribute(Parameters.role);
+            if (!user.getRole().equals(role)) {
+                return modelAndView;
+            }
+            String tokenByUser = getToken(user);
+            if (!StringUtils.equals(token, tokenByUser)) {
+                return modelAndView;
+            }
+
+
+            //String passNoCrypt = decode(user.getPassword(), user.getSalt());
+            //user.setSalt(generateKey());
+            //user.setSalt(request.getSession().getId());
+            //user.setPassword(encode(passNoCrypt, user.getSalt()));
+            //user.setDeleted(false);
+            //userManager.save(user);
+
+            //String tokenNew = getToken(user);
 
             modelAndView.setViewName(page);
-            modelAndView.addObject(Parameters.token, tokenNew);
-            modelAndView.addObject(Parameters.role, user.getRole());
+            //modelAndView.addObject(Parameters.token, tokenNew);
+            //modelAndView.addObject(Parameters.role, user.getRole());
             modelAndView.addObject(Parameters.baseUrl, environment.getRequiredProperty("base.url"));
-            modelAndView.addObject(Parameters.userName, user.getUsername());
+            //modelAndView.addObject(Parameters.userName, user.getUsername());
             return modelAndView;
         }
 
         return modelAndView;
     }
 
-    public Users getUserByToken(String token) {
-        List<Users> userList = userManager.getUserList();
-        for (Users user : userList) {
-            String tokenForUser = getToken(user);
-            if (token != null && token.equals(tokenForUser)) {
-                return user;
-            }
+    public void setNewSaltForUser(Users user, HttpServletRequest request) {
+        String passwordNoCrypt = decode(user.getPassword(), user.getSalt());
+        user.setSalt(request.getSession().getId());
+        user.setPassword(encode(passwordNoCrypt, user.getSalt()));
+        user.setDeleted(false);
+        userManager.save(user);
+    }
+
+    public Users getUserBySession(HttpServletRequest request) {
+        Users userFromDb = userManager.getUserByLogin((String) request.getSession().getAttribute(Parameters.login));
+        String token = getToken(userFromDb);
+        if (StringUtils.equals(token, (String) request.getSession().getAttribute(Parameters.token))) {
+            return userFromDb;
         }
+        //List<Users> userList = userManager.getUserList();
+        //for (Users user : userList) {
+        //    String tokenForUser = getToken(user);
+        //    if (token != null && token.equals(tokenForUser)) {
+        //        return user;
+        //    }
+        //}
 
         return null;
     }
