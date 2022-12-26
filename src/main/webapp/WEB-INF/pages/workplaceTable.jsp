@@ -21,93 +21,31 @@
             <p>
                 <a href="<%=baseUrl + Pages.employee%>">Сотрудники</a>
             </p>
-            <%
-                if (Role.ADMIN.equals(roleInWorklace)) {
-            %>
-            <p>
-                <a href="<%=baseUrl + Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.workplace%>">
-                    Добавить сотрудника</a></p>
-            <%
-                }
-            %>
         </th>
         <th>
             <p>
             <h1><a href="<%=baseUrl + Pages.computer%>">Компьютеры</a></h1></p>
-            <%
-                if (Role.ADMIN.equals(roleInWorklace)) {
-            %>
-            <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>">
-                    Добавить компьютер</a></p>
-            <%
-                }
-            %>
+
         </th>
         <th>
             <p>
             <h1><a href="<%=baseUrl + Pages.monitor%>">Мониторы</a></h1></p>
-            <%
-                if (Role.ADMIN.equals(roleInWorklace)) {
-            %>
-            <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>">
-                    Добавить монитор</a></p>
-            <%
-                }
-            %>
         </th>
         <th>
             <p>
             <h1><a href="<%=baseUrl + Pages.mfd%>">МФУ</a></h1></p>
-            <%
-                if (Role.ADMIN.equals(roleInWorklace)) {
-            %>
-            <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>">
-                    Добавить МФУ</a></p>
-            <%
-                }
-            %>
         </th>
         <th>
             <p>
             <h1><a href="<%=baseUrl + Pages.printer%>">Принтеры</a></h1></p>
-            <%
-                if (Role.ADMIN.equals(roleInWorklace)) {
-            %>
-            <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>">
-                    Добавить принтер</a></p>
-            <%
-                }
-            %>
         </th>
         <th>
             <p>
             <h1><a href="<%=baseUrl + Pages.scanner%>">Сканеры</a></h1></p>
-            <%
-                if (Role.ADMIN.equals(roleInWorklace)) {
-            %>
-            <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>">
-                    Добавить сканер</a></p>
-            <%
-                }
-            %>
         </th>
         <th>
             <p>
             <h1><a href="<%=baseUrl + Pages.ups%>">ИБП</a></h1></p>
-            <%
-                if (Role.ADMIN.equals(roleInWorklace)) {
-            %>
-            <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>">
-                    Добавить ИБП</a></p>
-            <%
-                }
-            %>
         </th>
         <%
             if (Role.ADMIN.equals(roleInWorklace)) {
@@ -177,6 +115,16 @@
                     }
                 }
             %>
+            <%
+                if (Role.ADMIN.equals(roleInWorklace)) {
+            %>
+            <p>
+                <a href="<%=baseUrl + Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                    Добавить сотрудника</a></p>
+            <%
+                }
+            %>
         </td>
 
         <td>
@@ -187,6 +135,16 @@
                 <a href="<%=baseUrl + Pages.computer%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>">
                     <%=computer.toStringHtmlSelectUid()%>
                 </a></p>
+            <%
+                }
+            %>
+            <%
+                if (Role.ADMIN.equals(roleInWorklace)) {
+            %>
+            <p>
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                    Добавить компьютер</a></p>
             <%
                 }
             %>
@@ -203,6 +161,16 @@
             <%
                 }
             %>
+            <%
+                if (Role.ADMIN.equals(roleInWorklace)) {
+            %>
+            <p>
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                    Добавить монитор</a></p>
+            <%
+                }
+            %>
         </td>
 
         <td>
@@ -213,6 +181,16 @@
                 <a href="<%=baseUrl + Pages.mfd%>?<%=Parameters.id%>=<%=mfd.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>">
                     <%=mfd.toStringHtml()%>
                 </a></p>
+            <%
+                }
+            %>
+            <%
+                if (Role.ADMIN.equals(roleInWorklace)) {
+            %>
+            <p>
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                    Добавить МФУ</a></p>
             <%
                 }
             %>
@@ -229,6 +207,16 @@
             <%
                 }
             %>
+            <%
+                if (Role.ADMIN.equals(roleInWorklace)) {
+            %>
+            <p>
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                    Добавить принтер</a></p>
+            <%
+                }
+            %>
         </td>
 
         <td>
@@ -242,6 +230,16 @@
             <%
                 }
             %>
+            <%
+                if (Role.ADMIN.equals(roleInWorklace)) {
+            %>
+            <p>
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                    Добавить сканер</a></p>
+            <%
+                }
+            %>
         </td>
 
         <td>
@@ -252,6 +250,16 @@
                 <a href="<%=baseUrl + Pages.ups%>?<%=Parameters.id%>=<%=ups.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>">
                     <%=ups.toStringHtml()%>
                 </a></p>
+            <%
+                }
+            %>
+            <%
+                if (Role.ADMIN.equals(roleInWorklace)) {
+            %>
+            <p>
+                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                    Добавить ИБП</a></p>
             <%
                 }
             %>

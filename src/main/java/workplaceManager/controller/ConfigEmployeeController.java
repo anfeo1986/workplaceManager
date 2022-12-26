@@ -61,6 +61,11 @@ public class ConfigEmployeeController {
             List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
             modelAndView.addObject(Parameters.workplaceList, workplaceList);
 
+            if(request.getParameter(Parameters.workplaceId) != null) {
+                Long id = Long.parseLong(request.getParameter(Parameters.workplaceId));
+                modelAndView.addObject(Parameters.workplaceId, id);
+            }
+
             if (redirect == null) {
                 redirect = "";
             }

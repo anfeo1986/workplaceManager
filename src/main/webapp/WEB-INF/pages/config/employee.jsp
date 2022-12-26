@@ -16,6 +16,10 @@
         //String token = (String) request.getAttribute(Parameters.token);
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
         Role role = (Role) request.getSession().getAttribute(Parameters.role);
+        Long workplaceIdFromRequest = -1L;
+        if(request.getParameter(Parameters.workplaceId) != null) {
+            workplaceIdFromRequest = Long.parseLong(request.getParameter(Parameters.workplaceId));
+        }
 
         String url = baseUrl;
         String title = "";
@@ -89,7 +93,7 @@
                 <%
                     Long workplaceId = (employee != null && employee.getWorkplace() != null) ? employee.getWorkplace().getId() : -1;
                     for (Workplace workplace : workplaceList) {
-                        if (workplace.getId() == workplaceId) {
+                        if (workplace.getId() == workplaceId || workplace.getId() == workplaceIdFromRequest) {
                 %>
                 <option selected value="<%=workplace.getId()%>"><%=workplace.getTitleHtml()%>
                 </option>

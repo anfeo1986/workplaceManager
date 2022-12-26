@@ -118,6 +118,11 @@ public class ConfigEquipmentController {
                 Computer computer = equipmentManager.getComputerById(id, false);
                 modelAndView.addObject(Parameters.computer, computer == null ? new Computer() : computer);
             }
+
+            if(request.getParameter(Parameters.workplaceId) != null) {
+                Long workplaceId = Long.parseLong(request.getParameter(Parameters.workplaceId));
+                modelAndView.addObject(Parameters.workplaceId, workplaceId);
+            }
         }
         return getModelAndView(redirect, modelAndView);
     }

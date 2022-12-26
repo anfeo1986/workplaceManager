@@ -36,6 +36,10 @@
         String model = (equipment != null && equipment.getModel() != null) ? equipment.getModel() : "";
         String redirect = (String) request.getAttribute(Parameters.redirect);
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
+        Long workplaceIdFromRequest = -1L;
+        if(request.getParameter(Parameters.workplaceId) != null) {
+            workplaceIdFromRequest = Long.parseLong(request.getParameter(Parameters.workplaceId));
+        }
 
         String url = baseUrl;
         String title = "";
@@ -134,7 +138,7 @@
                 <option value="-1"/>
                 <%
                     for (Workplace workplace : workplaceList) {
-                        if (workplace.getId() == workplaceId) {
+                        if (workplace.getId() == workplaceId || workplace.getId() == workplaceIdFromRequest) {
                 %>
                 <option selected value="<%=workplace.getId()%>">
                     <%=workplace.getTitleHtml()%>
