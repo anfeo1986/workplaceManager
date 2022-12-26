@@ -33,19 +33,19 @@
         </th>
         <th>
             <p>
-            <a href="<%=baseUrl + Pages.mfd%>">МФУ</a></p>
+                <a href="<%=baseUrl + Pages.mfd%>">МФУ</a></p>
         </th>
         <th>
             <p>
-            <a href="<%=baseUrl + Pages.printer%>">Принтеры</a></p>
+                <a href="<%=baseUrl + Pages.printer%>">Принтеры</a></p>
         </th>
         <th>
             <p>
-            <a href="<%=baseUrl + Pages.scanner%>">Сканеры</a></p>
+                <a href="<%=baseUrl + Pages.scanner%>">Сканеры</a></p>
         </th>
         <th>
             <p>
-            <a href="<%=baseUrl + Pages.ups%>">ИБП</a></p>
+                <a href="<%=baseUrl + Pages.ups%>">ИБП</a></p>
         </th>
         <%
             if (Role.ADMIN.equals(roleInWorklace)) {
@@ -98,7 +98,8 @@
             count++;
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=workplace.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>">
+            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=workplace.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>"
+               target="_blank">
                 <%=workplace.getTitleHtml()%>
             </a></td>
 

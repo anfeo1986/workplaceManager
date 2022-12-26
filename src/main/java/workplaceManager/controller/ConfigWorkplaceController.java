@@ -97,6 +97,7 @@ public class ConfigWorkplaceController {
                     redirect = "";
                 }
                 modelAndView.addObject(Parameters.redirect, redirect);
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             return modelAndView;
@@ -127,7 +128,9 @@ public class ConfigWorkplaceController {
 
                     journalManager.saveChangeWorkplace(workplaceFromDbById, workplace, user);
 
-                    modelAndView.setViewName("redirect:/" + redirect);
+                    modelAndView.addObject(Parameters.message, workplace + "успешно отредактирован");
+                    modelAndView.addObject(Parameters.closeWindow, true);
+                    //modelAndView.setViewName("redirect:/" + redirect);
                 }
 
                 if (redirect == null) {

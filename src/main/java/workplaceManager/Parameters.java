@@ -6,6 +6,8 @@ public class Parameters {
     public static final String passwordError = "passwordError";
     public static final String userName = "userName";
 
+    public static final String closeWindow = "closeWindow";
+
     public static final String page = "page";
     public static final String id = "id";
     public static final String typeEquipment = "typeEquipment";

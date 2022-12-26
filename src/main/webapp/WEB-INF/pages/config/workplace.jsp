@@ -14,6 +14,10 @@
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
         //String token = (String) request.getAttribute(Parameters.token);
         Role role = (Role) request.getSession().getAttribute(Parameters.role);
+        Boolean isClose = false;
+        if (request.getAttribute(Parameters.closeWindow) != null) {
+            isClose = (Boolean) request.getAttribute(Parameters.closeWindow);
+        }
 
         String url = baseUrl;
         String buttonTitle = "";
@@ -30,9 +34,24 @@
     %>
     <title><%=title%>
     </title>
+
+    <script type="text/javascript">
+        function close_window() {
+            close();
+        }
+    </script>
 </head>
 
 <body>
+<%
+    if (isClose) {
+%>
+<script>
+    close_window();
+</script>
+<%
+    }
+%>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
@@ -44,6 +63,7 @@
 %>
 <h3><%=error%>
 </h3>
+
 <%
     }
     String message = (String) request.getAttribute(Parameters.message);
@@ -80,7 +100,9 @@
                 }
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
-            <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+            <!--<a onclick="javascript:window.close(); return false;" class="button">Назад</a>-->
+            <a onclick="close_window(); return false;" class="button">Назад</a>
+            <!--<a onclick="javascript:window.history.go(-1);  return false;" class="button">Назад</a>-->
         </p>
     </div>
 </form>

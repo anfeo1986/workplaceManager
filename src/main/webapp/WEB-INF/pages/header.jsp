@@ -47,7 +47,7 @@
             <%
                 if (MainController.TypePage.workplace.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>" target="_blank">
                 Добавить рабочее место
             </a>
             <%
