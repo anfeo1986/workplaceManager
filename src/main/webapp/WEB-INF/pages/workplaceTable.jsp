@@ -24,28 +24,28 @@
         </th>
         <th>
             <p>
-            <h1><a href="<%=baseUrl + Pages.computer%>">Компьютеры</a></h1></p>
+                <a href="<%=baseUrl + Pages.computer%>">Компьютеры</a></p>
 
         </th>
         <th>
             <p>
-            <h1><a href="<%=baseUrl + Pages.monitor%>">Мониторы</a></h1></p>
+                <a href="<%=baseUrl + Pages.monitor%>">Мониторы</a></p>
         </th>
         <th>
             <p>
-            <h1><a href="<%=baseUrl + Pages.mfd%>">МФУ</a></h1></p>
+            <a href="<%=baseUrl + Pages.mfd%>">МФУ</a></p>
         </th>
         <th>
             <p>
-            <h1><a href="<%=baseUrl + Pages.printer%>">Принтеры</a></h1></p>
+            <a href="<%=baseUrl + Pages.printer%>">Принтеры</a></p>
         </th>
         <th>
             <p>
-            <h1><a href="<%=baseUrl + Pages.scanner%>">Сканеры</a></h1></p>
+            <a href="<%=baseUrl + Pages.scanner%>">Сканеры</a></p>
         </th>
         <th>
             <p>
-            <h1><a href="<%=baseUrl + Pages.ups%>">ИБП</a></h1></p>
+            <a href="<%=baseUrl + Pages.ups%>">ИБП</a></p>
         </th>
         <%
             if (Role.ADMIN.equals(roleInWorklace)) {
