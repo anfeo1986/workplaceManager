@@ -8,15 +8,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div align="center"><h1>${title}</h1></div>
-
 <%
     String typeEquipment = (String) request.getAttribute(Parameters.typeEquipment);
     String redirect = (String) request.getAttribute(Parameters.page);
     String title = (String) request.getAttribute(Parameters.title);
     List<Computer> computerList = (List<Computer>) request.getAttribute(Parameters.equipmentList);
     Role roleInComputer = (Role) request.getSession().getAttribute(Parameters.role);
+    Long idComputer = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
 %>
+
+<div align="center"><h1>${title}</h1></div>
+<%
+    if(idComputer == null) {
+%>
+<%
+    }
+%>
+
 
 <table>
     <tr>
@@ -59,7 +67,7 @@
             if (computer.getWorkplace() != null) {
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.workplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                 <%=computer.getWorkplace().getTitleHtml()%>
             </a>
         </td>
@@ -161,7 +169,7 @@
             if (computer.getAccounting1C() != null) {
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=computer.getAccounting1C().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.accounting1c%>?<%=Parameters.id%>=<%=computer.getAccounting1C().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
                 <%=computer.getAccounting1C().toStringHtml()%>
             </a>
         </td>
@@ -186,3 +194,15 @@
         %>
     </tr>
 </table>
+
+<%
+    if (idComputer != null && idComputer > 0) {
+%>
+<div align="center">
+    <p>
+        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+    </p>
+</div>
+<%
+    }
+%>

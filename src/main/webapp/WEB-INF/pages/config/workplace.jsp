@@ -80,7 +80,7 @@
                 }
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
-            <a href="<%=baseUrl + redirect%>" class="button">Назад</a>
+            <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
         </p>
     </div>
 </form>

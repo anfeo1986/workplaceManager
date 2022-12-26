@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div align="center"><h1>${title}</h1></div>
 
 <%
     String typeEquipment = (String) request.getAttribute(Parameters.typeEquipment);
@@ -9,6 +8,7 @@
     String title = (String) request.getAttribute(Parameters.title);
     List<Equipment> equipmentList = (List<Equipment>) request.getAttribute(Parameters.equipmentList);
     Role roleInEquipment = (Role) request.getSession().getAttribute(Parameters.role);
+    Long idEquipment = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
 
     String typeEquipmentStr = "";
     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
@@ -26,6 +26,14 @@
     }
 %>
 
+<div align="center"><h1>${title}</h1></div>
+
+<%
+    if(idEquipment == null) {
+%>
+<%
+    }
+%>
 
 <table class="table">
     <tr>
@@ -107,3 +115,15 @@
         }
     %>
 </table>
+
+<%
+    if (idEquipment != null && idEquipment > 0) {
+%>
+<div align="center">
+    <p>
+        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+    </p>
+</div>
+<%
+    }
+%>

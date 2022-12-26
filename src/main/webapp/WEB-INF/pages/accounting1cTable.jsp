@@ -5,12 +5,17 @@
 
 <%
     Role roleInAccounting1C = (Role) request.getSession().getAttribute(Parameters.role);
+    Long idAccounting1C = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
 %>
 
 <div align="center"><h1>Бухгалтерия</h1></div>
-
+<%
+    if (idAccounting1C == null) {
+%>
 <%@include file='/WEB-INF/pages/filter/accounting1CFilter.jsp' %>
-
+<%
+    }
+%>
 <table>
     <tr>
         <th>ID</th>
@@ -124,3 +129,15 @@
         }
     %>
 </table>
+
+<%
+    if (idAccounting1C != null && idAccounting1C > 0) {
+%>
+<div align="center">
+    <p>
+        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+    </p>
+</div>
+<%
+    }
+%>

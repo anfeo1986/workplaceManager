@@ -14,6 +14,7 @@ import workplaceManager.sorting.FilterAccounting1C;
 import workplaceManager.sorting.SortingAccounting1C;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -83,22 +84,19 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public ModelAndView getMain(//@RequestParam(name = Parameters.token, required = false) String token,
-                                HttpServletRequest request) {
+    public ModelAndView getMain(HttpServletRequest request) {
         //return securityCrypt.verifyUser(request, token, Pages.mainPage);
         return getWorkplace(request);
     }
 
     @GetMapping(Pages.mainPage)
-    public ModelAndView getMainPageForm(/*@RequestParam(name = Parameters.token) String token,*/
-                                        HttpServletRequest request) {
+    public ModelAndView getMainPageForm(HttpServletRequest request) {
         return getWorkplace(request);
     }
 
     @GetMapping(Pages.workplace)
     @Transactional
-    public ModelAndView getWorkplace(/*@RequestParam(name = Parameters.token) String token,*/
-                                     HttpServletRequest request) {
+    public ModelAndView getWorkplace(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
@@ -110,12 +108,21 @@ public class MainController {
     }
 
     @GetMapping(Pages.employee)
-    public ModelAndView getEmployee(/*@RequestParam(name = Parameters.token) String token,*/
-                                    HttpServletRequest request) {
+    public ModelAndView getEmployee(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Employee> employeeList = employeeManager.getEmployeeList();
+            List<Employee> employeeList = new ArrayList<>();
 
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Employee employee = employeeManager.getEmployeeById(id, false);
+                if (employee != null) {
+                    employeeList.add(employee);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
+                employeeList = employeeManager.getEmployeeList();
+            }
             modelAndView.addObject(Parameters.employeeList, employeeList);
             modelAndView.addObject(Parameters.page, TypePage.employee.toString());
         }
@@ -127,36 +134,58 @@ public class MainController {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            SortingAccounting1C sortingAccounting1C = SortingAccounting1C.INVENTORY_NUMBER;
-            String sortingStr = request.getParameter(Parameters.accountingSorting);
-            if(sortingStr != null) {
-                sortingAccounting1C = SortingAccounting1C.valueOf(sortingStr);
+            List<Accounting1C> accounting1CList = new ArrayList<>();
+
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Accounting1C accounting1C = accounting1CManager.getAccounting1CById(id, false);
+                if (accounting1C != null) {
+                    accounting1CList.add(accounting1C);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
+                SortingAccounting1C sortingAccounting1C = SortingAccounting1C.INVENTORY_NUMBER;
+                String sortingStr = request.getParameter(Parameters.accountingSorting);
+                if (sortingStr != null) {
+                    sortingAccounting1C = SortingAccounting1C.valueOf(sortingStr);
+                }
+
+                String findText = request.getParameter(Parameters.accounting1CFindText);
+
+                FilterAccounting1C filter = FilterAccounting1C.ALL;
+                String filterStr = request.getParameter(Parameters.accounting1CFilter);
+                if (filterStr != null) {
+                    filter = FilterAccounting1C.valueOf(filterStr);
+                }
+
+                accounting1CList = accounting1CManager.getAccounting1cList(sortingAccounting1C, findText, filter);
+
+                modelAndView.addObject(Parameters.accountingSorting, sortingAccounting1C);
             }
-
-            String findText = request.getParameter(Parameters.accounting1CFindText);
-
-            FilterAccounting1C filter = FilterAccounting1C.ALL;
-            String filterStr = request.getParameter(Parameters.accounting1CFilter);
-            if(filterStr != null) {
-                filter = FilterAccounting1C.valueOf(filterStr);
-            }
-
-            List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1cList(sortingAccounting1C, findText, filter);
-
-            modelAndView.addObject(Parameters.accounting1CList, accounting1CList);
             modelAndView.addObject(Parameters.page, TypePage.accounting1c.toString());
-            modelAndView.addObject(Parameters.accountingSorting, sortingAccounting1C);
+            modelAndView.addObject(Parameters.accounting1CList, accounting1CList);
         }
         return modelAndView;
     }
 
     @GetMapping(Pages.computer)
-    public ModelAndView getComputerForm(/*@RequestParam(name = Parameters.token) String token,*/
-                                        HttpServletRequest request) {
+    public ModelAndView getComputerForm(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Computer> equipmentList = equipmentManager.getComputerList();
+            List<Computer> equipmentList = new ArrayList<>();
+
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Computer computer = equipmentManager.getComputerById(id, false);
+                if (computer != null) {
+                    equipmentList.add(computer);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
+
+                equipmentList = equipmentManager.getComputerList();
+            }
 
             modelAndView.addObject(Parameters.equipmentList, equipmentList);
             modelAndView.addObject(Parameters.page, TypePage.computer.toString());
@@ -167,12 +196,23 @@ public class MainController {
     }
 
     @GetMapping(Pages.monitor)
-    public ModelAndView getMonitors(/*@RequestParam(name = Parameters.token) String token,*/
-                                    HttpServletRequest request) {
+    public ModelAndView getMonitors(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Monitor> equipmentList = equipmentManager.getMonitorList();
+            List<Monitor> equipmentList = new ArrayList<>();
+
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Monitor monitor = (Monitor) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.MONITOR);
+                if (monitor != null) {
+                    equipmentList.add(monitor);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
+
+                equipmentList = equipmentManager.getMonitorList();
+            }
 
             modelAndView.addObject(Parameters.equipmentList, equipmentList);
             modelAndView.addObject(Parameters.page, TypePage.monitor.toString());
@@ -183,13 +223,22 @@ public class MainController {
     }
 
     @GetMapping(Pages.printer)
-    public ModelAndView getPrinters(/*@RequestParam(name = Parameters.token) String token,*/
-                                    HttpServletRequest request) {
+    public ModelAndView getPrinters(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Printer> equipmentList = equipmentManager.getPrinterList();
+            List<Printer> equipmentList = new ArrayList<>();
 
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Printer printer = (Printer) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.PRINTER);
+                if (printer != null) {
+                    equipmentList.add(printer);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
+                equipmentList = equipmentManager.getPrinterList();
+            }
             modelAndView.addObject(Parameters.equipmentList, equipmentList);
             modelAndView.addObject(Parameters.page, TypePage.printer.toString());
             modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.PRINTER);
@@ -199,13 +248,23 @@ public class MainController {
     }
 
     @GetMapping(Pages.scanner)
-    public ModelAndView getScanners(/*@RequestParam(name = Parameters.token) String token,*/
-                                    HttpServletRequest request) {
+    public ModelAndView getScanners(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Scanner> equipmentList = equipmentManager.getScannerList();
+            List<Scanner> equipmentList = new ArrayList<>();
 
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Scanner scanner = (Scanner) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.SCANNER);
+                if (scanner != null) {
+                    equipmentList.add(scanner);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
+
+                equipmentList = equipmentManager.getScannerList();
+            }
             modelAndView.addObject(Parameters.equipmentList, equipmentList);
             modelAndView.addObject(Parameters.page, TypePage.scanner.toString());
             modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.SCANNER);
@@ -215,13 +274,22 @@ public class MainController {
     }
 
     @GetMapping(Pages.mfd)
-    public ModelAndView getMfd(/*@RequestParam(name = Parameters.token) String token,*/
-                               HttpServletRequest request) {
+    public ModelAndView getMfd(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Mfd> equipmentList = equipmentManager.getMfdList();
+            List<Mfd> equipmentList = new ArrayList<>();
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Mfd mfd = (Mfd) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.MFD);
+                if (mfd != null) {
+                    equipmentList.add(mfd);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
 
+                equipmentList = equipmentManager.getMfdList();
+            }
             modelAndView.addObject(Parameters.equipmentList, equipmentList);
             modelAndView.addObject(Parameters.page, TypePage.mfd.toString());
             modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.MFD);
@@ -231,13 +299,22 @@ public class MainController {
     }
 
     @GetMapping(Pages.ups)
-    public ModelAndView getUps(/*@RequestParam(name = Parameters.token) String token,*/
-                               HttpServletRequest request) {
+    public ModelAndView getUps(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
         if (!modelAndView.getViewName().equals(Pages.login)) {
-            List<Ups> equipmentList = equipmentManager.getUpsList();
+            List<Ups> equipmentList = new ArrayList<>();
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if(id != null && id > 0) {
+                Ups ups = (Ups) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.UPS);
+                if(ups != null) {
+                    equipmentList.add(ups);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
 
+                equipmentList = equipmentManager.getUpsList();
+            }
             modelAndView.addObject(Parameters.equipmentList, equipmentList);
             modelAndView.addObject(Parameters.page, TypePage.ups.toString());
             modelAndView.addObject(Parameters.typeEquipment, TypeEquipment.UPS);

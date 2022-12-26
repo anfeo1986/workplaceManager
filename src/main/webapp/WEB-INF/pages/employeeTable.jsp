@@ -3,11 +3,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div align="center"><h1>Сотрудники</h1></div>
 <%
     List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
     Role roleInEmployee = (Role) request.getSession().getAttribute(Parameters.role);
+    Long idEmployee = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+%>
 
+<div align="center"><h1>Сотрудники</h1></div>
+<%
+    if(idEmployee == null) {
+%>
+<%
+    }
 %>
 
 <table>
@@ -88,3 +95,15 @@
         }
     %>
 </table>
+
+<%
+    if (idEmployee != null && idEmployee > 0) {
+%>
+<div align="center">
+    <p>
+        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+    </p>
+</div>
+<%
+    }
+%>

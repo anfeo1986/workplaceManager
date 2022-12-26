@@ -543,7 +543,6 @@
             <input type="hidden" name="<%=Parameters.countVideoCard%>" value="<%=countVideoCard%>">
             <input type="hidden" name="<%=Parameters.countHardDrive%>" value="<%=countHardDrive%>">
 
-            <!--<a href="" class="button">Назад</a>-->
             <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
                 <%
                 if (Role.ADMIN.equals(role) && (equipment != null && equipment.getId() > 0)) {

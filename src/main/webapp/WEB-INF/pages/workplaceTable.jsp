@@ -5,11 +5,13 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="workplaceManager.Pages" %>
 
+<div align="center"><h1>Рабочие места</h1></div>
+
 <%
     Role roleInWorklace = (Role) request.getSession().getAttribute(Parameters.role);
+    Long idWorkplace = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
 %>
 
-<div align="center"><h1>Рабочие места</h1></div>
 
 <table>
     <tr>
@@ -168,7 +170,7 @@
                     for (Employee employee : workplace.getEmployeeList()) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>">
+                <a href="<%=baseUrl + Pages.employee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>">
                     <%=employee.getName()%>
                 </a></p>
             <%
@@ -182,7 +184,7 @@
                 for (Computer computer : computerList1) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>">
+                <a href="<%=baseUrl + Pages.computer%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>">
                     <%=computer.toStringHtmlSelectUid()%>
                 </a></p>
             <%
@@ -195,7 +197,7 @@
                 for (Monitor monitor : monitorList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=monitor.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>">
+                <a href="<%=baseUrl + Pages.monitor%>?<%=Parameters.id%>=<%=monitor.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>">
                     <%=monitor.toStringHtml()%>
                 </a></p>
             <%
@@ -208,7 +210,7 @@
                 for (Mfd mfd : mfdList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=mfd.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>">
+                <a href="<%=baseUrl + Pages.mfd%>?<%=Parameters.id%>=<%=mfd.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>">
                     <%=mfd.toStringHtml()%>
                 </a></p>
             <%
@@ -221,7 +223,7 @@
                 for (Printer printer : printerList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=printer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>">
+                <a href="<%=baseUrl + Pages.printer%>?<%=Parameters.id%>=<%=printer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>">
                     <%=printer.toStringHtml()%>
                 </a></p>
             <%
@@ -234,7 +236,7 @@
                 for (Scanner scanner : scannerList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=scanner.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>">
+                <a href="<%=baseUrl + Pages.scanner%>?<%=Parameters.id%>=<%=scanner.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>">
                     <%=scanner.toStringHtml()%>
                 </a></p>
             <%
@@ -247,7 +249,7 @@
                 for (Ups ups : upsList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=ups.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>">
+                <a href="<%=baseUrl + Pages.ups%>?<%=Parameters.id%>=<%=ups.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>">
                     <%=ups.toStringHtml()%>
                 </a></p>
             <%
