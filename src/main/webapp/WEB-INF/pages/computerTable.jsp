@@ -28,7 +28,7 @@
 
 <table>
     <tr>
-        <th>id</th>
+        <th>Номер</th>
         <th><%=title%>
         </th>
         <th>Рабочее место</th>
@@ -40,13 +40,7 @@
         <th>Видеокарта</th>
         <th>Комментарий</th>
         <th>Бухгалтерия</th>
-        <%
-            if (Role.ADMIN.equals(roleInComputer)) {
-        %>
-        <th/>
-        <%
-            }
-        %>
+
     </tr>
     <%
         int count = 1;
@@ -59,7 +53,8 @@
             count++;
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
                 <%=computer.toStringHtmlSelectIp()%>
             </a>
         </td>
@@ -67,7 +62,8 @@
             if (computer.getWorkplace() != null) {
         %>
         <td>
-            <a href="<%=baseUrl + Pages.workplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.workplace%>?<%=Parameters.id%>=<%=computer.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
                 <%=computer.getWorkplace().getTitleHtml()%>
             </a>
         </td>
@@ -169,7 +165,8 @@
             if (computer.getAccounting1C() != null) {
         %>
         <td>
-            <a href="<%=baseUrl + Pages.accounting1c%>?<%=Parameters.id%>=<%=computer.getAccounting1C().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.accounting1c%>?<%=Parameters.id%>=<%=computer.getAccounting1C().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
                 <%=computer.getAccounting1C().toStringHtml()%>
             </a>
         </td>
@@ -180,16 +177,8 @@
         <%
             }
         %>
+
         <%
-            if (Role.ADMIN.equals(roleInComputer)) {
-        %>
-        <td>
-            <a href="<%=baseUrl + Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                Удалить
-            </a>
-        </td>
-        <%
-                }
             }
         %>
     </tr>
@@ -200,7 +189,7 @@
 %>
 <div align="center">
     <p>
-        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+        <a onclick="close_window(); return false;" class="button">Назад</a>
     </p>
 </div>
 <%

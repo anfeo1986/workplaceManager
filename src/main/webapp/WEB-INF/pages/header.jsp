@@ -15,6 +15,8 @@
     String buttonStyleSelect = "button_select";
     String userName = (String) request.getSession().getAttribute(Parameters.login);
     Role roleHeader = (Role) request.getSession().getAttribute(Parameters.role);
+
+    Long idObject = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
 %>
 
 
@@ -37,7 +39,7 @@
         </div>
     </div>
     <%
-        if (Role.ADMIN.equals(roleHeader) && typePage != null) {
+        if (Role.ADMIN.equals(roleHeader) && typePage != null && idObject == null) {
     %>
     <div class="dropdown">
         <button class="dropbtn"> Действия
@@ -53,49 +55,57 @@
             <%
             } else if (MainController.TypePage.computer.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.computer%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.computer%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить компьютер
             </a>
             <%
             } else if (MainController.TypePage.monitor.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.monitor%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.monitor%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить монитор
             </a>
             <%
             } else if (MainController.TypePage.mfd.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.mfd%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.mfd%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить МФУ
             </a>
             <%
             } else if (MainController.TypePage.printer.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.printer%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.printer%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить принтер
             </a>
             <%
             } else if (MainController.TypePage.scanner.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.scanner%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.scanner%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить сканер
             </a>
             <%
             } else if (MainController.TypePage.ups.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.ups%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.ups%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить ИБП
             </a>
             <%
             } else if (MainController.TypePage.employee.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.employee%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.employee%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить сотрудника
             </a>
             <%
             } else if (MainController.TypePage.accounting1c.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>">
+            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить запись в бухгалтерии
             </a>
             <%

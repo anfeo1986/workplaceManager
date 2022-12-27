@@ -40,27 +40,16 @@
             console.log(document.visibilityState);
             if (document.visibilityState === 'visible') {
                 // страница видима
-                console.log('Вернулся');
+                //console.log('Вернулся');
                 location.reload();
             } else {
                 // страница скрыта
                 //console.log('Ушел');
             }
         });
-        /*window.addEventListener(
-            'visibilitychange',
-            function() {
-                //if (document.hidden === true) return;
-                if (document.visibilityState === 'visible') {
-                    console.log('Вернулся');
-                } else {
-                    console.log('Ушел');
-                }
-                //console.log('Вернулся');
-                //location.reload();
-            },
-            false
-        );*/
+        function close_window() {
+            close();
+        }
     </script>
 
 </head>

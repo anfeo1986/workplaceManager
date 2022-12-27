@@ -8,13 +8,13 @@ import workplaceManager.*;
 import workplaceManager.db.domain.*;
 import workplaceManager.db.service.Accounting1CManager;
 import workplaceManager.db.service.EmployeeManager;
+import workplaceManager.db.service.EquipmentManager;
 import workplaceManager.db.service.JournalManager;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-//@RequestMapping("/config/accounting1c")
 public class ConfigAccounting1CController {
     private Accounting1CManager accounting1CManager;
 
@@ -37,17 +37,23 @@ public class ConfigAccounting1CController {
         this.securityCrypt = securityCrypt;
     }
 
-    JournalManager journalManager;
+    private JournalManager journalManager;
 
     @Autowired
     public void setJournalManager(JournalManager journalManager) {
         this.journalManager = journalManager;
     }
 
+    private EquipmentManager equipmentManager;
+
+    @Autowired
+    public void setEquipmentManager(EquipmentManager equipmentManager) {
+        this.equipmentManager = equipmentManager;
+    }
+
     @GetMapping(Pages.addUpdateAccounting1C)
     public ModelAndView getForm(@RequestParam(name = Parameters.id, required = false) Long id,
                                 @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                //@RequestParam(name = Parameters.token) String token,
                                 HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigAccounting1C);
         if (!modelAndView.getViewName().equals(Pages.login)) {
@@ -65,7 +71,6 @@ public class ConfigAccounting1CController {
     public ModelAndView addAccounting1C(@ModelAttribute(Parameters.accounting1C) Accounting1C accounting1C,
                                         @RequestParam(name = Parameters.redirect, required = false) String redirect,
                                         @RequestParam(name = Parameters.employeeId, required = false) Long employeeId,
-                                        //@RequestParam(name = Parameters.token) String token,
                                         HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -75,20 +80,14 @@ public class ConfigAccounting1CController {
                 Employee employee = employeeManager.getEmployeeById(employeeId, false);
                 accounting1C.setEmployee(employee);
 
-                //Accounting1C accounting1C1FromDB = accounting1CManager.getAccounting1CByInventoryNumber(accounting1C.getInventoryNumber());
-                //if (accounting1C1FromDB != null) {
-                //    modelAndView.addObject(Parameters.error, String.format("%s (%s) уже существует",
-                //            accounting1C1FromDB.getInventoryNumber(), accounting1C1FromDB.getTitle()));
-                //    modelAndView.addObject(Parameters.accounting1C, accounting1C);
-                //} else {
-                    accounting1C.setDeleted(false);
-                    accounting1CManager.save(accounting1C);
+                accounting1C.setDeleted(false);
+                accounting1CManager.save(accounting1C);
 
-                    journalManager.save(new Journal(TypeEvent.ADD, TypeObject.ACCOUNTING1C, accounting1C, user));
+                journalManager.save(new Journal(TypeEvent.ADD, TypeObject.ACCOUNTING1C, accounting1C, user));
 
-                    modelAndView.addObject(Parameters.message, String.format("%s успешно добавлен", accounting1C));
-                    modelAndView.addObject(Parameters.accounting1C, new Accounting1C());
-                //}
+                modelAndView.addObject(Parameters.message, String.format("%s успешно добавлен", accounting1C));
+                modelAndView.addObject(Parameters.accounting1C, new Accounting1C());
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             return getModelAndView(redirect, modelAndView);
@@ -100,7 +99,6 @@ public class ConfigAccounting1CController {
     @PostMapping(Pages.updateAccounting1CPost)
     public ModelAndView updateAccounting(@RequestParam(name = Parameters.redirect, required = false) String redirect,
                                          @RequestParam(name = Parameters.employeeId, required = false) Long employeeId,
-                                         //@RequestParam(name = Parameters.token) String token,
                                          HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -133,7 +131,8 @@ public class ConfigAccounting1CController {
 
                     journalManager.saveChangeAccounting1C(accounting1CFromDbById, accounting1C, user);
 
-                    modelAndView.setViewName("redirect:/" + redirect);
+                    //modelAndView.setViewName("redirect:/" + redirect);
+                    modelAndView.addObject(Parameters.closeWindow, true);
                 }
             }
 
@@ -157,7 +156,6 @@ public class ConfigAccounting1CController {
 
     @GetMapping(Pages.deleteAccounting1CPost)
     public ModelAndView deleteAccounting1C(@RequestParam(name = Parameters.id) Long id,
-                                           //@RequestParam(name = Parameters.token) String token,
                                            HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -166,6 +164,12 @@ public class ConfigAccounting1CController {
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Accounting1C accounting1C = accounting1CManager.getAccounting1CById(id, false);
                 accounting1CManager.delete(accounting1C);
+
+                List<Equipment> equipmentList = equipmentManager.getEquipmentListByAccounting1C(accounting1C);
+                for(Equipment equipment : equipmentList) {
+                    equipment.setAccounting1C(null);
+                    equipmentManager.save(equipment);
+                }
 
                 journalManager.save(new Journal(TypeEvent.ACCOUNTING1C_CANCELLATION, TypeObject.ACCOUNTING1C,
                         accounting1C, user));

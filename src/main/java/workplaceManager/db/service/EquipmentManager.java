@@ -15,6 +15,34 @@ import java.util.TreeMap;
 @Repository
 public class EquipmentManager extends EntityManager<Equipment> {
     @Transactional
+    public List<Equipment> getEquipmentListByAccounting1C(Accounting1C accounting1C) {
+        Session session = sessionFactory.getCurrentSession();
+        List<Equipment> equipmentList = session.createQuery("from Equipment as equipment " +
+                "where equipment.accounting1C.id=" + accounting1C.getId()).list();
+        equipmentList.stream().forEach(equipment -> {
+            if(equipment instanceof Computer) {
+                initializeComputer((Computer) equipment);
+            }
+        });
+
+        return equipmentList;
+    }
+
+    @Transactional
+    public List<Equipment> getEquipmentListByWorkplace(Workplace workplace) {
+        Session session = sessionFactory.getCurrentSession();
+        List<Equipment> equipmentList = session.createQuery("from Equipment as equipment " +
+                "where equipment.workplace.id=" + workplace.getId()).list();
+        equipmentList.stream().forEach(equipment -> {
+            if(equipment instanceof Computer) {
+                initializeComputer((Computer) equipment);
+            }
+        });
+
+        return equipmentList;
+    }
+
+    @Transactional
     public List<Equipment> getEquipmentList() {
         Session session = sessionFactory.getCurrentSession();
         List<Equipment> equipmentList = session.createQuery("from Equipment as equipment " +

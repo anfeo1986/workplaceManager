@@ -101,7 +101,6 @@ public class ConfigEquipmentController {
     @GetMapping(Pages.addUpdateEquipment)
     public ModelAndView getFormAddUpdateEquipment(@RequestParam(name = Parameters.id, required = false) Long id,
                                                   @RequestParam(name = Parameters.typeEquipment) String typeEquipment,
-                                                  //@RequestParam(name = Parameters.token) String token,
                                                   @RequestParam(name = Parameters.redirect, required = false) String redirect,
                                                   HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
@@ -128,7 +127,6 @@ public class ConfigEquipmentController {
     }
 
     private ModelAndView readConfigComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                            //@RequestParam(name = Parameters.token) String token,
                                             HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -193,7 +191,6 @@ public class ConfigEquipmentController {
 
                 setAccounting1CByEquipment(equipment, request, false, user);
 
-                //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
 
                 if(computer == null) {
@@ -449,6 +446,7 @@ public class ConfigEquipmentController {
 
                     modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
                 }
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);
@@ -893,7 +891,6 @@ public class ConfigEquipmentController {
 
     @PostMapping(Pages.updateEquipmentPost)
     public ModelAndView updateEquipment(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                        //@RequestParam(name = Parameters.token) String token,
                                         HttpServletRequest request) {
         equipment.setDeleted(false);
         ModelAndView modelAndViewSearch = searchPage(equipment, request);
@@ -944,8 +941,10 @@ public class ConfigEquipmentController {
                         equipmentManager.save(equipment);
                         journalManager.saveChangeEquipment(equipmentOld, equipment, typeEquipment, user);
                     }
-                    modelAndView.setViewName("redirect:/" + redirect);
+                    //modelAndView.setViewName("redirect:/" + redirect);
                     //}
+
+                    modelAndView.addObject(Parameters.closeWindow, true);
                 }
             }
             return getModelAndView(redirect, modelAndView);
@@ -958,17 +957,19 @@ public class ConfigEquipmentController {
     public ModelAndView deleteEquipment(@RequestParam(name = Parameters.id) Long id,
                                         @RequestParam(value = Parameters.typeEquipment) String typeEquipment,
                                         @RequestParam(name = Parameters.redirect) String redirect,
-                                        //@RequestParam(name = Parameters.token) String token,
                                         HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + redirect);
+            //ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + redirect);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Equipment equipment = equipmentManager.getEquipmentById(id, false);
                 equipmentManager.delete(equipment);
                 journalManager.save(new Journal(TypeEvent.DELETE,
                         journalManager.getTypeObjectFromTypeEquipment(typeEquipment), equipment, user));
+
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             modelAndView.addObject(Parameters.typeEquipment, typeEquipment);

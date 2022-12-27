@@ -37,18 +37,11 @@
 
 <table class="table">
     <tr>
-        <th>id</th>
+        <th>Номер</th>
         <th><%=title%></th>
         <th>Рабочее место</th>
         <th>Комментарий</th>
         <th>Бухгалтерия</th>
-        <%
-            if(Role.ADMIN.equals(roleInEquipment)) {
-        %>
-        <th/>
-        <%
-            }
-        %>
     </tr>
 
     <%
@@ -62,7 +55,8 @@
             count++;
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
                 <%=equipment.toStringHtml()%>
             </a>
         </td>
@@ -70,7 +64,8 @@
             if (equipment.getWorkplace() != null) {
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=equipment.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.workplace%>?<%=Parameters.id%>=<%=equipment.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
                 <%=equipment.getWorkplace().getTitleHtml()%>
             </a>
         </td>
@@ -88,7 +83,8 @@
             if (equipment.getAccounting1C() != null) {
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=equipment.getAccounting1C().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+            <a href="<%=baseUrl + Pages.accounting1c%>?<%=Parameters.id%>=<%=equipment.getAccounting1C().getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
                 <%=equipment.getAccounting1C().toStringHtml()%>
             </a>
         </td>
@@ -96,17 +92,6 @@
         } else {
         %>
         <td/>
-        <%
-            }
-        %>
-        <%
-            if (Role.ADMIN.equals(roleInEquipment)) {
-        %>
-        <td>
-            <a href="<%=baseUrl + Pages.deleteEquipmentPost%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
-                Удалить
-            </a>
-        </td>
         <%
             }
         %>
@@ -121,7 +106,7 @@
 %>
 <div align="center">
     <p>
-        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+        <a onclick="close_window(); return false;" class="button">Назад</a>
     </p>
 </div>
 <%

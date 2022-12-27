@@ -4,9 +4,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
-    List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
-    Role roleInEmployee = (Role) request.getSession().getAttribute(Parameters.role);
-    Long idEmployee = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+    List<Employee> employeeList = request.getAttribute(Parameters.employeeList) != null ?
+            (List<Employee>) request.getAttribute(Parameters.employeeList) : new ArrayList<>();
+    Role roleInEmployee = request.getSession().getAttribute(Parameters.role) != null ?
+            (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+    Long idEmployee = request.getParameter(Parameters.id) != null ?
+            Long.parseLong(request.getParameter(Parameters.id)) : null;
 %>
 
 <div align="center"><h1>Сотрудники</h1></div>
@@ -19,27 +22,23 @@
 
 <table>
     <tr>
-        <th>id</th>
+        <th>Номер</th>
         <th>ФИО</th>
         <th>Должность</th>
         <th><a href="<%=baseUrl+Pages.workplace%>">Рабочее место</a></th>
         <th><a href="<%=baseUrl+Pages.accounting1c%>">Бухгалтерия</a></th>
-        <%
-            if(Role.ADMIN.equals(roleInEmployee)) {
-        %>
-        <th/>
-        <%
-            }
-        %>
     </tr>
     <%
+        int count = 1;
         for (Employee employee : employeeList) {
     %>
     <tr>
-        <td><%=employee.getId()%>
+        <td><%=count++%>
         </td>
+
         <td>
-            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>"
+               target="_blank">
                 <%=employee.getName()%>
             </a></td>
         <td><%=employee.getPost()%>
@@ -48,7 +47,8 @@
             if (employee.getWorkplace() != null) {
         %>
         <td>
-            <a href="<%=baseUrl+Pages.addUpdateWorkplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+            <a href="<%=baseUrl+Pages.workplace%>?<%=Parameters.id%>=<%=employee.getWorkplace().getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>"
+               target="_blank">
                 <%=employee.getWorkplace().getTitleHtml()%>
             </a></td>
         <%
@@ -64,7 +64,8 @@
                 for (Accounting1C accounting1C : employee.getAccounting1СList()) {
             %>
             <p>
-                <a href="<%=baseUrl+Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>">
+                <a href="<%=baseUrl+Pages.accounting1c%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>"
+                   target="_blank">
                     <%=accounting1C.toStringHtml()%>
                 </a>
             </p>
@@ -79,17 +80,7 @@
         <%
             }
         %>
-        <%
-            if (Role.ADMIN.equals(roleInEmployee)) {
-        %>
-        <td>
-            <a href="<%=baseUrl+Pages.deleteEmployeePost%>?<%=Parameters.id%>=<%=employee.getId()%>">
-                Удалить
-            </a>
-        </td>
-        <%
-            }
-        %>
+
     </tr>
     <%
         }
@@ -101,7 +92,7 @@
 %>
 <div align="center">
     <p>
-        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+        <a onclick="close_window(); return false;" class="button">Назад</a>
     </p>
 </div>
 <%

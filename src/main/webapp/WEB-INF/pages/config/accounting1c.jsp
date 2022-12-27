@@ -16,6 +16,10 @@
         //String token = (String) request.getAttribute(Parameters.token);
         String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
         Role role = (Role) request.getSession().getAttribute(Parameters.role);
+        Boolean isClose = false;
+        if (request.getAttribute(Parameters.closeWindow) != null) {
+            isClose = (Boolean) request.getAttribute(Parameters.closeWindow);
+        }
 
         String buttonTitle = "Добавить";
         String url = baseUrl;
@@ -31,9 +35,24 @@
     %>
     <title><%=titlePage%>
     </title>
+
+    <script type="text/javascript">
+        function close_window() {
+            close();
+        }
+    </script>
 </head>
 
 <body>
+<%
+    if (isClose) {
+%>
+<script>
+    close_window();
+</script>
+<%
+    }
+%>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
@@ -118,7 +137,18 @@
                 String redirect = (String) request.getAttribute(Parameters.redirect);
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
-            <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+            <a onclick="close_window(); return false;" class="button">Назад</a>
+                    <%
+            if (Role.ADMIN.equals(role)) {
+        %>
+        <td>
+            <a href="<%=baseUrl + Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
+                Удалить
+            </a>
+        </td>
+        <%
+            }
+        %>
         </p>
     </div>
 

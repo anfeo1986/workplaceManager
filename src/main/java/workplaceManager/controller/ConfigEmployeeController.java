@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.*;
 import workplaceManager.db.domain.*;
+import workplaceManager.db.service.Accounting1CManager;
 import workplaceManager.db.service.EmployeeManager;
 import workplaceManager.db.service.JournalManager;
 import workplaceManager.db.service.WorkplaceManager;
@@ -14,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-//@RequestMapping("/config/employee")
 public class ConfigEmployeeController {
     private WorkplaceManager workplaceManager;
 
@@ -44,10 +44,16 @@ public class ConfigEmployeeController {
         this.journalManager = journalManager;
     }
 
+    private Accounting1CManager accounting1CManager;
+
+    @Autowired
+    public void setAccounting1CManager(Accounting1CManager accounting1CManager) {
+        this.accounting1CManager = accounting1CManager;
+    }
+
     @GetMapping(Pages.addUpdateEmployee)
     public ModelAndView addUpdateEmployee(@RequestParam(name = Parameters.id, required = false) Long employeeId,
                                           @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                          //@RequestParam(name = Parameters.token) String token,
                                           HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEmployee);
 
@@ -78,7 +84,6 @@ public class ConfigEmployeeController {
     public ModelAndView addEmployee(@ModelAttribute(Parameters.employee) Employee employee,
                                     @ModelAttribute(Parameters.workplaceId) Long workplaceId,
                                     @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                    //@RequestParam(name = Parameters.token) String token,
                                     HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -111,6 +116,7 @@ public class ConfigEmployeeController {
                     redirect = "";
                 }
                 modelAndView.addObject(Parameters.redirect, redirect);
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
             return modelAndView;
         } else {
@@ -122,7 +128,6 @@ public class ConfigEmployeeController {
     public ModelAndView updateEmployee(@ModelAttribute(Parameters.employee) Employee employee,
                                        @ModelAttribute(Parameters.workplaceId) Long workplaceId,
                                        @ModelAttribute(Parameters.redirect) String redirect,
-                                       //@RequestParam(name = Parameters.token) String token,
                                        HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -145,7 +150,7 @@ public class ConfigEmployeeController {
 
                     journalManager.saveChangeEmployee(employeeFromDbByID, employee, user);
 
-                    modelAndView.setViewName("redirect:/" + redirect);
+                    //modelAndView.setViewName("redirect:/" + redirect);
                 }
 
                 List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
@@ -155,6 +160,8 @@ public class ConfigEmployeeController {
                     redirect = "";
                 }
                 modelAndView.addObject(Parameters.redirect, redirect);
+
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             return modelAndView;
@@ -165,16 +172,26 @@ public class ConfigEmployeeController {
 
     @GetMapping(Pages.deleteEmployeePost)
     public ModelAndView deleteEmployee(@RequestParam(name = Parameters.id) Long id,
-                                       //@RequestParam(name = Parameters.token) String token,
                                        HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/"+Pages.employee);
+            //ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/"+Pages.employee);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEmployee);
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Employee employee = employeeManager.getEmployeeById(id, false);
+
                 employeeManager.delete(employee);
 
+                List<Accounting1C> accounting1CList = accounting1CManager.getAccounting1CListByEmployee(employee);
+                System.out.println(accounting1CList.size());
+                for(Accounting1C accounting1C : accounting1CList) {
+                    accounting1C.setEmployee(null);
+                    accounting1CManager.save(accounting1C);
+                    System.out.println(accounting1C);
+                }
+
                 journalManager.save(new Journal(TypeEvent.DELETE, TypeObject.EMPLOYEE, employee, user));
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
             //modelAndView.setViewName("redirect:/employee");
             return modelAndView;

@@ -21,25 +21,37 @@
                 document.getElementById("<%=Components.accounting1CTitleInputText%>").disabled = false;
                 document.getElementById("selectEmployeeId").disabled = false;
             }
-        }
+        };
+
+        function close_window() {
+            close();
+        };
     </script>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
 
     <%
-        Equipment equipment = (Equipment) request.getAttribute(Parameters.equipment);
+        Equipment equipment = request.getAttribute(Parameters.equipment) != null ?
+                (Equipment) request.getAttribute(Parameters.equipment) : null;
         String buttonTitle = "Добавить";
         //String token = (String) request.getAttribute(Parameters.token);
-        Role role = (Role) request.getSession().getAttribute(Parameters.role);
-        String typeEquipment = (String) request.getAttribute(Parameters.typeEquipment);
-        String uid = (equipment != null && equipment.getUid() != null) ? equipment.getUid() : "";
-        String manufacturer = (equipment != null && equipment.getManufacturer() != null) ? equipment.getManufacturer() : "";
-        String model = (equipment != null && equipment.getModel() != null) ? equipment.getModel() : "";
-        String redirect = (String) request.getAttribute(Parameters.redirect);
-        String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
-        Long workplaceIdFromRequest = -1L;
-        if(request.getParameter(Parameters.workplaceId) != null) {
-            workplaceIdFromRequest = Long.parseLong(request.getParameter(Parameters.workplaceId));
-        }
+        Role role = request.getSession().getAttribute(Parameters.role) != null ?
+                (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+        String typeEquipment = request.getAttribute(Parameters.typeEquipment) != null ?
+                (String) request.getAttribute(Parameters.typeEquipment) : "";
+        String uid = (equipment != null && equipment.getUid() != null) ?
+                equipment.getUid() : "";
+        String manufacturer = (equipment != null && equipment.getManufacturer() != null) ?
+                equipment.getManufacturer() : "";
+        String model = (equipment != null && equipment.getModel() != null) ?
+                equipment.getModel() : "";
+        String redirect = request.getAttribute(Parameters.redirect) != null ?
+                (String) request.getAttribute(Parameters.redirect) : "";
+        String baseUrl = request.getAttribute(Parameters.baseUrl) != null ?
+                (String) request.getAttribute(Parameters.baseUrl) : "";
+        Long workplaceIdFromRequest = request.getParameter(Parameters.workplaceId) != null ?
+                Long.parseLong(request.getParameter(Parameters.workplaceId)) : -1L;
+        Boolean isClose = request.getAttribute(Parameters.closeWindow) != null ?
+                (Boolean) request.getAttribute(Parameters.closeWindow) : false;
 
         String url = baseUrl;
         String title = "";
@@ -71,6 +83,15 @@
 </head>
 
 <body>
+<%
+    if (isClose) {
+%>
+<script>
+    close_window();
+</script>
+<%
+    }
+%>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
@@ -547,7 +568,7 @@
             <input type="hidden" name="<%=Parameters.countVideoCard%>" value="<%=countVideoCard%>">
             <input type="hidden" name="<%=Parameters.countHardDrive%>" value="<%=countHardDrive%>">
 
-            <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+            <a onclick="close_window(); return false;" class="button">Назад</a>
                 <%
                 if (Role.ADMIN.equals(role) && (equipment != null && equipment.getId() > 0)) {
                     Long id;

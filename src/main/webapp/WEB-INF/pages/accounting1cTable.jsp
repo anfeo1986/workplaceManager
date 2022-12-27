@@ -23,13 +23,6 @@
         <th>Название</th>
         <th>Материально-отвественное лицо</th>
         <th>Оборудование</th>
-        <%
-            if (Role.ADMIN.equals(roleInAccounting1C)) {
-        %>
-        <th/>
-        <%
-            }
-        %>
     </tr>
 
     <%
@@ -44,12 +37,14 @@
             count++;
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
+            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>"
+               target="_blank">
                 <%=accounting1C.getInventoryNumber()%>
             </a>
         </td>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
+            <a href="<%=baseUrl + Pages.addUpdateAccounting1C%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>"
+               target="_blank">
                 <%=accounting1C.getTitleHtml()%>
             </a>
         </td>
@@ -72,27 +67,36 @@
             <%
                 for (Equipment equipment : accounting1C.getEquipmentList()) {
                     String typeEquipment = "";
+                    String pageEquipment = "";
                     if (equipment instanceof Computer) {
                         typeEquipment = TypeEquipment.COMPUTER;
+                        pageEquipment = Pages.computer;
                     }
                     if (equipment instanceof Monitor) {
                         typeEquipment = TypeEquipment.MONITOR;
+                        pageEquipment = Pages.monitor;
                     }
                     if (equipment instanceof Printer) {
                         typeEquipment = TypeEquipment.PRINTER;
+                        pageEquipment = Pages.printer;
                     }
                     if (equipment instanceof Scanner) {
                         typeEquipment = TypeEquipment.SCANNER;
+                        pageEquipment = Pages.scanner;
                     }
                     if (equipment instanceof Mfd) {
                         typeEquipment = TypeEquipment.MFD;
+                        pageEquipment = Pages.mfd;
                     }
                     if (equipment instanceof Ups) {
                         typeEquipment = TypeEquipment.UPS;
+                        pageEquipment = Pages.ups;
                     }
             %>
             <p>
-                <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>">
+
+                <a href="<%=baseUrl + pageEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+                   target="_blank">
                     <%=equipment.toStringHtml()%>
                 </a><br>
                 Рабочее место:
@@ -112,18 +116,6 @@
         <%
             }
         %>
-
-        <%
-            if (Role.ADMIN.equals(roleInAccounting1C)) {
-        %>
-        <td>
-            <a href="<%=baseUrl + Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">
-                Удалить
-            </a>
-        </td>
-        <%
-            }
-        %>
     </tr>
     <%
         }
@@ -135,7 +127,7 @@
 %>
 <div align="center">
     <p>
-        <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+        <a onclick="close_window(); return false;" class="button">Назад</a>
     </p>
 </div>
 <%

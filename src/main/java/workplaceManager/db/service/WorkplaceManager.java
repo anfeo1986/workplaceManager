@@ -3,9 +3,12 @@ package workplaceManager.db.service;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import workplaceManager.db.domain.Employee;
+import workplaceManager.db.domain.Equipment;
 import workplaceManager.db.domain.Workplace;
 
 import java.util.ArrayList;
@@ -82,6 +85,7 @@ public class WorkplaceManager extends EntityManager<Workplace> {
     }
     @Override
     public void delete(Workplace workplace) {
+
         workplace.setDeleted(true);
         super.save(workplace);
     }

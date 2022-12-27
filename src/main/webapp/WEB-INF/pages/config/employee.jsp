@@ -11,35 +11,57 @@
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <%
-        Employee employee = (Employee) request.getAttribute(Parameters.employee);
+        Employee employee = request.getAttribute(Parameters.employee) != null ?
+                (Employee) request.getAttribute(Parameters.employee) : null;
         String buttonTitle = "Добавить";
-        //String token = (String) request.getAttribute(Parameters.token);
-        String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
-        Role role = (Role) request.getSession().getAttribute(Parameters.role);
-        Long workplaceIdFromRequest = -1L;
-        if(request.getParameter(Parameters.workplaceId) != null) {
-            workplaceIdFromRequest = Long.parseLong(request.getParameter(Parameters.workplaceId));
-        }
+        String baseUrl = request.getAttribute(Parameters.baseUrl) != null ?
+                (String) request.getAttribute(Parameters.baseUrl) : "";
+        Role role = request.getSession().getAttribute(Parameters.role) != null ?
+                (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+        Long workplaceIdFromRequest = request.getParameter(Parameters.workplaceId) != null ?
+                Long.parseLong(request.getParameter(Parameters.workplaceId)) : -1L;
+        Boolean isClose = request.getAttribute(Parameters.closeWindow) != null ?
+                (Boolean) request.getAttribute(Parameters.closeWindow) : false;
+        List<Workplace> workplaceList = request.getAttribute(Parameters.workplaceList) != null ?
+                (List<Workplace>) request.getAttribute(Parameters.workplaceList) : new ArrayList<>();
 
-        String url = baseUrl;
+
+    String url = baseUrl;
         String title = "";
         if (employee != null && employee.getId() > 0) {
             title = "Редактирование материально-отвественного лица";
-        url += Pages.updateEmployeePost;
-        buttonTitle = "Редактировать";
-    } else {
+            url += Pages.updateEmployeePost;
+            buttonTitle = "Редактировать";
+        } else {
             title = "Добавление материально-отвественного лица";
             url += Pages.addEmployeePost;
         }
     %>
-    <title><%=title%></title>
+    <title><%=title%>
+    </title>
+
+    <script type="text/javascript">
+        function close_window() {
+            close();
+        }
+    </script>
 </head>
 
 <body>
+<%
+    if (isClose) {
+%>
+<script>
+    close_window();
+</script>
+<%
+    }
+%>
 <section class="sticky">
     <%@include file='/WEB-INF/pages/header.jsp' %>
 </section>
-<h1 align="center"><%=title%></h1>
+<h1 align="center"><%=title%>
+</h1>
 <%
     String error = (String) request.getAttribute(Parameters.error);
     if (error != null && error != "") {
@@ -83,10 +105,6 @@
         </p>
 
         <p>
-            <%
-                List<Workplace> workplaceList = (List<Workplace>) request.getAttribute(Parameters.workplaceList);
-            %>
-
             <label>Рабочее место</label>
             <select name="<%=Parameters.workplaceId%>">
                 <option value="-1"/>
@@ -113,16 +131,27 @@
 
     <div align="center">
         <p>
-            <%
+                <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <input type="submit" value="<%=buttonTitle%>">
-            <%
+                <%
                 }
                 String redirect = (String) request.getAttribute(Parameters.redirect);
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
-            <a onclick="javascript:history.back(); return false;" class="button">Назад</a>
+            <a onclick="close_window(); return false;" class="button">Назад</a>
+                <%
+            if (Role.ADMIN.equals(role) && employee != null) {
+        %>
+        <td>
+            <a href="<%=baseUrl+Pages.deleteEmployeePost%>?<%=Parameters.id%>=<%=employee.getId()%>">
+                Удалить
+            </a>
+        </td>
+        <%
+            }
+        %>
         </p>
     </div>
 </form>

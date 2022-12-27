@@ -47,13 +47,6 @@
             <p>
                 <a href="<%=baseUrl + Pages.ups%>">ИБП</a></p>
         </th>
-        <%
-            if (Role.ADMIN.equals(roleInWorklace)) {
-        %>
-        <th/>
-        <%
-            }
-        %>
     </tr>
 
     <%
@@ -109,7 +102,8 @@
                     for (Employee employee : workplace.getEmployeeList()) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.employee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>">
+                <a href="<%=baseUrl + Pages.employee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>"
+                   target="_blank">
                     <%=employee.getName()%>
                 </a></p>
             <%
@@ -121,7 +115,8 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEmployee%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
-                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;"
+                   target="_blank">
                     Добавить сотрудника</a></p>
             <%
                 }
@@ -133,7 +128,8 @@
                 for (Computer computer : computerList1) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.computer%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>">
+                <a href="<%=baseUrl + Pages.computer%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>"
+                   target="_blank">
                     <%=computer.toStringHtmlSelectUid()%>
                 </a></p>
             <%
@@ -144,7 +140,8 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.COMPUTER%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
-                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;"
+                   target="_blank">
                     Добавить компьютер</a></p>
             <%
                 }
@@ -156,7 +153,8 @@
                 for (Monitor monitor : monitorList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.monitor%>?<%=Parameters.id%>=<%=monitor.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>">
+                <a href="<%=baseUrl + Pages.monitor%>?<%=Parameters.id%>=<%=monitor.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>"
+                   target="_blank">
                     <%=monitor.toStringHtml()%>
                 </a></p>
             <%
@@ -167,7 +165,8 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MONITOR%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
-                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;"
+                   target="_blank">
                     Добавить монитор</a></p>
             <%
                 }
@@ -179,7 +178,8 @@
                 for (Mfd mfd : mfdList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.mfd%>?<%=Parameters.id%>=<%=mfd.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>">
+                <a href="<%=baseUrl + Pages.mfd%>?<%=Parameters.id%>=<%=mfd.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>"
+                   target="_blank">
                     <%=mfd.toStringHtml()%>
                 </a></p>
             <%
@@ -190,7 +190,8 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.MFD%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
-                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;"
+                   target="_blank">
                     Добавить МФУ</a></p>
             <%
                 }
@@ -202,7 +203,8 @@
                 for (Printer printer : printerList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.printer%>?<%=Parameters.id%>=<%=printer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>">
+                <a href="<%=baseUrl + Pages.printer%>?<%=Parameters.id%>=<%=printer.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>"
+                   target="_blank">
                     <%=printer.toStringHtml()%>
                 </a></p>
             <%
@@ -213,7 +215,8 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.PRINTER%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
-                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;"
+                   target="_blank">
                     Добавить принтер</a></p>
             <%
                 }
@@ -225,7 +228,8 @@
                 for (Scanner scanner : scannerList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.scanner%>?<%=Parameters.id%>=<%=scanner.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>">
+                <a href="<%=baseUrl + Pages.scanner%>?<%=Parameters.id%>=<%=scanner.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>"
+                   target="_blank">
                     <%=scanner.toStringHtml()%>
                 </a></p>
             <%
@@ -236,7 +240,8 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.SCANNER%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
-                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;"
+                   target="_blank">
                     Добавить сканер</a></p>
             <%
                 }
@@ -248,7 +253,8 @@
                 for (Ups ups : upsList) {
             %>
             <p>
-                <a href="<%=baseUrl + Pages.ups%>?<%=Parameters.id%>=<%=ups.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>">
+                <a href="<%=baseUrl + Pages.ups%>?<%=Parameters.id%>=<%=ups.getId()%>&<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>"
+                   target="_blank">
                     <%=ups.toStringHtml()%>
                 </a></p>
             <%
@@ -259,25 +265,28 @@
             %>
             <p>
                 <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.typeEquipment%>=<%=TypeEquipment.UPS%>&<%=Parameters.workplaceId%>=<%=workplace.getId()%>"
-                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                   style="color: cornflowerblue; font-family: Arial, Helvetica, sans-serif;font-family: Arial, Helvetica, sans-serif; font-size: 10px;"
+                   target="_blank">
                     Добавить ИБП</a></p>
             <%
                 }
             %>
         </td>
-
-        <%
-            if (Role.ADMIN.equals(roleInWorklace)) {
-        %>
-        <td>
-            <a href="<%=baseUrl + Pages.deleteWorkplacePost%>?<%=Parameters.id%>=<%=workplace.getId()%>&<%=Parameters.typeEquipment%>=<%=Pages.workplace%>">
-                Удалить</a></td>
-        <%
-            }
-        %>
     </tr>
     <%
         }
     %>
 
 </table>
+
+<%
+    if (idWorkplace != null && idWorkplace > 0) {
+%>
+<div align="center">
+    <p>
+        <a onclick="close_window(); return false;" class="button">Назад</a>
+    </p>
+</div>
+<%
+    }
+%>

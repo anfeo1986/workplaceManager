@@ -6,7 +6,9 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import workplaceManager.db.domain.Accounting1C;
+import workplaceManager.db.domain.Employee;
 import workplaceManager.db.domain.Equipment;
+import workplaceManager.db.domain.Workplace;
 import workplaceManager.sorting.FilterAccounting1C;
 import workplaceManager.sorting.SortingAccounting1C;
 
@@ -14,6 +16,17 @@ import java.util.*;
 
 @Repository
 public class Accounting1CManager extends EntityManager<Accounting1C> {
+
+    @Transactional
+    public List<Accounting1C> getAccounting1CListByEmployee(Employee employee) {
+        Session session = sessionFactory.getCurrentSession();
+        List<Accounting1C> accounting1CList = session.createQuery("from Accounting1C as ac " +
+                "where ac.employee.id=" + employee.getId()).list();
+
+        accounting1CList.stream().forEach(accounting1C -> initializeAccounting1c(accounting1C));
+
+        return accounting1CList;
+    }
 
     @Transactional
     public List<Accounting1C> getAccounting1cList(SortingAccounting1C sortingAccounting1C,

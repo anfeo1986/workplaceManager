@@ -16,6 +16,16 @@ import java.util.TreeMap;
 
 @Repository
 public class EmployeeManager extends EntityManager<Employee> {
+    @Transactional
+    public List<Employee> getEmployeeListByWorkplace(Workplace workplace) {
+        Session session = sessionFactory.getCurrentSession();
+        List<Employee> employeeList = session.createQuery("from Employee as employee " +
+                "where employee.workplace.id="+workplace.getId()).list();
+
+        employeeList.stream().forEach(employee -> initializeEmployee(employee));
+
+        return employeeList;
+    }
 
     @Transactional
     public List<Employee> getEmployeeList() {
@@ -46,6 +56,8 @@ public class EmployeeManager extends EntityManager<Employee> {
 
         return employeeList;
     }
+
+
 
     @Transactional
     public Employee getEmployeeById(Long id, boolean isReadAll) {

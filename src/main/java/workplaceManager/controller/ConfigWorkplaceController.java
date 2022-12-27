@@ -5,18 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import workplaceManager.*;
-import workplaceManager.db.domain.Journal;
-import workplaceManager.db.domain.Role;
-import workplaceManager.db.domain.Users;
-import workplaceManager.db.domain.Workplace;
+import workplaceManager.db.domain.*;
 import workplaceManager.db.service.EmployeeManager;
+import workplaceManager.db.service.EquipmentManager;
 import workplaceManager.db.service.JournalManager;
 import workplaceManager.db.service.WorkplaceManager;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
-//@RequestMapping("/config/workplace")
 public class ConfigWorkplaceController {
     private WorkplaceManager workplaceManager;
 
@@ -46,12 +44,16 @@ public class ConfigWorkplaceController {
         this.journalManager = journalManager;
     }
 
+    private EquipmentManager equipmentManager;
 
+    @Autowired
+    public void setEquipmentManager(EquipmentManager equipmentManager) {
+        this.equipmentManager = equipmentManager;
+    }
 
     @GetMapping(Pages.addUpdateWorkplace)
     public ModelAndView addWorkplace(@RequestParam(name = Parameters.id, required = false) Long workplaceId,
                                      @RequestParam(name = Parameters.redirect, required = false) String redirect,
-                                     //@RequestParam(name = Parameters.token) String token,
                                      HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigWorkplace);
         if (!modelAndView.getViewName().equals(Pages.login)) {
@@ -72,7 +74,6 @@ public class ConfigWorkplaceController {
     @PostMapping(Pages.addWorkplacePost)
     public ModelAndView addWorkplace(@ModelAttribute(Parameters.workplace) Workplace workplace,
                                      @ModelAttribute(Parameters.redirect) String redirect,
-                                     //@RequestParam(name = Parameters.token) String token,
                                      HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -151,13 +152,28 @@ public class ConfigWorkplaceController {
                                         HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + Pages.workplace);
+            //ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + Pages.workplace);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigWorkplace);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Workplace workplace = workplaceManager.getWorkplaceById(id, false);
+
+                List<Employee> employeeList = employeeManager.getEmployeeListByWorkplace(workplace);
+                for(Employee employee : employeeList) {
+                    employee.setWorkplace(null);
+                    employeeManager.save(employee);
+                }
+                List<Equipment> equipmentList = equipmentManager.getEquipmentListByWorkplace(workplace);
+                for(Equipment equipment : equipmentList) {
+                    equipment.setWorkplace(null);
+                    equipmentManager.save(equipment);
+                }
+
                 workplaceManager.delete(workplace);
 
                 journalManager.save(new Journal(TypeEvent.DELETE, TypeObject.WORKPLACE, workplace, user));
+
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             //modelAndView.setViewName("redirect:/");

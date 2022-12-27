@@ -99,10 +99,23 @@ public class MainController {
     public ModelAndView getWorkplace(HttpServletRequest request) {
         ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
 
-        List<Workplace> workplaceList = workplaceManager.getWorkplaceList();
-        modelAndView.addObject(Parameters.workplaceList, workplaceList);
+        if(!modelAndView.getViewName().equals(Pages.login)) {
+            List<Workplace> workplaceList = new ArrayList<>();
 
-        modelAndView.addObject(Parameters.page, TypePage.workplace.toString());
+            Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+            if (id != null && id > 0) {
+                Workplace workplace = workplaceManager.getWorkplaceById(id, false);
+                if(workplace != null) {
+                    workplaceList.add(workplace);
+                }
+                modelAndView.addObject(Parameters.id, id);
+            } else {
+                workplaceList = workplaceManager.getWorkplaceList();
+            }
+
+            modelAndView.addObject(Parameters.workplaceList, workplaceList);
+            modelAndView.addObject(Parameters.page, TypePage.workplace.toString());
+        }
 
         return modelAndView;
     }

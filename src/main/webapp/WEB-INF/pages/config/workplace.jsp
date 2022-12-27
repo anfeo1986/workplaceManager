@@ -9,15 +9,17 @@
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <%
-        Workplace workplace = (Workplace) request.getAttribute(Parameters.workplace);
-        String redirect = (String) request.getAttribute(Parameters.redirect);
-        String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
-        //String token = (String) request.getAttribute(Parameters.token);
-        Role role = (Role) request.getSession().getAttribute(Parameters.role);
-        Boolean isClose = false;
-        if (request.getAttribute(Parameters.closeWindow) != null) {
-            isClose = (Boolean) request.getAttribute(Parameters.closeWindow);
-        }
+        Workplace workplace = request.getAttribute(Parameters.workplace) != null ?
+                (Workplace) request.getAttribute(Parameters.workplace) : null;
+        String redirect = request.getAttribute(Parameters.redirect) != null ?
+                (String) request.getAttribute(Parameters.redirect) : "";
+        String baseUrl = request.getAttribute(Parameters.baseUrl) != null ?
+                (String) request.getAttribute(Parameters.baseUrl) : "";
+        Role role = request.getSession().getAttribute(Parameters.role) != null ?
+                (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+
+        Boolean isClose = request.getAttribute(Parameters.closeWindow) != null ?
+                (Boolean) request.getAttribute(Parameters.closeWindow) : false;
 
         String url = baseUrl;
         String buttonTitle = "";
@@ -92,17 +94,26 @@
     </div>
     <div align="center">
         <p>
-            <%
+                <%
                 if (Role.ADMIN.equals(role)) {
             %>
             <input type="submit" value="<%=buttonTitle%>">
-            <%
+                <%
                 }
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
             <!--<a onclick="javascript:window.close(); return false;" class="button">Назад</a>-->
             <a onclick="close_window(); return false;" class="button">Назад</a>
             <!--<a onclick="javascript:window.history.go(-1);  return false;" class="button">Назад</a>-->
+                <%
+            if (Role.ADMIN.equals(role) && workplace != null) {
+        %>
+        <td>
+            <a href="<%=baseUrl + Pages.deleteWorkplacePost%>?<%=Parameters.id%>=<%=workplace.getId()%>&<%=Parameters.typeEquipment%>=<%=Pages.workplace%>">
+                Удалить</a></td>
+        <%
+            }
+        %>
         </p>
     </div>
 </form>
