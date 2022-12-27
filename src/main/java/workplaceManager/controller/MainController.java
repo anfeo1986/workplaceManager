@@ -217,7 +217,9 @@ public class MainController {
 
             Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
             if (id != null && id > 0) {
-                Monitor monitor = (Monitor) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.MONITOR);
+                Equipment equipment = equipmentManager.getEquipmentById(id, false);
+                Monitor monitor = equipment != null ?
+                        (Monitor) equipment.getChildFromEquipment(TypeEquipment.MONITOR) : null;
                 if (monitor != null) {
                     equipmentList.add(monitor);
                 }
@@ -244,7 +246,9 @@ public class MainController {
 
             Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
             if (id != null && id > 0) {
-                Printer printer = (Printer) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.PRINTER);
+                Equipment equipment = equipmentManager.getEquipmentById(id, false);
+                Printer printer = equipment != null ?
+                        (Printer) equipment.getChildFromEquipment(TypeEquipment.PRINTER) : null;
                 if (printer != null) {
                     equipmentList.add(printer);
                 }
@@ -269,7 +273,9 @@ public class MainController {
 
             Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
             if (id != null && id > 0) {
-                Scanner scanner = (Scanner) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.SCANNER);
+                Equipment equipment = equipmentManager.getEquipmentById(id, false);
+                Scanner scanner = equipment != null ?
+                        (Scanner) equipment.getChildFromEquipment(TypeEquipment.SCANNER) : null;
                 if (scanner != null) {
                     equipmentList.add(scanner);
                 }
@@ -294,7 +300,9 @@ public class MainController {
             List<Mfd> equipmentList = new ArrayList<>();
             Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
             if (id != null && id > 0) {
-                Mfd mfd = (Mfd) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.MFD);
+                Equipment equipment = equipmentManager.getEquipmentById(id, false);
+                Mfd mfd = equipment != null ?
+                        (Mfd) equipment.getChildFromEquipment(TypeEquipment.MFD) : null;
                 if (mfd != null) {
                     equipmentList.add(mfd);
                 }
@@ -319,7 +327,9 @@ public class MainController {
             List<Ups> equipmentList = new ArrayList<>();
             Long id = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
             if(id != null && id > 0) {
-                Ups ups = (Ups) equipmentManager.getEquipmentById(id, false).getChildFromEquipment(TypeEquipment.UPS);
+                Equipment equipment =equipmentManager.getEquipmentById(id, false);
+                Ups ups = equipment != null ?
+                        (Ups) equipment.getChildFromEquipment(TypeEquipment.UPS) : null;
                 if(ups != null) {
                     equipmentList.add(ups);
                 }

@@ -14,9 +14,11 @@
     String buttonStyle = "button";
     String buttonStyleSelect = "button_select";
     String userName = (String) request.getSession().getAttribute(Parameters.login);
-    Role roleHeader = (Role) request.getSession().getAttribute(Parameters.role);
+    Role roleHeader = request.getSession().getAttribute(Parameters.role) != null ?
+            (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
 
-    Long idObject = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+    Long idObject = request.getParameter(Parameters.id) != null ?
+            Long.parseLong(request.getParameter(Parameters.id)) : null;
 %>
 
 

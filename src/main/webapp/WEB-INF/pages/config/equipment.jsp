@@ -5,6 +5,7 @@
 <%@ page import="org.springframework.util.CollectionUtils" %>
 <%@ page import="workplaceManager.db.domain.components.*" %>
 <%@ page import="workplaceManager.*" %>
+<%@ page import="java.util.ArrayList" %>
 
 <html>
 <head>
@@ -52,6 +53,12 @@
                 Long.parseLong(request.getParameter(Parameters.workplaceId)) : -1L;
         Boolean isClose = request.getAttribute(Parameters.closeWindow) != null ?
                 (Boolean) request.getAttribute(Parameters.closeWindow) : false;
+        List<Workplace> workplaceList = request.getAttribute(Parameters.workplaceList) != null ?
+                (List<Workplace>) request.getAttribute(Parameters.workplaceList) : new ArrayList<>();
+        List<Accounting1C> accounting1CList = request.getAttribute(Parameters.accounting1CList) != null ?
+                (List<Accounting1C>) request.getAttribute(Parameters.accounting1CList) : new ArrayList<>();
+        List<Employee> employeeList = request.getAttribute(Parameters.employeeList) != null ?
+                (List<Employee>) request.getAttribute(Parameters.employeeList) : new ArrayList<>();
 
         String url = baseUrl;
         String title = "";
@@ -151,7 +158,6 @@
         %>
         <p>
             <%
-                List<Workplace> workplaceList = (List<Workplace>) request.getAttribute(Parameters.workplaceList);
                 Long workplaceId = (equipment != null && equipment.getWorkplace() != null) ? equipment.getWorkplace().getId() : -1;
             %>
             <label>Рабочее место</label>
@@ -237,7 +243,6 @@
         <h1>Бухгалтерия</h1></p>
         <p>
             <%
-                List<Accounting1C> accounting1CList = (List<Accounting1C>) request.getAttribute(Parameters.accounting1CList);
                 Long accounting1СId = (equipment != null && equipment.getAccounting1C() != null) ? equipment.getAccounting1C().getId() : -1;
             %>
             <input type="radio" name="<%=Components.accounting1CRadio%>" id="useRecord"
@@ -275,9 +280,6 @@
         <p><input type="radio" name="<%=Components.accounting1CRadio%>" id="addNewRecord"
                   value="<%=Parameters.accounting1CAddNewRecord%>" onchange="changeFunc()">Добавить
             новую запись</p>
-        <%
-            List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
-        %>
         <p class="align_p">
             <label for="<%=Components.accounting1CInventoryNumberInputText%>">Инвентарный номер</label>
             <input type="text" name="<%=Components.accounting1CInventoryNumberInputText%>"

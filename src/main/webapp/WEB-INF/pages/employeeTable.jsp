@@ -14,7 +14,7 @@
 
 <div align="center"><h1>Сотрудники</h1></div>
 <%
-    if(idEmployee == null) {
+    if (idEmployee == null) {
 %>
 <%
     }
@@ -41,7 +41,11 @@
                target="_blank">
                 <%=employee.getName()%>
             </a></td>
-        <td><%=employee.getPost()%>
+        <td>
+            <a href="<%=baseUrl+Pages.addUpdateEmployee%>?<%=Parameters.id%>=<%=employee.getId()%>&<%=Parameters.redirect%>=<%=Pages.employee%>"
+               target="_blank">
+                <%=employee.getPost()%>
+            </a>
         </td>
         <%
             if (employee.getWorkplace() != null) {

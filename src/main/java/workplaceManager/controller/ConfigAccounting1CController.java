@@ -159,7 +159,8 @@ public class ConfigAccounting1CController {
                                            HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
-            ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + Pages.accounting1c);
+            //ModelAndView modelAndView = securityCrypt.verifyUser(request, "redirect:/" + Pages.accounting1c);
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigAccounting1C);
 
             if (!modelAndView.getViewName().equals(Pages.login)) {
                 Accounting1C accounting1C = accounting1CManager.getAccounting1CById(id, false);
@@ -173,6 +174,8 @@ public class ConfigAccounting1CController {
 
                 journalManager.save(new Journal(TypeEvent.ACCOUNTING1C_CANCELLATION, TypeObject.ACCOUNTING1C,
                         accounting1C, user));
+
+                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             return modelAndView;

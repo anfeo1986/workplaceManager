@@ -90,7 +90,8 @@
         <p>
             <label for="name">ФИО</label>
             <%
-                String employeeName = (employee != null && employee.getName() != null) ? employee.getName() : "";
+                String employeeName = (employee != null && employee.getName() != null) ?
+                        employee.getName() : "";
             %>
 
             <input type="text" name="name" id="name" autofocus size="56" value="<%=employeeName%>">
@@ -99,7 +100,8 @@
         <p>
             <label for="post">Должность</label>
             <%
-                String employeePost = (employee != null && employee.getPost() != null) ? employee.getPost() : "";
+                String employeePost = (employee != null && employee.getPost() != null) ?
+                        employee.getPost() : "";
             %>
             <input type="text" name="post" id="post" size="50" value="<%=employeePost%>">
         </p>
@@ -109,7 +111,8 @@
             <select name="<%=Parameters.workplaceId%>">
                 <option value="-1"/>
                 <%
-                    Long workplaceId = (employee != null && employee.getWorkplace() != null) ? employee.getWorkplace().getId() : -1;
+                    Long workplaceId = (employee != null && employee.getWorkplace() != null) ?
+                            employee.getWorkplace().getId() : -1;
                     for (Workplace workplace : workplaceList) {
                         if (workplace.getId() == workplaceId || workplace.getId() == workplaceIdFromRequest) {
                 %>

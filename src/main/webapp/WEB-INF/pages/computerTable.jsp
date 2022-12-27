@@ -12,14 +12,17 @@
     String typeEquipment = (String) request.getAttribute(Parameters.typeEquipment);
     String redirect = (String) request.getAttribute(Parameters.page);
     String title = (String) request.getAttribute(Parameters.title);
-    List<Computer> computerList = (List<Computer>) request.getAttribute(Parameters.equipmentList);
-    Role roleInComputer = (Role) request.getSession().getAttribute(Parameters.role);
-    Long idComputer = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+    List<Computer> computerList = request.getAttribute(Parameters.equipmentList) != null ?
+            (List<Computer>) request.getAttribute(Parameters.equipmentList) : new ArrayList<>();
+    Role roleInComputer = request.getSession().getAttribute(Parameters.role) != null ?
+            (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+    Long idComputer = request.getParameter(Parameters.id) != null ?
+            Long.parseLong(request.getParameter(Parameters.id)) : null;
 %>
 
 <div align="center"><h1>${title}</h1></div>
 <%
-    if(idComputer == null) {
+    if (idComputer == null) {
 %>
 <%
     }
@@ -33,8 +36,8 @@
         </th>
         <th>Рабочее место</th>
         <th>ОС</th>
-        <th>Процессор</th>
         <th>Материнская плата</th>
+        <th>Процессор</th>
         <th>Оперативная память</th>
         <th>Жесткие диски</th>
         <th>Видеокарта</th>
@@ -74,20 +77,33 @@
         <%
             }
         %>
-        <td><%=computer.getOperationSystem() != null ? computer.getOperationSystem().toStringHtml() : ""%>
+        <td>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%=computer.getOperationSystem() != null ? computer.getOperationSystem().toStringHtml() : ""%>
+            </a>
+        </td>
+        <td>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%=computer.getMotherBoard() != null ? computer.getMotherBoard() : ""%>
+            </a>
         </td>
         <%
             if (!CollectionUtils.isEmpty(computer.getProcessorList())) {
         %>
         <td>
-            <%
-                for (Processor processor : computer.getProcessorList()) {
-            %>
-            <p><%=processor.toStringHtml()%>
-            </p>
-            <%
-                }
-            %>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%
+                    for (Processor processor : computer.getProcessorList()) {
+                %>
+                <p><%=processor.toStringHtml()%>
+                </p>
+                <%
+                    }
+                %>
+            </a>
         </td>
         <%
         } else {
@@ -96,20 +112,22 @@
         <%
             }
         %>
-        <td><%=computer.getMotherBoard() != null ? computer.getMotherBoard() : ""%>
-        </td>
+
         <%
             if (!CollectionUtils.isEmpty(computer.getRamList())) {
         %>
         <td>
-            <%
-                for (Ram ram : computer.getRamList()) {
-            %>
-            <p><%=ram.toStringHtml()%>
-            </p>
-            <%
-                }
-            %>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%
+                    for (Ram ram : computer.getRamList()) {
+                %>
+                <p><%=ram.toStringHtml()%>
+                </p>
+                <%
+                    }
+                %>
+            </a>
         </td>
         <%
         } else {
@@ -122,14 +140,17 @@
             if (!CollectionUtils.isEmpty(computer.getHardDriveList())) {
         %>
         <td>
-            <%
-                for (HardDrive hardDrive : computer.getHardDriveList()) {
-            %>
-            <p><%=hardDrive.toStringHtml()%>
-            </p>
-            <%
-                }
-            %>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%
+                    for (HardDrive hardDrive : computer.getHardDriveList()) {
+                %>
+                <p><%=hardDrive.toStringHtml()%>
+                </p>
+                <%
+                    }
+                %>
+            </a>
         </td>
         <%
         } else {
@@ -142,14 +163,17 @@
             if (!CollectionUtils.isEmpty(computer.getVideoCardList())) {
         %>
         <td>
-            <%
-                for (VideoCard videoCard : computer.getVideoCardList()) {
-            %>
-            <p><%=videoCard%>
-            </p>
-            <%
-                }
-            %>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%
+                    for (VideoCard videoCard : computer.getVideoCardList()) {
+                %>
+                <p><%=videoCard%>
+                </p>
+                <%
+                    }
+                %>
+            </a>
         </td>
         <%
         } else {
@@ -159,7 +183,10 @@
             }
         %>
         <td>
-            <%=computer.getCommentHtml()%>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%=computer.getCommentHtml()%>
+            </a>
         </td>
         <%
             if (computer.getAccounting1C() != null) {

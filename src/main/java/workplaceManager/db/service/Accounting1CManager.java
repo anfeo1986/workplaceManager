@@ -136,7 +136,8 @@ public class Accounting1CManager extends EntityManager<Accounting1C> {
     public Accounting1C getAccounting1CByInventoryNumber(String inventoryNumber) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Accounting1C as ac where" +
-                " ac.inventoryNumber='" + inventoryNumber + "'");
+                " ac.inventoryNumber='" + inventoryNumber + "' " +
+                "and ac.deleted=false");
         Accounting1C accounting1C = (Accounting1C) query.uniqueResult();
         initializeAccounting1c(accounting1C);
 

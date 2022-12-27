@@ -37,8 +37,8 @@
 <body>
 
 <%
-    List<Journal> journalList = new ArrayList<>();
-    journalList = (List<Journal>) request.getAttribute(Parameters.journalList);
+    List<Journal> journalList = request.getAttribute(Parameters.journalList) != null ?
+            (List<Journal>) request.getAttribute(Parameters.journalList) : new ArrayList<>();
 
     String typeObjectStr = (String) request.getAttribute(Parameters.journalFilterTypeObject);
     TypeObject typeObject = null;
@@ -48,31 +48,34 @@
 
     Long objectId = request.getAttribute(Parameters.journalFilterObjectId) != null ?
             (Long) request.getAttribute(Parameters.journalFilterObjectId) : -1;
-    SortedMap<String, Long> objectIdList = (SortedMap<String, Long>) request.getAttribute(Parameters.journalObjectIdListForFilter);
+    SortedMap<String, Long> objectIdList = request.getAttribute(Parameters.journalObjectIdListForFilter) != null ?
+            (SortedMap<String, Long>) request.getAttribute(Parameters.journalObjectIdListForFilter) : new TreeMap<>();
 
-    String typeEventStr = (String) request.getAttribute(Parameters.journalFilterTypeEvent);
-    TypeEvent typeEvent = null;
-    if (typeEventStr != null && !typeEventStr.isEmpty()) {
-        typeEvent = TypeEvent.valueOf(typeEventStr);
-    }
-    List<TypeEvent> typeEventList = (List<TypeEvent>) request.getAttribute(Parameters.journalTypeEventListForFilter);
+    TypeEvent typeEvent = request.getAttribute(Parameters.journalFilterTypeEvent) != null ?
+            TypeEvent.valueOf((String) request.getAttribute(Parameters.journalFilterTypeEvent)) : null;
+
+    List<TypeEvent> typeEventList = request.getAttribute(Parameters.journalTypeEventListForFilter) != null ?
+            (List<TypeEvent>) request.getAttribute(Parameters.journalTypeEventListForFilter) : new ArrayList<>();
 
     String typeParameterStr = (String) request.getAttribute(Parameters.journalFilterTypeParameter);
     TypeParameter typeParameter = null;
     if (typeParameterStr != null && !typeParameterStr.isEmpty()) {
         typeParameter = TypeParameter.valueOf(typeParameterStr);
     }
-    List<TypeParameter> typeParameterList = (List<TypeParameter>) request.getAttribute(Parameters.journalParametersListForFilter);
+    List<TypeParameter> typeParameterList = request.getAttribute(Parameters.journalParametersListForFilter) != null ?
+            (List<TypeParameter>) request.getAttribute(Parameters.journalParametersListForFilter) : new ArrayList<>();
 
     Users user = (Users) request.getAttribute(Parameters.journalFilterUser);
-    List<Users> usersList = (List<Users>) request.getAttribute(Parameters.journalUsersListForFilter);
+    List<Users> usersList = request.getAttribute(Parameters.journalUsersListForFilter) != null ?
+            (List<Users>) request.getAttribute(Parameters.journalUsersListForFilter) : new ArrayList<>();
 
     String stateObjectForFilterStr = (String) request.getAttribute(Parameters.journalFilterStateObject);
     StateObject stateObjectForFilter = null;
     if (stateObjectForFilterStr != null && !stateObjectForFilterStr.isEmpty()) {
         stateObjectForFilter = StateObject.valueOf(stateObjectForFilterStr);
     }
-    List<StateObject> stateObjectList = (List<StateObject>) request.getAttribute(Parameters.journalStateObjectListForFilter);
+    List<StateObject> stateObjectList = request.getAttribute(Parameters.journalStateObjectListForFilter) != null ?
+            (List<StateObject>) request.getAttribute(Parameters.journalStateObjectListForFilter) : new ArrayList<>();
 
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat formatWithTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");

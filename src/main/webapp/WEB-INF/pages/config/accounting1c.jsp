@@ -3,6 +3,7 @@
 <%@ page import="workplaceManager.db.domain.Employee" %>
 <%@ page import="java.util.List" %>
 <%@ page import="workplaceManager.*" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -10,16 +11,21 @@
 <head>
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <%
-        Accounting1C accounting1C = (Accounting1C) request.getAttribute(Parameters.accounting1C);
-        String error = (String) request.getAttribute(Parameters.error);
-        String message = (String) request.getAttribute(Parameters.message);
-        //String token = (String) request.getAttribute(Parameters.token);
-        String baseUrl = (String) request.getAttribute(Parameters.baseUrl);
-        Role role = (Role) request.getSession().getAttribute(Parameters.role);
-        Boolean isClose = false;
-        if (request.getAttribute(Parameters.closeWindow) != null) {
-            isClose = (Boolean) request.getAttribute(Parameters.closeWindow);
-        }
+        Accounting1C accounting1C = request.getAttribute(Parameters.accounting1C) != null ?
+                (Accounting1C) request.getAttribute(Parameters.accounting1C) : null;
+        String error = request.getAttribute(Parameters.error) != null ?
+                (String) request.getAttribute(Parameters.error) : "";
+        String message = request.getAttribute(Parameters.message) != null ?
+                (String) request.getAttribute(Parameters.message) : "";
+        String baseUrl = request.getAttribute(Parameters.baseUrl) != null ?
+                (String) request.getAttribute(Parameters.baseUrl) : "";
+        Role role = request.getSession().getAttribute(Parameters.role) != null ?
+                (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+        Boolean isClose = request.getAttribute(Parameters.closeWindow) != null ?
+                (Boolean) request.getAttribute(Parameters.closeWindow) : false;
+        List<Employee> employeeList = request.getAttribute(Parameters.employeeList) != null ?
+                (List<Employee>) request.getAttribute(Parameters.employeeList) : new ArrayList<>();
+        String redirect = (String) request.getAttribute(Parameters.redirect);
 
         String buttonTitle = "Добавить";
         String url = baseUrl;
@@ -94,20 +100,21 @@
         <p>
             <label for="title">Название</label>
             <%
-                String title = (accounting1C != null && accounting1C.getTitle() != null) ? accounting1C.getTitleHtml() : "";
+                String title = (accounting1C != null && accounting1C.getTitle() != null) ?
+                        accounting1C.getTitleHtml() : "";
             %>
             <input type="text" name="title" id="title" size="50" value="<%=title%>">
         </p>
 
         <p>
             <%
-                Long employeeId = (accounting1C != null && accounting1C.getEmployee() != null) ? accounting1C.getEmployee().getId() : -1;
+                Long employeeId = (accounting1C != null && accounting1C.getEmployee() != null) ?
+                        accounting1C.getEmployee().getId() : -1;
             %>
             <label for="<%=Parameters.employeeId%>">Материально-ответственное лицо</label>
             <select name="<%=Parameters.employeeId%>" id="<%=Parameters.employeeId%>">
                 <option value="-1"/>
                 <%
-                    List<Employee> employeeList = (List<Employee>) request.getAttribute(Parameters.employeeList);
                     for (Employee employee : employeeList) {
                         if (employee.getId() == employeeId) {
                 %>
@@ -134,12 +141,11 @@
             <input type="submit" value="<%=buttonTitle%>">
             <%
                 }
-                String redirect = (String) request.getAttribute(Parameters.redirect);
             %>
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
             <a onclick="close_window(); return false;" class="button">Назад</a>
                     <%
-            if (Role.ADMIN.equals(role)) {
+            if (Role.ADMIN.equals(role) && accounting1C != null) {
         %>
         <td>
             <a href="<%=baseUrl + Pages.deleteAccounting1CPost%>?<%=Parameters.id%>=<%=accounting1C.getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>">

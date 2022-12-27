@@ -440,13 +440,13 @@ public class ConfigEquipmentController {
                     if (StringUtils.equals(error, "")) {
                         modelAndView.addObject(Parameters.message, message);
                         modelAndView.addObject(Parameters.equipment, new Equipment());
+                        modelAndView.addObject(Parameters.closeWindow, true);
                     } else {
                         modelAndView.addObject(Parameters.equipment, equipment);
                     }
 
                     modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
                 }
-                modelAndView.addObject(Parameters.closeWindow, true);
             }
 
             return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);

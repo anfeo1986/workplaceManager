@@ -5,7 +5,10 @@
 
 <%
     Role roleInAccounting1C = (Role) request.getSession().getAttribute(Parameters.role);
-    Long idAccounting1C = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+    Long idAccounting1C = request.getParameter(Parameters.id) != null ?
+            Long.parseLong(request.getParameter(Parameters.id)) : null;
+    List<Accounting1C> accounting1CList = request.getAttribute(Parameters.accounting1CList) != null ?
+            (List<Accounting1C>) request.getAttribute(Parameters.accounting1CList) : new ArrayList<>();
 %>
 
 <div align="center"><h1>Бухгалтерия</h1></div>
@@ -26,7 +29,6 @@
     </tr>
 
     <%
-        List<Accounting1C> accounting1CList = (List<Accounting1C>) request.getAttribute(Parameters.accounting1CList);
         int count = 1;
         for (Accounting1C accounting1C : accounting1CList) {
     %>
@@ -51,7 +53,11 @@
         <%
             if (accounting1C.getEmployee() != null) {
         %>
-        <td><%=accounting1C.getEmployee().getName()%>
+        <td>
+            <a href="<%=baseUrl + Pages.employee%>?<%=Parameters.id%>=<%=accounting1C.getEmployee().getId()%>&<%=Parameters.redirect%>=<%=Pages.accounting1c%>"
+               target="_blank">
+                <%=accounting1C.getEmployee().getName()%>
+            </a>
         </td>
         <%
         } else {

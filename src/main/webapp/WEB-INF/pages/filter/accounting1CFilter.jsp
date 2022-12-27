@@ -10,11 +10,8 @@
     }
     String baseUrlForFilter = (String) request.getAttribute(Parameters.baseUrl);
 
-    String filterStr = request.getParameter(Parameters.accounting1CFilter);
-    FilterAccounting1C filter = FilterAccounting1C.ALL;
-    if (filterStr != null) {
-        filter = FilterAccounting1C.valueOf(filterStr);
-    }
+    FilterAccounting1C filter = request.getParameter(Parameters.accounting1CFilter) != null ?
+            FilterAccounting1C.valueOf(request.getParameter(Parameters.accounting1CFilter)) : FilterAccounting1C.ALL;
 
     String findText = request.getParameter(Parameters.accounting1CFindText);
 %>

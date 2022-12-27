@@ -6,9 +6,12 @@
     String typeEquipment = (String) request.getAttribute(Parameters.typeEquipment);
     String redirect = (String) request.getAttribute(Parameters.page);
     String title = (String) request.getAttribute(Parameters.title);
-    List<Equipment> equipmentList = (List<Equipment>) request.getAttribute(Parameters.equipmentList);
-    Role roleInEquipment = (Role) request.getSession().getAttribute(Parameters.role);
-    Long idEquipment = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+    List<Equipment> equipmentList = request.getAttribute(Parameters.equipmentList) != null ?
+            (List<Equipment>) request.getAttribute(Parameters.equipmentList) : new ArrayList<>();
+    Role roleInEquipment = request.getSession().getAttribute(Parameters.role) != null ?
+            (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+    Long idEquipment = request.getParameter(Parameters.id) != null ?
+            Long.parseLong(request.getParameter(Parameters.id)) : null;
 
     String typeEquipmentStr = "";
     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
@@ -29,7 +32,7 @@
 <div align="center"><h1>${title}</h1></div>
 
 <%
-    if(idEquipment == null) {
+    if (idEquipment == null) {
 %>
 <%
     }
@@ -38,7 +41,8 @@
 <table class="table">
     <tr>
         <th>Номер</th>
-        <th><%=title%></th>
+        <th><%=title%>
+        </th>
         <th>Рабочее место</th>
         <th>Комментарий</th>
         <th>Бухгалтерия</th>
@@ -77,7 +81,10 @@
             }
         %>
         <td>
-            <%=equipment.getCommentHtml()%>
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=equipment.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+               target="_blank">
+                <%=equipment.getCommentHtml()%>
+            </a>
         </td>
         <%
             if (equipment.getAccounting1C() != null) {

@@ -8,8 +8,12 @@
 <div align="center"><h1>Рабочие места</h1></div>
 
 <%
-    Role roleInWorklace = (Role) request.getSession().getAttribute(Parameters.role);
-    Long idWorkplace = request.getParameter(Parameters.id) != null ? Long.parseLong(request.getParameter(Parameters.id)) : null;
+    Role roleInWorklace = request.getSession().getAttribute(Parameters.role) != null ?
+            (Role) request.getSession().getAttribute(Parameters.role) : Role.USER;
+    Long idWorkplace = request.getParameter(Parameters.id) != null ?
+            Long.parseLong(request.getParameter(Parameters.id)) : null;
+    List<Workplace> workplaceList = request.getAttribute(Parameters.workplaceList) != null ?
+            (List<Workplace>) request.getAttribute(Parameters.workplaceList) : new ArrayList<>();
 %>
 
 
@@ -50,8 +54,6 @@
     </tr>
 
     <%
-        List<Workplace> workplaceList = (List<Workplace>) request.getAttribute(Parameters.workplaceList);
-
         int count = 1;
         for (Workplace workplace : workplaceList) {
             List<Computer> computerList1 = new ArrayList<>();

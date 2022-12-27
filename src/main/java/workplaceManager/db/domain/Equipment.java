@@ -94,6 +94,7 @@ public class Equipment<T> implements Serializable {
         equipment.setWorkplace(this.getWorkplace());
         equipment.setAccounting1C(this.getAccounting1C());
         equipment.setDeleted(this.getDeleted());
+        equipment.setComment(this.getComment());
 
         return (T) equipment;
     }
