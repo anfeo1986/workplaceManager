@@ -45,6 +45,9 @@ public class Computer extends Equipment<Computer> {
     @OneToMany(mappedBy = "computer", fetch = FetchType.LAZY)
     private List<HardDrive> hardDriveList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "computer", fetch = FetchType.LAZY)
+    private List<VirtualMachine> virtualMachineList = new ArrayList<>();
+
     @Override
     @Transient
     public String toString() {

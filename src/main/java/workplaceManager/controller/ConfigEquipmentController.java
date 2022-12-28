@@ -289,11 +289,44 @@ public class ConfigEquipmentController {
         }
     }
 
+    private ModelAndView addVirtualMachine(Equipment equipment, HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
+        if (user != null && Role.ADMIN.equals(user.getRole())) {
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
+
+            if (!modelAndView.getViewName().equals(Pages.login)) {
+                setWorkplaceByEquipment(equipment, request);
+
+                setAccounting1CByEquipment(equipment, request, false, user);
+
+                Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
+
+                if(computer == null) {
+                    computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                }
+                setParameterComputer(computer, request, equipment, false);
+
+                computer.getVirtualMachineList().add(new VirtualMachine());
+
+                //equipmentManager.save(computer);
+                modelAndView.addObject(Parameters.computer, computer);
+                modelAndView.addObject(Parameters.equipment, equipment);
+                modelAndView.addObject(Parameters.typeEquipment, request.getParameter(Parameters.typeEquipment));
+            }
+            return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);
+        } else {
+            return new ModelAndView(Pages.login);
+        }
+    }
+
     private ModelAndView searchPage(@ModelAttribute(Parameters.equipment) Equipment equipment,
                                     //@RequestParam(name = Parameters.token) String token,
                                     HttpServletRequest request) {
         if (request.getParameter(Components.buttonReadConfigComputer) != null) {
             return readConfigComputer(equipment, request);
+        }
+        if(request.getParameter(Components.buttonAddVirtualMachine) != null) {
+            return addVirtualMachine(equipment, request);
         }
         if (request.getParameter(Components.buttonAddProcessor) != null) {
             return addComponentComputer(equipment, request, TypeComponentsComputer.processor);

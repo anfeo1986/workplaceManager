@@ -235,6 +235,18 @@
                    ? computer.getOperationSystem().getOSArchitecture() : ""%>">
         </p>
     </div>
+    <div class="wrapper_1100">
+        <h1> Виртуальные машины
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <input type="submit" name="<%=Components.buttonReadConfigComputer%>"
+                   value="Добавить">
+            <%
+                }
+            %>
+        </h1>
+    </div>
     <%
         }
     %>
@@ -317,7 +329,7 @@
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
-            <input type="submit" name="<%=Components.buttonReadConfigComputer%>"
+            <input type="submit" name="<%=Components.buttonAddVirtualMachine%>"
                    value="Считать конфигурацию компьютера">
             <%
                 }

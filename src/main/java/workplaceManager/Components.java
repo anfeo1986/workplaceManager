@@ -14,6 +14,7 @@ public class Components {
     public static final String ramDeviceLocatorInputText = "ramDeviceLocator";
     public static final String ramIdHiddenText = "ramId";
 
+    public static final String buttonAddVirtualMachine = "buttonAddVirtualMachine";
     public static final String buttonReadConfigComputer = "buttonReadConfigComputer";
     public static final String buttonAddProcessor = "buttonAddProcessor";
     public static final String buttonDeleteProcessor = "buttonDeleteProcessor";
