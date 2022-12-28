@@ -98,6 +98,13 @@ public class ConfigEquipmentController {
         this.journalManager = journalManager;
     }
 
+    private VirtualMachineManager virtualMachineManager;
+
+    @Autowired
+    public void setVirtualMachineManager(VirtualMachineManager virtualMachineManager) {
+        this.virtualMachineManager = virtualMachineManager;
+    }
+
     @GetMapping(Pages.addUpdateEquipment)
     public ModelAndView getFormAddUpdateEquipment(@RequestParam(name = Parameters.id, required = false) Long id,
                                                   @RequestParam(name = Parameters.typeEquipment) String typeEquipment,
@@ -118,7 +125,7 @@ public class ConfigEquipmentController {
                 modelAndView.addObject(Parameters.computer, computer == null ? new Computer() : computer);
             }
 
-            if(request.getParameter(Parameters.workplaceId) != null) {
+            if (request.getParameter(Parameters.workplaceId) != null) {
                 Long workplaceId = Long.parseLong(request.getParameter(Parameters.workplaceId));
                 modelAndView.addObject(Parameters.workplaceId, workplaceId);
             }
@@ -193,7 +200,7 @@ public class ConfigEquipmentController {
 
                 Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
 
-                if(computer == null) {
+                if (computer == null) {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
                 setParameterComputer(computer, request, equipment, false);
@@ -289,6 +296,44 @@ public class ConfigEquipmentController {
         }
     }
 
+    private ModelAndView deleteVirtualMachineFromComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
+                                                          HttpServletRequest request) {
+        Users user = securityCrypt.getUserBySession(request);
+        if (user != null && Role.ADMIN.equals(user.getRole())) {
+            ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
+
+            if (!modelAndView.getViewName().equals(Pages.login)) {
+
+                setWorkplaceByEquipment(equipment, request);
+
+                setAccounting1CByEquipment(equipment, request, false, user);
+
+                //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
+                Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
+
+                setParameterComputer(computer, request, equipment, false);
+
+                int countVirtualMachine = Integer.parseInt(request.getParameter(Parameters.countVirtualMachine));
+                for (int numberVirtualMachine = 1; numberVirtualMachine <= countVirtualMachine; numberVirtualMachine++) {
+                    String buttonDeleteProcessor = Parameters.virtualMachineButtonDelete + numberVirtualMachine;
+                    if (request.getParameter(buttonDeleteProcessor) != null) {
+                        VirtualMachine virtualMachine = computer.getVirtualMachineList().get(numberVirtualMachine - 1);
+                        virtualMachineManager.delete(virtualMachine);
+                        computer.getVirtualMachineList().remove(numberVirtualMachine - 1);
+                    }
+                }
+
+                //equipmentManager.save(computer);
+                modelAndView.addObject(Parameters.computer, computer);
+                modelAndView.addObject(Parameters.equipment, equipment);
+                modelAndView.addObject(Parameters.typeEquipment, request.getParameter(Parameters.typeEquipment));
+            }
+            return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);
+        } else {
+            return new ModelAndView(Pages.login);
+        }
+    }
+
     private ModelAndView addVirtualMachine(Equipment equipment, HttpServletRequest request) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
@@ -301,12 +346,15 @@ public class ConfigEquipmentController {
 
                 Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
 
-                if(computer == null) {
+                if (computer == null) {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
                 setParameterComputer(computer, request, equipment, false);
 
-                computer.getVirtualMachineList().add(new VirtualMachine());
+                VirtualMachine virtualMachine = new VirtualMachine();
+                virtualMachine.setComputer(computer);
+                virtualMachineManager.save(virtualMachine);
+                computer.getVirtualMachineList().add(virtualMachine);
 
                 //equipmentManager.save(computer);
                 modelAndView.addObject(Parameters.computer, computer);
@@ -325,8 +373,15 @@ public class ConfigEquipmentController {
         if (request.getParameter(Components.buttonReadConfigComputer) != null) {
             return readConfigComputer(equipment, request);
         }
-        if(request.getParameter(Components.buttonAddVirtualMachine) != null) {
+        if (request.getParameter(Components.buttonAddVirtualMachine) != null) {
             return addVirtualMachine(equipment, request);
+        }
+        int countVirtualMachine = Integer.parseInt(request.getParameter(Parameters.countVirtualMachine));
+        for (int i = 1; i <= countVirtualMachine; i++) {
+            String virtualMachineButtonDelete = Parameters.virtualMachineButtonDelete + i;
+            if (request.getParameter(virtualMachineButtonDelete) != null) {
+                return deleteVirtualMachineFromComputer(equipment, request);
+            }
         }
         if (request.getParameter(Components.buttonAddProcessor) != null) {
             return addComponentComputer(equipment, request, TypeComponentsComputer.processor);
@@ -516,10 +571,109 @@ public class ConfigEquipmentController {
         addRamListToComputer(request, computer, isNeedSave);
         addVideoCardListToComputer(request, computer, isNeedSave);
         addHardDriveListToComputer(request, computer, isNeedSave);
+        addVirtualMachineToComputer(request, computer, isNeedSave);
+    }
+
+    private void addVirtualMachineToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+        List<Long> virtualMachineIdList = new ArrayList<>();
+        int countVirtualMachine = Integer.parseInt(request.getParameter(Parameters.countVirtualMachine));
+        for (int i = 1; i < countVirtualMachine; i++) {
+            //VirtualMachine virtualMachine = new VirtualMachine();
+            VirtualMachine virtualMachine = null;
+            String ipVirtualMachineName = Parameters.ipVirtualMachine + i;
+            String osTypeVirtualMachineName = Parameters.OsTypeVirtualMachine + i;
+            String osVendorVirtualMachineName = Parameters.OsVendorVirtualMachine + i;
+            String osVersionVirtualMachineName = Parameters.OsVersionVirtualMachine + i;
+            String virtualMachineIdName = Parameters.idVirtualMachine + i;
+
+            Long virtualMachineId = Long.parseLong(request.getParameter(virtualMachineIdName));
+            boolean isNewVirtualMachine = true;
+            if (virtualMachineId > 0) {
+                for (VirtualMachine virtualMachine1 : computer.getVirtualMachineList()) {
+                    if (virtualMachine1.getId() == virtualMachineId) {
+                        virtualMachine = virtualMachine1;
+                        isNewVirtualMachine = false;
+                        break;
+                    }
+                }
+            }
+            if(virtualMachine == null) {
+                continue;
+            }
+
+            /*boolean isAllNull = true;*/
+
+            if (request.getParameter(ipVirtualMachineName) != null) {
+                virtualMachine.setIp(request.getParameter(ipVirtualMachineName));
+                //isAllNull = false;
+            }
+            if (request.getParameter(osTypeVirtualMachineName) != null) {
+                virtualMachine.setTypeOS(TypeOS.valueOf(request.getParameter(osTypeVirtualMachineName)));
+                //isAllNull = false;
+            }
+            if (request.getParameter(osVendorVirtualMachineName) != null) {
+                virtualMachine.setVendor(request.getParameter(osVendorVirtualMachineName));
+                //isAllNull = false;
+            }
+            if (request.getParameter(osVersionVirtualMachineName) != null) {
+                virtualMachine.setVersion(request.getParameter(osVersionVirtualMachineName));
+                //isAllNull = false;
+            }
+
+            if (isNeedSave) {
+                if (!VirtualMachine.isEmpty(virtualMachine)) {
+                    virtualMachineManager.save(virtualMachine);
+                }
+            }
+
+            /*if (isAllNull) {
+                continue;
+            }
+            if (virtualMachineId > 0) {
+                virtualMachineIdList.add(virtualMachineId);
+            }
+            if (isNewVirtualMachine) {
+                virtualMachine.setComputer(computer);
+                virtualMachineManager.save(virtualMachine);
+                computer.getVirtualMachineList().add(virtualMachine);
+            }
+
+            if (isNeedSave) {
+                if (!VirtualMachine.isEmpty(virtualMachine)) {
+                    virtualMachineManager.save(virtualMachine);
+                    if (isNewVirtualMachine) {
+                        virtualMachineIdList.add(virtualMachine.getId());
+                    }
+                }
+            }*/
+        }
+
+        /*List<Integer> virtualMachineIndexForDelete = new ArrayList<>();
+        int index = 0;
+        for (VirtualMachine virtualMachine : computer.getVirtualMachineList()) {
+            boolean isExist = false;
+            for (Long id : virtualMachineIdList) {
+                if (id == virtualMachine.getId()) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                virtualMachineIndexForDelete.add(index);
+            }
+            index++;
+        }
+        for (Integer i : virtualMachineIndexForDelete) {
+            if (isNeedSave) {
+                VirtualMachine virtualMachine = computer.getVirtualMachineList().get(i);
+                virtualMachineManager.delete(virtualMachine);
+            }
+            computer.getVirtualMachineList().remove(i);
+
+        }*/
     }
 
     private void addHardDriveListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
-
         List<Long> hardDriveIdList = new ArrayList<>();
         int countHardDrive = Integer.parseInt(request.getParameter(Parameters.countHardDrive));
         for (int i = 1; i < countHardDrive; i++) {
@@ -594,7 +748,6 @@ public class ConfigEquipmentController {
             }
             computer.getHardDriveList().remove(i);
         }
-
     }
 
     private void addVideoCardListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {

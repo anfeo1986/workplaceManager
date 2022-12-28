@@ -252,6 +252,7 @@ public class EquipmentManager extends EntityManager<Equipment> {
             Hibernate.initialize(computer.getVideoCardList());
             Hibernate.initialize(computer.getHardDriveList());
             Hibernate.initialize(computer.getRamList());
+            Hibernate.initialize(computer.getVirtualMachineList());
         }
     }
 }

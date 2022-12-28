@@ -190,6 +190,7 @@
     </div>
 
     <%
+        int countVirtualMachine = 1;
         if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
             Computer computer = (Computer) request.getAttribute(Parameters.computer);
     %>
@@ -240,12 +241,72 @@
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
-            <input type="submit" name="<%=Components.buttonReadConfigComputer%>"
+            <input type="submit" name="<%=Components.buttonAddVirtualMachine%>"
                    value="Добавить">
             <%
                 }
             %>
         </h1>
+
+        <%
+            if (computer != null && computer.getVirtualMachineList() == null) {
+                for (VirtualMachine virtualMachine : computer.getVirtualMachineList()) {
+                    String ipVirtualMachineName = Parameters.ipVirtualMachine + countVirtualMachine;
+                    String osTypeVirtualMachineName = Parameters.OsTypeVirtualMachine + countVirtualMachine;
+                    String osVendorVirtualMachineName = Parameters.OsVendorVirtualMachine + countVirtualMachine;
+                    String osVersionVirtualMachineName = Parameters.OsVersionVirtualMachine + countVirtualMachine;
+                    String virtualMachineIdName = Parameters.idVirtualMachine + countVirtualMachine;
+                    String virtualMachineButtonDelete = Parameters.virtualMachineButtonDelete + countVirtualMachine;
+
+        %>
+        <p>
+            <label for="<%=ipVirtualMachineName%>">IP</label>
+            <input type="text" name="<%=ipVirtualMachineName%>" id="<%=ipVirtualMachineName%>"
+                   value="<%=virtualMachine.getIp() != null ? virtualMachine.getIp() : ""%>">
+
+            <label for="<%=osTypeVirtualMachineName%>">Тип ОС</label>
+            <select name="<%=osTypeVirtualMachineName%>">
+                <%
+                    for (TypeOS typeOS : TypeOS.values()) {
+                        if (virtualMachine.getTypeOS() != null && virtualMachine.getTypeOS().equals(typeOS)) {
+                %>
+                <option selected value="<%=typeOS%>"><%=typeOS%>
+                </option>
+                <%
+                } else {
+                %>
+                <option value="<%=typeOS%>"><%=typeOS%>
+                </option>
+                <%
+                        }
+                    }
+                %>
+            </select>
+
+            <label for="<%=osVendorVirtualMachineName%>">Название ОС</label>
+            <input type="text" name="<%=osVendorVirtualMachineName%>" id="<%=osVendorVirtualMachineName%>"
+                   value="<%=virtualMachine.getVendor() != null ? virtualMachine.getVendor() : ""%>">
+
+            <label for="<%=osVersionVirtualMachineName%>">Версия ОС</label>
+            <input type="text" name="<%=osVersionVirtualMachineName%>" id="<%=osVersionVirtualMachineName%>"
+                   value="<%=virtualMachine.getVersion() != null ? virtualMachine.getVersion() : ""%>">
+
+            <input type="hidden" name="<%=virtualMachineIdName%>" value="<%=virtualMachine.getId()%>">
+
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <input type="submit" name="<%=virtualMachineButtonDelete%>" value="Удалить">
+            <%
+                }
+            %>
+        </p>
+        <%
+
+                    countVirtualMachine++;
+                }
+            }
+        %>
     </div>
     <%
         }
@@ -578,6 +639,7 @@
             <input type="hidden" name="<%=Parameters.redirect%>" value="<%=redirect%>">
             <input type="hidden" name="<%=Parameters.typeEquipment%>" value="<%=typeEquipment%>">
             <input type="hidden" name="<%=Parameters.countProcessor%>" value="<%=countProcessor%>">
+            <input type="hidden" name="<%=Parameters.countVirtualMachine%>" value="<%=countVirtualMachine%>">
             <input type="hidden" name="<%=Parameters.countRam%>" value="<%=countRam%>">
             <input type="hidden" name="<%=Parameters.countVideoCard%>" value="<%=countVideoCard%>">
             <input type="hidden" name="<%=Parameters.countHardDrive%>" value="<%=countHardDrive%>">

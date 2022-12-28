@@ -2,6 +2,7 @@ package workplaceManager.db.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import workplaceManager.db.domain.components.HardDrive;
 
 import javax.persistence.*;
 
@@ -29,4 +30,18 @@ public class VirtualMachine {
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "computer")
     private Computer computer;
+
+    @Transient
+    public static boolean isEmpty(VirtualMachine virtualMachine) {
+        if (virtualMachine == null) {
+            return true;
+        }
+        if ((virtualMachine.getIp() == null || virtualMachine.getIp() == "") &&
+                (virtualMachine.getVendor() == null || virtualMachine.getVendor() == "") &&
+                (virtualMachine.getVersion() == null || virtualMachine.getVersion() == "")) {
+            return true;
+        }
+
+        return false;
+    }
 }

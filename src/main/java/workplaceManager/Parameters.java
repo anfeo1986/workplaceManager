@@ -19,6 +19,7 @@ public class Parameters {
     public static final String computer = "computer";
     public static final String typeOS = "type_operationsystem";
     public static final String message = "message";
+    public static final String countVirtualMachine = "countVirtualMachine";
     public static final String countProcessor = "countProcessor";
     public static final String countRam = "countRam";
     public static final String countVideoCard = "countVideoCard";
@@ -37,6 +38,13 @@ public class Parameters {
     public static final String OsVendor = "vendor_operationsystem";
     public static final String OsVersion = "version_operationsystem";
     public static final String OSArchitecture = "OSArchitecture";
+
+    public static final String OsTypeVirtualMachine = "OsTypeVirtualMachine";
+    public static final String OsVendorVirtualMachine = "OsVendorVirtualMachine";
+    public static final String OsVersionVirtualMachine = "OsVersionVirtualMachine";
+    public static final String ipVirtualMachine = "ipVirtualMachine";
+    public static final String idVirtualMachine = "idVirtualMachine";
+    public static final String virtualMachineButtonDelete = "virtualMachineButtonDelete";
 
     public static final String accounting1C = "accounting1C";
     public static final String accounting1CUseRecord = "useRecord";
