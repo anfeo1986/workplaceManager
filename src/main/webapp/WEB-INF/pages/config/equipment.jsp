@@ -146,11 +146,11 @@
         <p>
             <label for="<%=Parameters.ip%>">IP</label>
             <input type="text" name="<%=Parameters.ip%>" id="<%=Parameters.ip%>"
-                   value="<%=computer.getIp() == null ? "" : computer.getIp()%>">
+                   value="<%=(computer != null && computer.getIp() != null) ? computer.getIp() : ""%>">
 
             <label for="<%=Parameters.netName%>">Сетевое имя</label>
             <input type="text" name="<%=Parameters.netName%>" id="<%=Parameters.netName%>"
-                   value="<%=computer.getNetName() != null ? computer.getNetName() : ""%>">
+                   value="<%=(computer != null && computer.getNetName() != null) ? computer.getNetName() : ""%>">
 
         </p>
         <%
@@ -202,7 +202,7 @@
             <select name="<%=Parameters.OsType%>">
                 <%
                     for (TypeOS typeOS : TypeOS.values()) {
-                        if (computer.getOperationSystem() != null && computer.getOperationSystem().getTypeOS() != null &&
+                        if (computer != null && computer.getOperationSystem() != null && computer.getOperationSystem().getTypeOS() != null &&
                                 computer.getOperationSystem().getTypeOS().equals(typeOS)) {
                 %>
                 <option selected value="<%=typeOS%>"><%=typeOS%>
@@ -222,17 +222,17 @@
         <p>
             <label for="<%=Parameters.OsVendor%>">Название</label>
             <input type="text" name="<%=Parameters.OsVendor%>" id="<%=Parameters.OsVendor%>"
-                   value="<%=(computer.getOperationSystem() != null && computer.getOperationSystem().getVendor() != null)
+                   value="<%=(computer != null && computer.getOperationSystem() != null && computer.getOperationSystem().getVendor() != null)
                    ? computer.getOperationSystem().getVendor() : ""%>">
 
             <label for="<%=Parameters.OsVersion%>">Версия</label>
             <input type="text" name="<%=Parameters.OsVersion%>" id="<%=Parameters.OsVersion%>"
-                   value="<%=(computer.getOperationSystem() != null && computer.getOperationSystem().getVersion() != null)
+                   value="<%=(computer != null && computer.getOperationSystem() != null && computer.getOperationSystem().getVersion() != null)
                    ? computer.getOperationSystem().getVersion() : ""%>">
 
             <label for="<%=Parameters.OSArchitecture%>">Архитектура</label>
             <input type="text" name="<%=Parameters.OSArchitecture%>" id="<%=Parameters.OSArchitecture%>"
-                   value="<%=(computer.getOperationSystem() != null && computer.getOperationSystem().getOSArchitecture() != null)
+                   value="<%=(computer != null && computer.getOperationSystem() != null && computer.getOperationSystem().getOSArchitecture() != null)
                    ? computer.getOperationSystem().getOSArchitecture() : ""%>">
         </p>
     </div>
@@ -249,7 +249,7 @@
         </h1>
 
         <%
-            if (!CollectionUtils.isEmpty(computer.getVirtualMachineList())) {
+            if (computer != null && !CollectionUtils.isEmpty(computer.getVirtualMachineList())) {
                 for (VirtualMachine virtualMachine : computer.getVirtualMachineList()) {
                     String ipVirtualMachineName = Parameters.ipVirtualMachine + countVirtualMachine;
                     String osTypeVirtualMachineName = Parameters.OsTypeVirtualMachine + countVirtualMachine;
@@ -389,7 +389,7 @@
             <%
                 if (Role.ADMIN.equals(role)) {
             %>
-            <input type="submit" name="<%=Components.buttonAddVirtualMachine%>"
+            <input type="submit" name="<%=Components.buttonReadConfigComputer%>"
                    value="Считать конфигурацию компьютера">
             <%
                 }
@@ -402,11 +402,11 @@
             <label for="<%=Components.motherboardManufacturer%>">Производитель</label>
             <input type="text" name="<%=Components.motherboardManufacturer%>"
                    id="<%=Components.motherboardManufacturer%>"
-                   value="<%=computer.getMotherBoard() != null ? computer.getMotherBoard().getManufacturer() : ""%>">
+                   value="<%=(computer != null && computer.getMotherBoard() != null) ? computer.getMotherBoard().getManufacturer() : ""%>">
 
             <label for="<%=Components.motherboardModel%>">Модель</label>
             <input type="text" name="<%=Components.motherboardModel%>" id="<%=Components.motherboardModel%>"
-                   value="<%=computer.getMotherBoard() != null ? computer.getMotherBoard().getModel() : ""%>">
+                   value="<%=(computer != null && computer.getMotherBoard() != null) ? computer.getMotherBoard().getModel() : ""%>">
         </p>
 
         <h2>Процессор
@@ -421,7 +421,7 @@
         <p>
                 <%
                 countProcessor = 1;
-                if (!CollectionUtils.isEmpty(computer.getProcessorList())) {
+                if (computer != null && !CollectionUtils.isEmpty(computer.getProcessorList())) {
                     for (Processor processor : computer.getProcessorList()) {
                         String modelName = Components.processorModelInputText + countProcessor;
                         String numberCoreName = Components.processorNumberOfCoresInputText + countProcessor;
@@ -475,7 +475,7 @@
         <p>
                 <%
                 countRam = 1;
-                if (!CollectionUtils.isEmpty(computer.getRamList())) {
+                if (computer != null && !CollectionUtils.isEmpty(computer.getRamList())) {
                     for (Ram ram : computer.getRamList()) {
                         String ramModelName = Components.ramModelInputText + countRam;
                         String ramTypeRamName = Components.ramTypeRamSelect + countRam;
@@ -549,7 +549,7 @@
         <p>
                 <%
                 countVideoCard = 1;
-                if (!CollectionUtils.isEmpty(computer.getVideoCardList())) {
+                if (computer != null && !CollectionUtils.isEmpty(computer.getVideoCardList())) {
                     for (VideoCard videoCard : computer.getVideoCardList()) {
                         String videocardModelName = Components.videoCardModelInputText + countVideoCard;
                         String videoCardIdName = Components.videoCardIdHiddenText + countVideoCard;
@@ -588,7 +588,7 @@
         <p>
                 <%
                 countHardDrive = 1;
-                if (!CollectionUtils.isEmpty(computer.getHardDriveList())) {
+                if (computer != null && !CollectionUtils.isEmpty(computer.getHardDriveList())) {
                     for (HardDrive hardDrive : computer.getHardDriveList()) {
                         String hardDriveModelName = Components.hardDriveModelInputText + countHardDrive;
                         String hardDriveSizeName = Components.hardDriveSizeInputText + countHardDrive;
@@ -649,7 +649,7 @@
                     Long id;
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                         Computer computer = (Computer) request.getAttribute(Parameters.computer);
-                        id = computer.getId();
+                        id = computer != null ? computer.getId() : -1L;
                     } else {
                         id = equipment.getId();
                     }

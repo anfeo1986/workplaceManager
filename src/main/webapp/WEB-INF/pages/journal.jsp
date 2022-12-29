@@ -5,7 +5,8 @@
 <%@ page import="workplaceManager.db.domain.*" %>
 <%@ page import="workplaceManager.db.domain.Scanner" %>
 <%@ page import="org.springframework.security.core.parameters.P" %>
-<%@ page import="java.text.SimpleDateFormat" %><%--
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="javax.swing.plaf.nimbus.State" %><%--
   Created by IntelliJ IDEA.
   User: feoktistov
   Date: 07.12.2022
@@ -51,17 +52,15 @@
     SortedMap<String, Long> objectIdList = request.getAttribute(Parameters.journalObjectIdListForFilter) != null ?
             (SortedMap<String, Long>) request.getAttribute(Parameters.journalObjectIdListForFilter) : new TreeMap<>();
 
-    TypeEvent typeEvent = request.getAttribute(Parameters.journalFilterTypeEvent) != null ?
+    TypeEvent typeEvent = !StringUtils.isEmpty((String) request.getAttribute(Parameters.journalFilterTypeEvent)) ?
             TypeEvent.valueOf((String) request.getAttribute(Parameters.journalFilterTypeEvent)) : null;
 
     List<TypeEvent> typeEventList = request.getAttribute(Parameters.journalTypeEventListForFilter) != null ?
             (List<TypeEvent>) request.getAttribute(Parameters.journalTypeEventListForFilter) : new ArrayList<>();
 
-    String typeParameterStr = (String) request.getAttribute(Parameters.journalFilterTypeParameter);
-    TypeParameter typeParameter = null;
-    if (typeParameterStr != null && !typeParameterStr.isEmpty()) {
-        typeParameter = TypeParameter.valueOf(typeParameterStr);
-    }
+    TypeParameter typeParameter = !StringUtils.isEmpty((String) request.getAttribute(Parameters.journalFilterTypeParameter)) ?
+            TypeParameter.valueOf((String) request.getAttribute(Parameters.journalFilterTypeParameter)) : null;
+
     List<TypeParameter> typeParameterList = request.getAttribute(Parameters.journalParametersListForFilter) != null ?
             (List<TypeParameter>) request.getAttribute(Parameters.journalParametersListForFilter) : new ArrayList<>();
 
@@ -69,11 +68,9 @@
     List<Users> usersList = request.getAttribute(Parameters.journalUsersListForFilter) != null ?
             (List<Users>) request.getAttribute(Parameters.journalUsersListForFilter) : new ArrayList<>();
 
-    String stateObjectForFilterStr = (String) request.getAttribute(Parameters.journalFilterStateObject);
-    StateObject stateObjectForFilter = null;
-    if (stateObjectForFilterStr != null && !stateObjectForFilterStr.isEmpty()) {
-        stateObjectForFilter = StateObject.valueOf(stateObjectForFilterStr);
-    }
+    StateObject stateObjectForFilter = !StringUtils.isEmpty((String) request.getAttribute(Parameters.journalFilterStateObject)) ?
+            StateObject.valueOf((String) request.getAttribute(Parameters.journalFilterStateObject)) : null;
+
     List<StateObject> stateObjectList = request.getAttribute(Parameters.journalStateObjectListForFilter) != null ?
             (List<StateObject>) request.getAttribute(Parameters.journalStateObjectListForFilter) : new ArrayList<>();
 
@@ -478,8 +475,10 @@
                     objectStr = object != null ? object.toStringHtml() : journal.getObjectStr();
                 }
             %>
-            <td><%=objectStr%></td>
-            <td><%=accounting1CStr%></td>
+            <td><%=objectStr%>
+            </td>
+            <td><%=accounting1CStr%>
+            </td>
             <td><%=journal.getUser() != null ? journal.getUser().toString() :
                     journal.getUserStr() != null ? journal.getUserStr() : ""%>
             </td>

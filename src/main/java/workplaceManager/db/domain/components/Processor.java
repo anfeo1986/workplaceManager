@@ -70,8 +70,7 @@ public class Processor implements Serializable {
                 (processor1 != null && processor2 == null)) {
             return false;
         }
-        if (processor1.getId() == processor2.getId() &&
-                StringUtils.equals(processor1.getModel(), processor2.getModel()) &&
+        if (StringUtils.equals(processor1.getModel(), processor2.getModel()) &&
                 StringUtils.equals(processor1.getNumberOfCores(), processor2.getNumberOfCores()) &&
                 StringUtils.equals(processor1.getFrequency(), processor2.getFrequency()) &&
                 StringUtils.equals(processor1.getSocket(), processor2.getSocket())) {
@@ -87,7 +86,7 @@ public class Processor implements Serializable {
 
             return true;
         }
-        if(processorList1.size() != processorList2.size()) {
+        if (processorList1.size() != processorList2.size()) {
             return false;
         }
         if ((processorList1 == null && processorList2 != null) ||
