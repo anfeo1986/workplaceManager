@@ -15,6 +15,7 @@ public enum TypeParameter {
     RAM("Оперативная память"),
     HARDDRIVE("Жесткий диск"),
     VIDEOCARD("Видеокарта"),
+    VIRTUAL_MACHINE("Виртуальные машины"),
 
     EMPLOYEE_USERNAME("ФИО"),
     EMPLOYEE_POST("Должность"),

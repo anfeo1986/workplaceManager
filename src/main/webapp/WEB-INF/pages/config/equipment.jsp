@@ -249,7 +249,7 @@
         </h1>
 
         <%
-            if (computer != null && computer.getVirtualMachineList() == null) {
+            if (!CollectionUtils.isEmpty(computer.getVirtualMachineList())) {
                 for (VirtualMachine virtualMachine : computer.getVirtualMachineList()) {
                     String ipVirtualMachineName = Parameters.ipVirtualMachine + countVirtualMachine;
                     String osTypeVirtualMachineName = Parameters.OsTypeVirtualMachine + countVirtualMachine;
@@ -302,7 +302,6 @@
             %>
         </p>
         <%
-
                     countVirtualMachine++;
                 }
             }

@@ -148,6 +148,7 @@ public class JournalController {
             parameterList.add(TypeParameter.HARDDRIVE);
             parameterList.add(TypeParameter.VIDEOCARD);
             parameterList.add(TypeParameter.COMMENT);
+            parameterList.add(TypeParameter.VIRTUAL_MACHINE);
         } else if (TypeObject.MONITOR.equals(typeObject) ||
                 TypeObject.PRINTER.equals(typeObject) ||
                 TypeObject.SCANNER.equals(typeObject) ||

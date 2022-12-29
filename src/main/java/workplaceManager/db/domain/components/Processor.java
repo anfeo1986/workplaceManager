@@ -21,16 +21,16 @@ public class Processor implements Serializable {
     private long id;
 
     @Column
-    private String model;
+    private String model = "";
 
     @Column
-    private String numberOfCores;
+    private String numberOfCores = "";
 
     @Column
-    private String frequency;
+    private String frequency = "";
 
     @Column
-    private String socket;
+    private String socket = "";
 
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "computer")

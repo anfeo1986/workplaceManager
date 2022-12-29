@@ -139,7 +139,7 @@ public class JournalManager extends EntityManager<Journal> {
                     equipmentNew.getWorkplace() != null ? equipmentNew.getWorkplace().toString() : "",
                     typeEquipment, user);
         }
-        if(!StringUtils.equals(equipmentNew.getComment(), equipmentOld.getComment())) {
+        if (!StringUtils.equals(equipmentNew.getComment(), equipmentOld.getComment())) {
             saveChange(TypeEvent.UPDATE, equipmentOld, TypeParameter.COMMENT,
                     equipmentOld.getComment(), equipmentNew.getCommentHtml(), typeEquipment, user);
         }
@@ -194,6 +194,15 @@ public class JournalManager extends EntityManager<Journal> {
                 saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.VIDEOCARD,
                         getStrFromList(computerOld.getVideoCardList()),
                         getStrFromList(computerNew.getVideoCardList()),
+                        typeEquipment, user);
+            }
+            System.out.println("saveChangeEquipment");
+            System.out.println(getStrFromList(computerOld.getVirtualMachineList()));
+            System.out.println(getStrFromList(computerNew.getVirtualMachineList()));
+            if (!VirtualMachine.equalsVirtualMachineList(computerOld.getVirtualMachineList(), computerNew.getVirtualMachineList())) {
+                saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.VIRTUAL_MACHINE,
+                        getStrFromList(computerOld.getVirtualMachineList()),
+                        getStrFromList(computerNew.getVirtualMachineList()),
                         typeEquipment, user);
             }
         }
@@ -276,9 +285,9 @@ public class JournalManager extends EntityManager<Journal> {
             if (journal.getIdObject() == null || journal.getIdObject() <= 0) {
                 continue;
             }
-            if(!objectIdList.contains(journal.getIdObject())) {
+            if (!objectIdList.contains(journal.getIdObject())) {
                 Journal journalNew = setObjectByJournal(journal, stateObject);
-                if(journalNew == null) {
+                if (journalNew == null) {
                     continue;
                 }
                 objectIdList.add(journalNew.getIdObject());
@@ -447,16 +456,16 @@ public class JournalManager extends EntityManager<Journal> {
         SortedMap<Long, Object> objectList = new TreeMap<>();
         SortedMap<Long, Users> userSortedMap = new TreeMap<>();
         for (Journal journal : journalList) {
-            if(journal.getIdUser() != null && !userSortedMap.containsKey(journal.getIdUser())) {
+            if (journal.getIdUser() != null && !userSortedMap.containsKey(journal.getIdUser())) {
                 Users user = userManager.getUserById(journal.getIdUser(), true);
-                if(user != null) {
+                if (user != null) {
                     userSortedMap.put(user.getId(), user);
                     journal.setUser(user);
                 }
             }
-            if(!objectList.containsKey(journal.getIdObject())) {
+            if (!objectList.containsKey(journal.getIdObject())) {
                 Journal journalNew = setObjectByJournal(journal, stateObject);
-                if(journalNew != null && journalNew.getObject() != null) {
+                if (journalNew != null && journalNew.getObject() != null) {
                     objectList.put(journalNew.getIdObject(), journalNew.getObject());
                     journalListNew.add(journalNew);
                 }
