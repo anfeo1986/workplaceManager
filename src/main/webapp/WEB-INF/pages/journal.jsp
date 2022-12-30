@@ -414,11 +414,11 @@
             </td>
             <td>
                 <h3><%=journal.getEvent()%>.</h3>
-                <b>Тип объекта: </b><%=TypeObject.valueOf(journal.getTypeObject())%><br>
+                Тип объекта: <b><%=TypeObject.valueOf(journal.getTypeObject())%></b><br>
                 <%
                     if (journal.getParameter() != null && !journal.getParameter().isEmpty()) {
                 %>
-                <b>Параметр: </b><%=TypeParameter.valueOf(journal.getParameter())%>.
+                Параметр: <b><%=TypeParameter.valueOf(journal.getParameter())%>.</b>
                 <%
                     }
                 %>

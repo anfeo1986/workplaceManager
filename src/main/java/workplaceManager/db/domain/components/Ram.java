@@ -75,8 +75,7 @@ public class Ram implements Serializable {
                 (ram1 != null && ram2 == null)) {
             return false;
         }
-        if (ram1.getId() == ram2.getId() &&
-                StringUtils.equals(ram1.getModel(), ram2.getModel()) &&
+        if (StringUtils.equals(ram1.getModel(), ram2.getModel()) &&
                 ram1.getTypeRam() == ram2.getTypeRam() &&
                 StringUtils.equals(ram1.getAmount(), ram2.getAmount()) &&
                 StringUtils.equals(ram1.getFrequency(), ram2.getFrequency()) &&
@@ -99,15 +98,15 @@ public class Ram implements Serializable {
                 (ramList1 != null && ramList2 == null)) {
             return false;
         }
-        for(Ram ram1 : ramList1) {
+        for (Ram ram1 : ramList1) {
             boolean isExist = false;
-            for(Ram ram2 : ramList2) {
-                if(equalsRam(ram1, ram2)) {
+            for (Ram ram2 : ramList2) {
+                if (equalsRam(ram1, ram2)) {
                     isExist = true;
                     break;
                 }
             }
-            if(!isExist) {
+            if (!isExist) {
                 return false;
             }
         }

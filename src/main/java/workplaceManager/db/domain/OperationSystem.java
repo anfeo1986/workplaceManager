@@ -31,7 +31,7 @@ public class OperationSystem {
     @Override
     @Transient
     public String toString() {
-        if(vendor.isEmpty() && version.isEmpty() && OSArchitecture.isEmpty()) {
+        if (vendor.isEmpty() && version.isEmpty() && OSArchitecture.isEmpty()) {
             return "";
         }
         return String.format("%s (%s, %s)", vendor, version, OSArchitecture);
@@ -39,7 +39,7 @@ public class OperationSystem {
 
     @Transient
     public String toStringHtml() {
-        if(vendor.isEmpty() && version.isEmpty() && OSArchitecture.isEmpty()) {
+        if (vendor.isEmpty() && version.isEmpty() && OSArchitecture.isEmpty()) {
             return "";
         }
         return String.format("<b>%s</b> (%s, %s)", vendor, version, OSArchitecture);
@@ -54,8 +54,7 @@ public class OperationSystem {
                 (operationSystem1 != null && operationSystem2 == null)) {
             return false;
         }
-        if (operationSystem1.getId() == operationSystem2.getId() &&
-                operationSystem1.getTypeOS() == operationSystem2.getTypeOS() &&
+        if (operationSystem1.getTypeOS() == operationSystem2.getTypeOS() &&
                 StringUtils.equals(operationSystem1.getVendor(), operationSystem2.getVendor()) &&
                 StringUtils.equals(operationSystem1.getVersion(), operationSystem2.getVersion()) &&
                 StringUtils.equals(operationSystem1.getOSArchitecture(), operationSystem2.getOSArchitecture())) {

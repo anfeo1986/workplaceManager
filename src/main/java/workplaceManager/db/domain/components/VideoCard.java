@@ -53,8 +53,7 @@ public class VideoCard {
                 (videoCard1 == null && videoCard2 != null)) {
             return false;
         }
-        if (videoCard1.getId() == videoCard2.getId() &&
-                StringUtils.equals(videoCard1.getModel(), videoCard2.getModel())) {
+        if (StringUtils.equals(videoCard1.getModel(), videoCard2.getModel())) {
             return true;
         }
         return false;

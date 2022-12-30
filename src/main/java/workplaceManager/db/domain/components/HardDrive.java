@@ -60,8 +60,7 @@ public class HardDrive {
                 (hardDrive1 != null && hardDrive2 == null)) {
             return false;
         }
-        if (hardDrive1.getId() == hardDrive2.getId() &&
-                StringUtils.equals(hardDrive1.getModel(), hardDrive2.getModel()) &&
+        if (StringUtils.equals(hardDrive1.getModel(), hardDrive2.getModel()) &&
                 StringUtils.equals(hardDrive1.getSize(), hardDrive2.getSize())) {
             return true;
         }
@@ -81,15 +80,15 @@ public class HardDrive {
                 (hardDriveList1 != null && hardDriveList2 == null)) {
             return false;
         }
-        for(HardDrive hardDrive1 : hardDriveList1) {
+        for (HardDrive hardDrive1 : hardDriveList1) {
             boolean isExist = false;
-            for(HardDrive hardDrive2 : hardDriveList2) {
-                if(equalsHardDrive(hardDrive1, hardDrive2)) {
+            for (HardDrive hardDrive2 : hardDriveList2) {
+                if (equalsHardDrive(hardDrive1, hardDrive2)) {
                     isExist = true;
                     break;
                 }
             }
-            if(!isExist) {
+            if (!isExist) {
                 return false;
             }
         }

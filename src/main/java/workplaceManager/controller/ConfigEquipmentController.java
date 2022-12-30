@@ -147,32 +147,24 @@ public class ConfigEquipmentController {
 
                 //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
-                if(computer == null) {
+                if (computer == null) {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
+                Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
+                }
 
-                setParameterComputer(computer, request, equipment, false);
+                setParameterComputer(computer, request, equipment);
                 computer.setDeleted(false);
 
-                /*if (computer.getId() <= 0) {
-                    String error = dataVerification(request, equipment);
-                    if (error != null && !StringUtils.equals(error, "")) {
-                        modelAndView.addObject(Parameters.computer, computer);
-                        modelAndView.addObject(Parameters.error, error);
-                        modelAndView.addObject(Parameters.equipment, equipment);
-                        modelAndView.addObject(Parameters.typeEquipment, request.getParameter(Parameters.typeEquipment));
-                        return getModelAndView(request.getParameter(Parameters.redirect), modelAndView);
-                    }
-                    equipmentManager.save(computer);
-                    equipment.setId(computer.getId());
-                    journalManager.save(new Journal(TypeEvent.ADD, TypeObject.COMPUTER, computer, user));
-                } else {
-                    Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                    equipmentManager.save(computer);
-                    journalManager.saveChangeEquipment(computerOld, computer, TypeEquipment.COMPUTER, user);
-                }*/
-                if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
+                }
+
+                computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
                 }
 
                 String message = "";
@@ -190,7 +182,7 @@ public class ConfigEquipmentController {
 
                 saveComponentComputer(computer, computerWithConfig);
 
-                if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
                 }
 
@@ -223,10 +215,19 @@ public class ConfigEquipmentController {
                 if (computer == null) {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
-                setParameterComputer(computer, request, equipment, false);
+                Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
+                }
 
-                if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                setParameterComputer(computer, request, equipment);
+
+                if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
+                }
+                computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
                 }
 
                 if (TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
@@ -237,7 +238,7 @@ public class ConfigEquipmentController {
                     processorManager.save(processor);
                     computer.getProcessorList().add(processor);
 
-                    if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                    if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                         return modelAndView;
                     }
 
@@ -251,17 +252,31 @@ public class ConfigEquipmentController {
                     ramManager.save(ram);
                     computer.getRamList().add(ram);
 
-                    if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                    if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                         return modelAndView;
                     }
 
                     //journalManager.saveChangeEquipment(computerOld, computer, TypeEquipment.COMPUTER, user);
                 }
                 if (TypeComponentsComputer.videoCard.equals(typeComponentsComputer)) {
-                    computer.getVideoCardList().add(new VideoCard());
+                    VideoCard videoCard = new VideoCard();
+                    videoCard.setComputer(computer);
+                    videoCardManager.save(videoCard);
+                    computer.getVideoCardList().add(videoCard);
+
+                    if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
+                        return modelAndView;
+                    }
                 }
                 if (TypeComponentsComputer.hardDrive.equals(typeComponentsComputer)) {
-                    computer.getHardDriveList().add(new HardDrive());
+                    HardDrive hardDrive = new HardDrive();
+                    hardDrive.setComputer(computer);
+                    hardDriveManager.save(hardDrive);
+                    computer.getHardDriveList().add(hardDrive);
+
+                    if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
+                        return modelAndView;
+                    }
                 }
 
                 //equipmentManager.save(computer);
@@ -276,7 +291,6 @@ public class ConfigEquipmentController {
     }
 
     private ModelAndView deleteComponentsComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                                  //@RequestParam(name = Parameters.token) String token,
                                                   HttpServletRequest request,
                                                   TypeComponentsComputer typeComponentsComputer) {
         Users user = securityCrypt.getUserBySession(request);
@@ -291,14 +305,22 @@ public class ConfigEquipmentController {
 
                 //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
-                if(computer == null) {
+                if (computer == null) {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
+                Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
+                }
 
-                setParameterComputer(computer, request, equipment, false);
+                setParameterComputer(computer, request, equipment);
 
-                if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
+                }
+                computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
                 }
 
                 if (TypeComponentsComputer.processor.equals(typeComponentsComputer)) {
@@ -306,17 +328,13 @@ public class ConfigEquipmentController {
                     for (int numberProcessor = 1; numberProcessor <= countProcessor; numberProcessor++) {
                         String buttonDeleteProcessor = Components.buttonDeleteProcessor + numberProcessor;
                         if (request.getParameter(buttonDeleteProcessor) != null) {
-                            //Computer computerOld = equipmentManager.getComputerById(equipment.getId(), false);
-
                             Processor processor = computer.getProcessorList().get(numberProcessor - 1);
                             processorManager.delete(processor);
                             computer.getProcessorList().remove(numberProcessor - 1);
 
-                            if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                            if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                                 return modelAndView;
                             }
-
-                            //journalManager.saveChangeEquipment(computerOld, computer, TypeEquipment.COMPUTER, user);
                         }
                     }
                 }
@@ -325,17 +343,13 @@ public class ConfigEquipmentController {
                     for (int numberRam = 1; numberRam <= countRam; numberRam++) {
                         String buttonDeleteRam = Components.buttonDeleteRam + numberRam;
                         if (request.getParameter(buttonDeleteRam) != null) {
-                            //Computer computerOld = equipmentManager.getComputerById(equipment.getId(), false);
-
                             Ram ram = computer.getRamList().get(numberRam - 1);
                             ramManager.delete(ram);
                             computer.getRamList().remove(numberRam - 1);
 
-                            if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                            if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                                 return modelAndView;
                             }
-
-                            //journalManager.saveChangeEquipment(computerOld, computer, TypeEquipment.COMPUTER, user);
                         }
                     }
                 }
@@ -344,7 +358,13 @@ public class ConfigEquipmentController {
                     for (int i = 1; i <= countVideoCard; i++) {
                         String buttonDeleteVideoCard = Components.buttonDeleteVideoCard + i;
                         if (request.getParameter(buttonDeleteVideoCard) != null) {
+                            VideoCard videoCard = computer.getVideoCardList().get(i - 1);
+                            videoCardManager.delete(videoCard);
                             computer.getVideoCardList().remove(i - 1);
+
+                            if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
+                                return modelAndView;
+                            }
                         }
                     }
                 }
@@ -353,7 +373,13 @@ public class ConfigEquipmentController {
                     for (int i = 1; i <= countHardDrive; i++) {
                         String buttonDeleteHardDrive = Components.buttonDeleteHardDrive + i;
                         if (request.getParameter(buttonDeleteHardDrive) != null) {
+                            HardDrive hardDrive = computer.getHardDriveList().get(i - 1);
+                            hardDriveManager.delete(hardDrive);
                             computer.getHardDriveList().remove(i - 1);
+
+                            if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
+                                return modelAndView;
+                            }
                         }
                     }
                 }
@@ -383,14 +409,22 @@ public class ConfigEquipmentController {
 
                 //Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
-                if(computer == null) {
+                if (computer == null) {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
+                Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
+                }
 
-                setParameterComputer(computer, request, equipment, false);
+                setParameterComputer(computer, request, equipment);
 
-                if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
+                }
+                computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
                 }
 
                 int countVirtualMachine = Integer.parseInt(request.getParameter(Parameters.countVirtualMachine));
@@ -403,7 +437,7 @@ public class ConfigEquipmentController {
 
                         computer.getVirtualMachineList().remove(numberVirtualMachine - 1);
 
-                        if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                        if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                             return modelAndView;
                         }
 
@@ -422,8 +456,8 @@ public class ConfigEquipmentController {
         }
     }
 
-    private boolean saveComputer(ModelAndView modelAndView, HttpServletRequest request,
-                              Computer computer, Equipment equipment, Users user) {
+    private boolean saveComputer(ModelAndView modelAndView, HttpServletRequest request, Computer computerOld,
+                                 Computer computer, Equipment equipment, Users user) {
         if (computer.getId() <= 0) {
             String error = dataVerification(request, equipment);
             if (error != null && !StringUtils.equals(error, "")) {
@@ -438,7 +472,6 @@ public class ConfigEquipmentController {
             equipment.setId(computer.getId());
             journalManager.save(new Journal(TypeEvent.ADD, TypeObject.COMPUTER, computer, user));
         } else {
-            Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
             equipmentManager.save(computer);
             computer = equipmentManager.getComputerById(computer.getId(), false);
             journalManager.saveChangeEquipment(computerOld, computer, TypeEquipment.COMPUTER, user);
@@ -446,39 +479,168 @@ public class ConfigEquipmentController {
         return true;
     }
 
-    private void saveComponentComputer(Computer computer, Computer computerWithConfig) {
-        if(!CollectionUtils.isEmpty(computerWithConfig.getProcessorList())) {
+    private void saveProcessorComputer(Computer computer, Computer computerWithConfig) {
+        if (!CollectionUtils.isEmpty(computerWithConfig.getProcessorList())) {
             //добавляем новые
-            for(Processor processorConfig : computerWithConfig.getProcessorList()) {
+            for (Processor processorConfig : computerWithConfig.getProcessorList()) {
                 boolean isExist = false;
-                for(Processor processor : computer.getProcessorList()) {
-                    if(Processor.equalsProcessor(processorConfig, processor)) {
+                for (Processor processor : computer.getProcessorList()) {
+                    if (Processor.equalsProcessor(processorConfig, processor)) {
                         isExist = true;
                         break;
                     }
                 }
-                if(!isExist) {
+                if (!isExist) {
                     processorConfig.setComputer(computer);
                     processorManager.save(processorConfig);
                     computer.getProcessorList().add(processorConfig);
                 }
             }
             //удаляем те, которые не вошли в новый массив
-            for(Processor processor : computer.getProcessorList()) {
+            for (Processor processor : computer.getProcessorList()) {
                 boolean isExist = false;
-                for(Processor processorConfig : computerWithConfig.getProcessorList()) {
-                    if(Processor.equalsProcessor(processor, processorConfig)) {
+                for (Processor processorConfig : computerWithConfig.getProcessorList()) {
+                    if (Processor.equalsProcessor(processor, processorConfig)) {
                         isExist = true;
                         break;
                     }
                 }
-                if(!isExist) {
+                if (!isExist) {
                     processorManager.delete(processor);
                 }
             }
         } else {
             computer.setProcessorList(new ArrayList<>());
         }
+    }
+
+    private void saveRamComputer(Computer computer, Computer computerWithConfig) {
+        if (!CollectionUtils.isEmpty(computerWithConfig.getRamList())) {
+            //добавляем новые
+            for (Ram ramConfig : computerWithConfig.getRamList()) {
+                boolean isExist = false;
+                for (Ram ram : computer.getRamList()) {
+                    if (Ram.equalsRam(ramConfig, ram)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    ramConfig.setComputer(computer);
+                    ramManager.save(ramConfig);
+                    computer.getRamList().add(ramConfig);
+                }
+            }
+            //удаляем те, которые не вошли в новый массив
+            for (Ram ram : computer.getRamList()) {
+                boolean isExist = false;
+                for (Ram ramConfig : computerWithConfig.getRamList()) {
+                    if (Ram.equalsRam(ram, ramConfig)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    ramManager.delete(ram);
+                }
+            }
+        } else {
+            computer.setRamList(new ArrayList<>());
+        }
+    }
+
+    private void saveVideoCardComputer(Computer computer, Computer computerWithConfig) {
+        if (!CollectionUtils.isEmpty(computerWithConfig.getVideoCardList())) {
+            //добавляем новые
+            for (VideoCard videoCardConfig : computerWithConfig.getVideoCardList()) {
+                boolean isExist = false;
+                for (VideoCard videoCard : computer.getVideoCardList()) {
+                    if (VideoCard.equalsVideoCard(videoCardConfig, videoCard)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    videoCardConfig.setComputer(computer);
+                    videoCardManager.save(videoCardConfig);
+                    computer.getVideoCardList().add(videoCardConfig);
+                }
+            }
+            //удаляем те, которые не вошли в новый массив
+            for (VideoCard videoCard : computer.getVideoCardList()) {
+                boolean isExist = false;
+                for (VideoCard videoCardConfig : computerWithConfig.getVideoCardList()) {
+                    if (VideoCard.equalsVideoCard(videoCard, videoCardConfig)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    videoCardManager.delete(videoCard);
+                }
+            }
+        } else {
+            computer.setVideoCardList(new ArrayList<>());
+        }
+    }
+
+    private void saveHardDriveComputer(Computer computer, Computer computerWithConfig) {
+        if (!CollectionUtils.isEmpty(computerWithConfig.getHardDriveList())) {
+            //добавляем новые
+            for (HardDrive hardDriveConfig : computerWithConfig.getHardDriveList()) {
+                boolean isExist = false;
+                for (HardDrive hardDrive : computer.getHardDriveList()) {
+                    if (HardDrive.equalsHardDrive(hardDriveConfig, hardDrive)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    hardDriveConfig.setComputer(computer);
+                    hardDriveManager.save(hardDriveConfig);
+                    computer.getHardDriveList().add(hardDriveConfig);
+                }
+            }
+            //удаляем те, которые не вошли в новый массив
+            for (HardDrive hardDrive : computer.getHardDriveList()) {
+                boolean isExist = false;
+                for (HardDrive hardDriveConfig : computerWithConfig.getHardDriveList()) {
+                    if (HardDrive.equalsHardDrive(hardDrive, hardDriveConfig)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    hardDriveManager.delete(hardDrive);
+                }
+            }
+        } else {
+            computer.setHardDriveList(new ArrayList<>());
+        }
+    }
+
+    private void saveComponentComputer(Computer computer, Computer computerWithConfig) {
+        computer.setNetName(computerWithConfig.getNetName());
+
+        if(computer.getOperationSystem() == null || computer.getOperationSystem().getId() <= 0) {
+            computer.setOperationSystem(new OperationSystem());
+        }
+        computer.getOperationSystem().setTypeOS(computerWithConfig.getOperationSystem().getTypeOS());
+        computer.getOperationSystem().setVendor(computerWithConfig.getOperationSystem().getVendor());
+        computer.getOperationSystem().setVersion(computerWithConfig.getOperationSystem().getVersion());
+        computer.getOperationSystem().setOSArchitecture(computerWithConfig.getOperationSystem().getOSArchitecture());
+
+        if(computer.getMotherBoard() == null || computer.getMotherBoard().getId() <= 0) {
+            computer.setMotherBoard(new MotherBoard());
+            computer.getMotherBoard().setComputer(computer);
+        }
+        computer.getMotherBoard().setModel(computerWithConfig.getMotherBoard().getModel());
+        computer.getMotherBoard().setManufacturer(computerWithConfig.getMotherBoard().getManufacturer());
+
+        saveProcessorComputer(computer, computerWithConfig);
+        saveRamComputer(computer, computerWithConfig);
+        saveVideoCardComputer(computer, computerWithConfig);
+        saveHardDriveComputer(computer, computerWithConfig);
     }
 
     private ModelAndView addVirtualMachine(Equipment equipment, HttpServletRequest request) {
@@ -495,10 +657,19 @@ public class ConfigEquipmentController {
                 if (computer == null) {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
-                setParameterComputer(computer, request, equipment, false);
+                Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
+                }
 
-                if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                setParameterComputer(computer, request, equipment);
+
+                if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
+                }
+                computerOld = equipmentManager.getComputerById(computer.getId(), false);
+                if(computerOld == null) {
+                    computerOld = new Computer();
                 }
 
                 //Computer computerOld = equipmentManager.getComputerById(equipment.getId(), false);
@@ -509,7 +680,7 @@ public class ConfigEquipmentController {
 
                 computer.getVirtualMachineList().add(virtualMachine);
 
-                if(!saveComputer(modelAndView, request, computer, equipment, user)) {
+                if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
                 }
                 //journalManager.saveChangeEquipment(computerOld, computer, TypeEquipment.COMPUTER, user);
@@ -602,7 +773,7 @@ public class ConfigEquipmentController {
 
     private Equipment getEquipment(@ModelAttribute(Parameters.equipment) Equipment equipmentRequest) {
         Equipment equipment = new Equipment();
-        if(equipmentRequest.getId() > 0) {
+        if (equipmentRequest.getId() > 0) {
             equipment = equipmentManager.getEquipmentById(equipmentRequest.getId(), false);
         }
 
@@ -646,14 +817,14 @@ public class ConfigEquipmentController {
                     modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                         Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
-                        setParameterComputer(computer, request, equipment, false);
+                        setParameterComputer(computer, request, equipment);
                         modelAndView.addObject(Parameters.computer, computer);
                     }
                 } else {
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                         Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
 
-                        setParameterComputer(computer, request, equipment, true);
+                        setParameterComputer(computer, request, equipment);
                         computer.setDeleted(false);
                         if (computer.getId() <= 0) {
                             equipmentManager.save(computer);
@@ -720,8 +891,8 @@ public class ConfigEquipmentController {
         Long workplaceId = request.getParameter(Parameters.workplaceId) != null ?
                 Long.parseLong(request.getParameter(Parameters.workplaceId)) : -1;
 
-        if(workplaceId > 0) {
-            if(equipment.getWorkplace() == null || equipment.getWorkplace().getId() != workplaceId) {
+        if (workplaceId > 0) {
+            if (equipment.getWorkplace() == null || equipment.getWorkplace().getId() != workplaceId) {
                 Workplace workplace = workplaceManager.getWorkplaceById(workplaceId, false);
                 equipment.setWorkplace(workplace);
             }
@@ -730,7 +901,8 @@ public class ConfigEquipmentController {
         }
     }
 
-    private void setParameterComputer(Computer computer, HttpServletRequest request, Equipment equipment, boolean isNeedSave) {
+    //private void setParameterComputer(Computer computer, HttpServletRequest request, Equipment equipment, boolean isNeedSave) {
+    private void setParameterComputer(Computer computer, HttpServletRequest request, Equipment equipment) {
         computer.setIp(request.getParameter(Parameters.ip));
         computer.setUid(equipment.getUid());
         computer.setManufacturer(equipment.getManufacturer());
@@ -742,14 +914,14 @@ public class ConfigEquipmentController {
 
         addMotherboardToComputer(request, computer);
         addOperationSystemToComputer(request, computer);
-        addProcessorListToComputer(request, computer, isNeedSave);
-        addRamListToComputer(request, computer, isNeedSave);
-        addVideoCardListToComputer(request, computer, isNeedSave);
-        addHardDriveListToComputer(request, computer, isNeedSave);
-        addVirtualMachineToComputer(request, computer, isNeedSave);
+        addProcessorListToComputer(request, computer);
+        addRamListToComputer(request, computer);
+        addVideoCardListToComputer(request, computer);
+        addHardDriveListToComputer(request, computer);
+        addVirtualMachineToComputer(request, computer);
     }
 
-    private void addVirtualMachineToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+    private void addVirtualMachineToComputer(HttpServletRequest request, Computer computer) {
         int countVirtualMachine = Integer.parseInt(request.getParameter(Parameters.countVirtualMachine));
         for (int i = 1; i < countVirtualMachine; i++) {
             String ipVirtualMachineName = Parameters.ipVirtualMachine + i;
@@ -781,157 +953,70 @@ public class ConfigEquipmentController {
             virtualMachine.setVersion(request.getParameter(osVersionVirtualMachineName) != null ?
                     request.getParameter(osVersionVirtualMachineName) : "");
 
-            if (isNeedSave) {
-                virtualMachineManager.save(virtualMachine);
-            }
+            virtualMachineManager.save(virtualMachine);
         }
     }
 
-    private void addHardDriveListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
-        List<Long> hardDriveIdList = new ArrayList<>();
+    private void addHardDriveListToComputer(HttpServletRequest request, Computer computer) {
         int countHardDrive = Integer.parseInt(request.getParameter(Parameters.countHardDrive));
         for (int i = 1; i < countHardDrive; i++) {
-            HardDrive hardDrive = new HardDrive();
+            HardDrive hardDrive = null;
             String hardDriveModelName = Components.hardDriveModelInputText + i;
             String hardDriveSizeName = Components.hardDriveSizeInputText + i;
             String hardDriveIdName = Components.hardDriveIdHiddenText + i;
 
             Long hardDriveId = Long.parseLong(request.getParameter(hardDriveIdName));
-            boolean isNewHardDrive = true;
             if (hardDriveId > 0) {
                 for (HardDrive hardDrive1 : computer.getHardDriveList()) {
                     if (hardDrive1.getId() == hardDriveId) {
                         hardDrive = hardDrive1;
-                        isNewHardDrive = false;
                         break;
                     }
                 }
             }
-
-            boolean isAllNull = true;
-
-            if (request.getParameter(hardDriveModelName) != null) {
-                hardDrive.setModel(request.getParameter(hardDriveModelName));
-                isAllNull = false;
-            }
-            if (request.getParameter(hardDriveSizeName) != null) {
-                hardDrive.setSize(request.getParameter(hardDriveSizeName));
-                isAllNull = false;
-            }
-
-            if (isAllNull) {
+            if (hardDrive == null) {
                 continue;
             }
-            if (hardDriveId > 0) {
-                hardDriveIdList.add(hardDriveId);
-            }
-            if (isNewHardDrive) {
-                hardDrive.setComputer(computer);
-                computer.getHardDriveList().add(hardDrive);
-            }
 
-            if (isNeedSave) {
-                if (!HardDrive.isEmpty(hardDrive)) {
-                    hardDriveManager.save(hardDrive);
-                    if (isNewHardDrive) {
-                        hardDriveIdList.add(hardDrive.getId());
-                    }
-                }
-            }
-        }
+            hardDrive.setModel(request.getParameter(hardDriveModelName) != null ?
+                    request.getParameter(hardDriveModelName) : "");
 
-        List<Integer> hardDiskIndexForDelete = new ArrayList<>();
-        int index = 0;
-        for (HardDrive hardDrive : computer.getHardDriveList()) {
-            boolean isExist = false;
-            for (Long id : hardDriveIdList) {
-                if (id == hardDrive.getId()) {
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) {
-                hardDiskIndexForDelete.add(index);
-            }
-            index++;
-        }
-        for (Integer i : hardDiskIndexForDelete) {
-            if (isNeedSave) {
-                HardDrive hardDrive = computer.getHardDriveList().get(i);
-                hardDriveManager.delete(hardDrive);
-            }
-            computer.getHardDriveList().remove(i);
+            hardDrive.setSize(request.getParameter(hardDriveSizeName) != null ?
+                    request.getParameter(hardDriveSizeName) : "");
+
+            hardDriveManager.save(hardDrive);
         }
     }
 
-    private void addVideoCardListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
-        List<Long> videoCardIdList = new ArrayList<>();
+    private void addVideoCardListToComputer(HttpServletRequest request, Computer computer) {
         int countVideoCard = Integer.parseInt(request.getParameter(Parameters.countVideoCard));
         for (int i = 1; i < countVideoCard; i++) {
-            VideoCard videoCard = new VideoCard();
+            VideoCard videoCard = null;
             String videoCardModelName = Components.videoCardModelInputText + i;
             String videoCardIdName = Components.videoCardIdHiddenText + i;
 
             Long videoCardId = Long.parseLong(request.getParameter(videoCardIdName));
-            boolean isNewVideoCard = true;
             if (videoCardId > 0) {
                 for (VideoCard videoCard1 : computer.getVideoCardList()) {
                     if (videoCard1.getId() == videoCardId) {
                         videoCard = videoCard1;
-                        isNewVideoCard = false;
                         break;
                     }
                 }
             }
 
-            if (request.getParameter(videoCardModelName) != null) {
-                videoCard.setModel(request.getParameter(videoCardModelName));
-            } else {
+            if (videoCard == null) {
                 continue;
             }
 
-            if (videoCardId > 0) {
-                videoCardIdList.add(videoCardId);
-            }
-            if (isNewVideoCard) {
-                videoCard.setComputer(computer);
-                computer.getVideoCardList().add(videoCard);
-            }
+            videoCard.setModel(request.getParameter(videoCardModelName) != null ?
+                    request.getParameter(videoCardModelName) : "");
 
-            if (isNeedSave) {
-                if (!VideoCard.isEmpty(videoCard)) {
-                    videoCardManager.save(videoCard);
-                    if (isNewVideoCard) {
-                        videoCardIdList.add(videoCard.getId());
-                    }
-                }
-            }
-        }
-        List<Integer> videoCardIndexForDelete = new ArrayList<>();
-        int index = 0;
-        for (VideoCard videoCard : computer.getVideoCardList()) {
-            boolean isExist = false;
-            for (Long id : videoCardIdList) {
-                if (id == videoCard.getId()) {
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) {
-                videoCardIndexForDelete.add(index);
-            }
-            index++;
-        }
-        for (Integer i : videoCardIndexForDelete) {
-            if (isNeedSave) {
-                VideoCard videoCard = computer.getVideoCardList().get(i);
-                videoCardManager.delete(videoCard);
-            }
-            computer.getVideoCardList().remove(i);
+            videoCardManager.save(videoCard);
         }
     }
 
-    private void addRamListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+    private void addRamListToComputer(HttpServletRequest request, Computer computer) {
         int countRam = Integer.parseInt(request.getParameter(Parameters.countRam));
         for (int i = 1; i < countRam; i++) {
             Ram ram = new Ram();
@@ -951,7 +1036,7 @@ public class ConfigEquipmentController {
                     }
                 }
             }
-            if(ram == null) {
+            if (ram == null) {
                 continue;
             }
 
@@ -970,9 +1055,7 @@ public class ConfigEquipmentController {
             ram.setDeviceLocator(request.getParameter(ramDeviceLocatorName) != null ?
                     request.getParameter(ramDeviceLocatorName) : "");
 
-            if (isNeedSave) {
-                ramManager.save(ram);
-            }
+            ramManager.save(ram);
         }
     }
 
@@ -1003,7 +1086,8 @@ public class ConfigEquipmentController {
         operationSystem.setOSArchitecture(request.getParameter(Parameters.OSArchitecture));
     }
 
-    private void addProcessorListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+    //private void addProcessorListToComputer(HttpServletRequest request, Computer computer, boolean isNeedSave) {
+    private void addProcessorListToComputer(HttpServletRequest request, Computer computer) {
         int countProcessor = Integer.parseInt(request.getParameter(Parameters.countProcessor));
         for (int i = 1; i < countProcessor; i++) {
             Processor processor = null;
@@ -1039,9 +1123,9 @@ public class ConfigEquipmentController {
             processor.setSocket(request.getParameter(socketName) != null ?
                     request.getParameter(socketName) : "");
 
-            if (isNeedSave) {
-                processorManager.save(processor);
-            }
+            //if (isNeedSave) {
+            processorManager.save(processor);
+            //}
         }
     }
 
@@ -1126,7 +1210,7 @@ public class ConfigEquipmentController {
                     modelAndView.addObject(Parameters.typeEquipment, typeEquipment);
                     if (TypeEquipment.COMPUTER.equals(typeEquipment)) {
                         Computer computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
-                        setParameterComputer(computer, request, equipment, false);
+                        setParameterComputer(computer, request, equipment);
                         modelAndView.addObject(Parameters.computer, computer);
                     }
                 } else {
@@ -1136,7 +1220,7 @@ public class ConfigEquipmentController {
                         Computer computerOld = equipmentManager.getComputerById(equipment.getId(), false);
 
                         Computer computer = equipmentManager.getComputerById(equipment.getId(), false);
-                        setParameterComputer(computer, request, equipment, true);
+                        setParameterComputer(computer, request, equipment);
                         computer.setDeleted(false);
                         equipmentManager.save(computer);
                         computer = equipmentManager.getComputerById(equipment.getId(), false);
