@@ -3,6 +3,7 @@ package workplaceManager.db.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import workplaceManager.ReplaceString;
 import workplaceManager.db.domain.components.HardDrive;
 
 import javax.persistence.*;
@@ -21,6 +22,9 @@ public class VirtualMachine {
     private String ip = "";
 
     @Column
+    private String description = "";
+
+    @Column
     private TypeOS typeOS = TypeOS.windows;
 
     @Column
@@ -37,6 +41,21 @@ public class VirtualMachine {
     @Transient
     public String toString() {
         return String.format("%s (Тип: %s, OC: %s (%s))",ip, typeOS, vendor, version);
+    }
+
+    @Transient
+    public String getIpAndDescription() {
+        return String.format("%s (%s)", ip != null ? ip : "", description != null ? description : "");
+    }
+
+    @Transient
+    public String getOs() {
+         return String.format("%s (%s)", vendor != null ? vendor : "", version != null ? version : "");
+    }
+
+    @Transient
+    public String getDescriptionHtml() {
+        return ReplaceString.replace(description != null ? description : "");
     }
 
     @Transient

@@ -28,6 +28,7 @@ public class MainController {
         scanner,
         ups,
         net,
+        virtualMachine,
         employee,
         accounting1c
     }
@@ -74,6 +75,13 @@ public class MainController {
         this.userManager = userManager;
     }
 
+    private VirtualMachineManager virtualMachineManager;
+
+    @Autowired
+    public void setVirtualMachineManager(VirtualMachineManager virtualMachineManager) {
+        this.virtualMachineManager = virtualMachineManager;
+    }
+
     @GetMapping(Pages.logout)
     public ModelAndView logout(HttpServletRequest request) {
         request.getSession().removeAttribute(Parameters.token);
@@ -117,6 +125,20 @@ public class MainController {
             modelAndView.addObject(Parameters.page, TypePage.workplace.toString());
         }
 
+        return modelAndView;
+    }
+
+    @GetMapping(Pages.virtualMachine)
+    public ModelAndView getFormVirtualMachine(HttpServletRequest request) {
+        ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.mainPage);
+        if (!modelAndView.getViewName().equals(Pages.login)) {
+            List<VirtualMachine> virtualMachineList = new ArrayList<>();
+
+            virtualMachineList = virtualMachineManager.getVirtualMachineListAll();
+
+            modelAndView.addObject(Parameters.virtualMachineList, virtualMachineList);
+            modelAndView.addObject(Parameters.page, Pages.virtualMachine);
+        }
         return modelAndView;
     }
 

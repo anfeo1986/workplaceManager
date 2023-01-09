@@ -34,6 +34,9 @@
     <c:if test="${page == 'ups'}">
         <title>ИБП</title>
     </c:if>
+    <c:if test="${page == 'virtualMachine'}">
+        <title>Виртуальные машины</title>
+    </c:if>
 
     <script type="text/javascript">
         document.addEventListener('visibilitychange', () => {
@@ -107,9 +110,11 @@
 
     </c:if>
     <c:if test="${page == 'ups'}">
-
         <%@include file="equipmentTable.jsp" %>
+    </c:if>
 
+    <c:if test="${page == 'virtualMachine'}">
+        <%@include file="virtualMachineTable.jsp" %>
     </c:if>
 
 </div>

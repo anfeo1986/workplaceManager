@@ -45,5 +45,5 @@ public class Pages {
     public static final String updateAccounting1CPost = "config/accounting1c/updateAccounting1C";
     public static final String deleteAccounting1CPost = "config/accounting1c/deleteAccounting1C";
 
-
+    public static final String virtualMachine = "virtualMachine";
 }

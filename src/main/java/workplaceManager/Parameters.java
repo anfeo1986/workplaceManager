@@ -26,6 +26,7 @@ public class Parameters {
     public static final String countHardDrive = "countHardDrive";
     public static final String error = "error";
     public static final String comment = "comment";
+    public static final String description = "description";
 
     public static final String role = "role";
 
@@ -45,6 +46,7 @@ public class Parameters {
     public static final String ipVirtualMachine = "ipVirtualMachine";
     public static final String idVirtualMachine = "idVirtualMachine";
     public static final String virtualMachineButtonDelete = "virtualMachineButtonDelete";
+    public static final String virtualMachineButtonReadOs = "virtualMachineButtonReadOs";
 
     public static final String accounting1C = "accounting1C";
     public static final String accounting1CUseRecord = "useRecord";
@@ -61,6 +63,7 @@ public class Parameters {
     public static final String employee = "employee";
     public static final String employeeId = "employeeId";
     public static final String employeeList = "employeeList";
+    public static final String virtualMachineList = "virtualMachineList";
 
     public static final String motherBoardId = "motherBoardId";
 

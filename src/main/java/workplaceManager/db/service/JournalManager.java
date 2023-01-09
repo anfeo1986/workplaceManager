@@ -196,9 +196,7 @@ public class JournalManager extends EntityManager<Journal> {
                         getStrFromList(computerNew.getVideoCardList()),
                         typeEquipment, user);
             }
-            System.out.println("saveChangeEquipment");
-            System.out.println(getStrFromList(computerOld.getVirtualMachineList()));
-            System.out.println(getStrFromList(computerNew.getVirtualMachineList()));
+
             if (!VirtualMachine.equalsVirtualMachineList(computerOld.getVirtualMachineList(), computerNew.getVirtualMachineList())) {
                 saveChange(TypeEvent.UPDATE, computerOld, TypeParameter.VIRTUAL_MACHINE,
                         getStrFromList(computerOld.getVirtualMachineList()),

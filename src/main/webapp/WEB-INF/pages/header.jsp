@@ -36,6 +36,7 @@
             <a href="<%=baseUrl + Pages.printer%>">Принтеры</a>
             <a href="<%=baseUrl + Pages.scanner%>">Сканеры</a>
             <a href="<%=baseUrl + Pages.ups%>">ИБП</a>
+            <a href="<%=baseUrl + Pages.virtualMachine%>">Виртуальные машины</a>
             <a href="<%=baseUrl + Pages.employee%>">Сотрудники</a>
             <a href="<%=baseUrl + Pages.accounting1c%>">Бухгалтерия</a>
         </div>

@@ -56,7 +56,7 @@
             count++;
         %>
         <td>
-            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?id=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
+            <a href="<%=baseUrl + Pages.addUpdateEquipment%>?<%=Parameters.id%>=<%=computer.getId()%>&<%=Parameters.redirect%>=<%=redirect%>&<%=Parameters.typeEquipment%>=<%=typeEquipment%>"
                target="_blank">
                 <%=computer.toStringHtmlSelectIp()%>
             </a>

@@ -256,9 +256,14 @@
                     String osVendorVirtualMachineName = Parameters.OsVendorVirtualMachine + countVirtualMachine;
                     String osVersionVirtualMachineName = Parameters.OsVersionVirtualMachine + countVirtualMachine;
                     String virtualMachineIdName = Parameters.idVirtualMachine + countVirtualMachine;
+                    String virtualMachineDescription = Parameters.description + countVirtualMachine;
                     String virtualMachineButtonDelete = Parameters.virtualMachineButtonDelete + countVirtualMachine;
+                    String vmButtonReadOs = Parameters.virtualMachineButtonReadOs + countVirtualMachine;
 
         %>
+        <h2>
+            <%=virtualMachine.getIpAndDescription()%>
+        </h2>
         <p>
             <label for="<%=ipVirtualMachineName%>">IP</label>
             <input type="text" name="<%=ipVirtualMachineName%>" id="<%=ipVirtualMachineName%>"
@@ -282,8 +287,15 @@
                     }
                 %>
             </select>
+            <%
+                if (Role.ADMIN.equals(role)) {
+            %>
+            <input type="submit" name="<%=vmButtonReadOs%>" value="Считать">
+            <%
+                }
+            %>
 
-            <label for="<%=osVendorVirtualMachineName%>">Название ОС</label>
+            <label for="<%=osVendorVirtualMachineName%>">ОС</label>
             <input type="text" name="<%=osVendorVirtualMachineName%>" id="<%=osVendorVirtualMachineName%>"
                    value="<%=virtualMachine.getVendor() != null ? virtualMachine.getVendor() : ""%>">
 
@@ -300,6 +312,12 @@
             <%
                 }
             %>
+        </p>
+        <p class="align_p">
+            <label for="<%=virtualMachineDescription%>">Описание</label>
+            <textarea name="<%=virtualMachineDescription%>" id="<%=virtualMachineDescription%>"
+                      rows="5"
+                      cols="100"><%=(virtualMachine.getDescription() != null) ? virtualMachine.getDescriptionHtml() : ""%></textarea>
         </p>
         <%
                     countVirtualMachine++;

@@ -135,7 +135,7 @@ public class ConfigEquipmentController {
     }
 
     private ModelAndView readConfigComputer(@ModelAttribute(Parameters.equipment) Equipment equipment,
-                                            HttpServletRequest request) {
+                                            HttpServletRequest request, boolean readOsVM) {
         Users user = securityCrypt.getUserBySession(request);
         if (user != null && Role.ADMIN.equals(user.getRole())) {
             ModelAndView modelAndView = securityCrypt.verifyUser(request, Pages.formConfigEquipment);
@@ -151,7 +151,7 @@ public class ConfigEquipmentController {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
                 Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -163,24 +163,53 @@ public class ConfigEquipmentController {
                 }
 
                 computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
                 String message = "";
-                Computer computerWithConfig = new Computer();
-                computerWithConfig.setIp(computer.getIp());
-                if (TypeOS.windows.toString().equals(request.getParameter(Parameters.typeOS))) {
-                    try {
-                        WMI.getAllConfigFormComputerWindows(computerWithConfig);
-                    } catch (Exception exception) {
-                        message = exception.getMessage();
+                if (readOsVM) {
+                    int countVirtualMachine = Integer.parseInt(request.getParameter(Parameters.countVirtualMachine));
+                    for (int numberVirtualMachine = 1; numberVirtualMachine <= countVirtualMachine; numberVirtualMachine++) {
+                        String buttonReadOsVM = Parameters.virtualMachineButtonReadOs + numberVirtualMachine;
+                        if (request.getParameter(buttonReadOsVM) != null) {
+                            VirtualMachine virtualMachine = computer.getVirtualMachineList().get(numberVirtualMachine - 1);
+
+                            if(virtualMachine == null) {
+                                continue;
+                            }
+
+                            if(TypeOS.windows.equals(virtualMachine.getTypeOS())) {
+                                try {
+                                    OperationSystem os = WMI.getOperationSystem(virtualMachine.getIp());
+
+                                    virtualMachine.setTypeOS(TypeOS.windows);
+                                    virtualMachine.setVendor(os.getVendor());
+                                    virtualMachine.setVersion(os.getVersion());
+
+                                    virtualMachineManager.save(virtualMachine);
+                                } catch (Exception exception) {
+                                    message = exception.getMessage();
+                                }
+                            } else if(TypeOS.linux.equals(virtualMachine.getTypeOS())) {
+
+                            }
+                        }
+                    }
+                } else {
+                    Computer computerWithConfig = new Computer();
+                    computerWithConfig.setIp(computer.getIp());
+                    if (TypeOS.windows.toString().equals(request.getParameter(Parameters.typeOS))) {
+                        try {
+                            WMI.getAllConfigFormComputerWindows(computerWithConfig);
+                        } catch (Exception exception) {
+                            message = exception.getMessage();
+                        }
+                        journalManager.save(new Journal(TypeEvent.READ_CONFIG_COMPUTER, TypeObject.COMPUTER, computer, user));
+
+                        saveComponentComputer(computer, computerWithConfig);
                     }
                 }
-
-                journalManager.save(new Journal(TypeEvent.READ_CONFIG_COMPUTER, TypeObject.COMPUTER, computer, user));
-
-                saveComponentComputer(computer, computerWithConfig);
 
                 if (!saveComputer(modelAndView, request, computerOld, computer, equipment, user)) {
                     return modelAndView;
@@ -216,7 +245,7 @@ public class ConfigEquipmentController {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
                 Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -226,7 +255,7 @@ public class ConfigEquipmentController {
                     return modelAndView;
                 }
                 computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -309,7 +338,7 @@ public class ConfigEquipmentController {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
                 Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -319,7 +348,7 @@ public class ConfigEquipmentController {
                     return modelAndView;
                 }
                 computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -413,7 +442,7 @@ public class ConfigEquipmentController {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
                 Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -423,14 +452,14 @@ public class ConfigEquipmentController {
                     return modelAndView;
                 }
                 computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
                 int countVirtualMachine = Integer.parseInt(request.getParameter(Parameters.countVirtualMachine));
                 for (int numberVirtualMachine = 1; numberVirtualMachine <= countVirtualMachine; numberVirtualMachine++) {
-                    String buttonDeleteProcessor = Parameters.virtualMachineButtonDelete + numberVirtualMachine;
-                    if (request.getParameter(buttonDeleteProcessor) != null) {
+                    String buttonDeleteVM = Parameters.virtualMachineButtonDelete + numberVirtualMachine;
+                    if (request.getParameter(buttonDeleteVM) != null) {
                         //Computer computerOld = equipmentManager.getComputerById(equipment.getId(), false);
                         VirtualMachine virtualMachine = computer.getVirtualMachineList().get(numberVirtualMachine - 1);
                         virtualMachineManager.delete(virtualMachine);
@@ -622,7 +651,7 @@ public class ConfigEquipmentController {
     private void saveComponentComputer(Computer computer, Computer computerWithConfig) {
         computer.setNetName(computerWithConfig.getNetName());
 
-        if(computer.getOperationSystem() == null || computer.getOperationSystem().getId() <= 0) {
+        if (computer.getOperationSystem() == null || computer.getOperationSystem().getId() <= 0) {
             computer.setOperationSystem(new OperationSystem());
         }
         computer.getOperationSystem().setTypeOS(computerWithConfig.getOperationSystem().getTypeOS());
@@ -630,7 +659,7 @@ public class ConfigEquipmentController {
         computer.getOperationSystem().setVersion(computerWithConfig.getOperationSystem().getVersion());
         computer.getOperationSystem().setOSArchitecture(computerWithConfig.getOperationSystem().getOSArchitecture());
 
-        if(computer.getMotherBoard() == null || computer.getMotherBoard().getId() <= 0) {
+        if (computer.getMotherBoard() == null || computer.getMotherBoard().getId() <= 0) {
             computer.setMotherBoard(new MotherBoard());
             computer.getMotherBoard().setComputer(computer);
         }
@@ -658,7 +687,7 @@ public class ConfigEquipmentController {
                     computer = (Computer) equipment.getChildFromEquipment(TypeEquipment.COMPUTER);
                 }
                 Computer computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -668,7 +697,7 @@ public class ConfigEquipmentController {
                     return modelAndView;
                 }
                 computerOld = equipmentManager.getComputerById(computer.getId(), false);
-                if(computerOld == null) {
+                if (computerOld == null) {
                     computerOld = new Computer();
                 }
 
@@ -699,7 +728,7 @@ public class ConfigEquipmentController {
     private ModelAndView searchPage(Equipment equipment,
                                     HttpServletRequest request) {
         if (request.getParameter(Components.buttonReadConfigComputer) != null) {
-            return readConfigComputer(equipment, request);
+            return readConfigComputer(equipment, request, false);
         }
         if (request.getParameter(Components.buttonAddVirtualMachine) != null) {
             return addVirtualMachine(equipment, request);
@@ -710,7 +739,12 @@ public class ConfigEquipmentController {
             if (request.getParameter(virtualMachineButtonDelete) != null) {
                 return deleteVirtualMachineFromComputer(equipment, request);
             }
+            String vmButtonReadOs = Parameters.virtualMachineButtonReadOs + i;
+            if (request.getParameter(vmButtonReadOs) != null) {
+                return readConfigComputer(equipment, request, true);
+            }
         }
+
         if (request.getParameter(Components.buttonAddProcessor) != null) {
             return addComponentComputer(equipment, request, TypeComponentsComputer.processor);
         }
@@ -929,6 +963,7 @@ public class ConfigEquipmentController {
             String osVendorVirtualMachineName = Parameters.OsVendorVirtualMachine + i;
             String osVersionVirtualMachineName = Parameters.OsVersionVirtualMachine + i;
             String virtualMachineIdName = Parameters.idVirtualMachine + i;
+            String virtualMachineDescription = Parameters.description + i;
 
             Long virtualMachineId = Long.parseLong(request.getParameter(virtualMachineIdName));
             VirtualMachine virtualMachine = null;
@@ -952,6 +987,8 @@ public class ConfigEquipmentController {
                     request.getParameter(osVendorVirtualMachineName) : "");
             virtualMachine.setVersion(request.getParameter(osVersionVirtualMachineName) != null ?
                     request.getParameter(osVersionVirtualMachineName) : "");
+            virtualMachine.setDescription(request.getParameter(virtualMachineDescription) != null ?
+                    request.getParameter(virtualMachineDescription) : "");
 
             virtualMachineManager.save(virtualMachine);
         }
