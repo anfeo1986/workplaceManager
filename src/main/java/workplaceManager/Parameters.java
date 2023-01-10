@@ -6,6 +6,10 @@ public class Parameters {
     public static final String passwordError = "passwordError";
     public static final String userName = "userName";
 
+    public static final String mainSettings = "mainSettings";
+    public static final String mainSettingsPublicKey = "mainSettingsPublicKey";
+    public static final String mainSettingsPrivateKey = "mainSettingsPrivateKey";
+
     public static final String closeWindow = "closeWindow";
 
     public static final String page = "page";

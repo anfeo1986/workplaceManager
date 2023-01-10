@@ -30,7 +30,8 @@ public class MainController {
         net,
         virtualMachine,
         employee,
-        accounting1c
+        accounting1c,
+        mainSettings
     }
 
     private EmployeeManager employeeManager;

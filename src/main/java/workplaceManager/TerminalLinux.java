@@ -186,12 +186,14 @@ public class TerminalLinux {
                 }
                 System.out.println("line: " + s);
             }
+
             thread.interrupt();
             //} else {
             //    error += "Ошибка выполнения команды: " + command + System.lineSeparator();
             //}
             if (br.isCancelTimeOut()) {
                 error += "Время ожидания выполнения команды истекло: " + command + System.lineSeparator();
+                br.close();
             } else {
                 //BufferedReader brError = new BufferedReader(new InputStreamReader(p.getErrorStream(), "Cp866"));
                 CancelableReader brError = new CancelableReader(new InputStreamReader(p.getErrorStream(), "Cp866"));
@@ -232,7 +234,12 @@ public class TerminalLinux {
 
     public static void main(String[] args) {
         try {
-            TerminalLinux.getOsName("10.140.40.250");
+            TerminalLinux.getOsName("192.168.0.104");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        try {
+            TerminalLinux.getOsName("192.168.0.104");
         } catch (Exception exception) {
             exception.printStackTrace();
         }

@@ -52,7 +52,8 @@
             <%
                 if (MainController.TypePage.workplace.equals(typePage)) {
             %>
-            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>" target="_blank">
+            <a href="<%=baseUrl + Pages.addUpdateWorkplace%>?<%=Parameters.redirect%>=<%=Pages.workplace%>&<%=Parameters.page%>=<%=request.getAttribute(Parameters.page)%>"
+               target="_blank">
                 Добавить рабочее место
             </a>
             <%
@@ -116,6 +117,13 @@
             %>
         </div>
     </div>
+    <%
+        }
+    %>
+    <%
+        if (MainController.TypePage.workplace.equals(typePage)) {
+    %>
+    <a href="<%=baseUrl + Pages.mainSettings%>" target="_blank">Настройки</a>
     <%
         }
     %>

@@ -7,6 +7,9 @@ public class Pages {
     public static final String registration = "registration";
     public static final String logout = "logout";
 
+    public static final String mainSettings = "config/mainSettings";
+    public static final String mainSettingsSavePost = "config/mainSettingsSavePost";
+
     public static final String journal = "journal";
 
     public static final String mainPage = "mainPage";
